@@ -1,0 +1,29 @@
+{
+  "project_type": "documentation",
+  "framework": "vocs",
+  "language": "typescript",
+  "main_branch": "main",
+  "important_files": [
+    "docs/pages/index.mdx",
+    "docs/pages/getting-started.mdx",
+    "docs/pages/fans.mdx",
+    "docs/pages/posts.mdx",
+    "vocs.config.ts"
+  ],
+  "context": {
+    "description": "Documentation for the Recoup API, which provides access to artist social media data and analytics",
+    "key_concepts": [
+      "API Documentation",
+      "Fan Analytics",
+      "Post Analytics",
+      "Social Media Integration"
+    ],
+    "file_purposes": {
+      "docs/pages/index.mdx": "Landing page with quick start guide",
+      "docs/pages/getting-started.mdx": "Initial setup and authentication guide",
+      "docs/pages/fans.mdx": "Fan data API endpoint documentation",
+      "docs/pages/posts.mdx": "Posts API endpoint documentation",
+      "vocs.config.ts": "Documentation site configuration"
+    }
+  }
+} 
