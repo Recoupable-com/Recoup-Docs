@@ -8,10 +8,6 @@ export default defineConfig({
       link: "/getting-started",
     },
     {
-      text: "Example",
-      link: "/example",
-    },
-    {
       text: "API Reference",
       items: [
         {
