@@ -11,6 +11,10 @@ export default defineConfig({
       text: "API Reference",
       items: [
         {
+          text: "Image Generation",
+          link: "/image-generation",
+        },
+        {
           text: "Artist Profile",
           link: "/artist-profile",
         },
@@ -18,6 +22,7 @@ export default defineConfig({
           text: "Fans",
           link: "/fans",
         },
+
         {
           text: "Posts",
           link: "/posts",
