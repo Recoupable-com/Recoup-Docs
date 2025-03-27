@@ -1,3 +1,178 @@
-# Get started
+---
+title: Getting Started
+description: Learn how to integrate with the Recoup API to access artist fan and post data.
+---
 
-Hello world!
+# Getting Started with Recoup API
+
+Welcome to the Recoup API documentation. This API allows you to access and analyze social media data for artists, including their fans and posts across various platforms.
+
+## Base URL
+
+All API requests should be made to:
+
+```bash
+https://api.recoupable.com/api
+```
+
+## Available Endpoints
+
+The Recoup API provides the following main endpoints:
+
+### Fans API
+
+Access detailed information about an artist's fans across all social platforms. This includes:
+
+- Fan profiles
+- Geographic data
+- Social media statistics
+- Engagement metrics
+
+[Learn more about the Fans API →](/fans)
+
+### Posts API
+
+Retrieve and analyze an artist's social media posts across platforms. This includes:
+
+- Post content
+- Engagement metrics
+- Post URLs
+- Timestamps
+
+[Learn more about the Posts API →](/posts)
+
+## Rate Limiting
+
+Coming soon - Rate limiting details will be provided here.
+
+## Error Handling
+
+The API uses conventional HTTP response codes to indicate the success or failure of requests:
+
+- `200`: Success
+- `400`: Bad Request
+- `401`: Unauthorized
+- `403`: Forbidden
+- `404`: Not Found
+- `429`: Too Many Requests
+- `500`: Internal Server Error
+
+## Example Implementation
+
+Here's a quick example of how to fetch artist fans using different programming languages:
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/fans?artist_account_id=YOUR_ARTIST_ACCOUNT_ID" \
+  -H "Content-Type: application/json"
+  # -H "Authorization: Bearer YOUR_API_KEY" # Coming soon
+```
+
+```python [Python]
+import requests
+
+def get_artist_fans(artist_account_id):
+    try:
+        url = "https://api.recoupable.com/api/fans"
+        params = {"artist_account_id": artist_account_id}
+        headers = {
+            "Content-Type": "application/json",
+            # "Authorization": "Bearer YOUR_API_KEY"  # Coming soon
+        }
+
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()  # Raises an HTTPError for bad responses
+
+        return response.json()
+    except requests.exceptions.RequestException as error:
+        print(f"Error fetching artist fans: {error}")
+        raise
+```
+
+```javascript [JavaScript]
+async function getArtistFans(artistAccountId) {
+  try {
+    const response = await fetch(
+      `https://api.recoupable.com/api/fans?artist_account_id=${artistAccountId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          // "Authorization": "Bearer YOUR_API_KEY"  // Coming soon
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching artist fans:", error);
+    throw error;
+  }
+}
+```
+
+```typescript [TypeScript]
+interface ArtistFansResponse {
+  status: string;
+  fans: Array<{
+    id: string;
+    username: string;
+    avatar: string;
+    profile_url: string;
+    region: string;
+    bio: string;
+    followerCount: number;
+    followingCount: number;
+    updated_at: string;
+  }>;
+  pagination: {
+    total_count: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+  };
+}
+
+async function getArtistFans(
+  artistAccountId: string
+): Promise<ArtistFansResponse> {
+  try {
+    const response = await fetch(
+      `https://api.recoupable.com/api/fans?artist_account_id=${artistAccountId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          // "Authorization": "Bearer YOUR_API_KEY"  // Coming soon
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: ArtistFansResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching artist fans:", error);
+    throw error;
+  }
+}
+```
+
+:::
+
+## Next Steps
+
+1. Explore the [Fans API](/fans) documentation to learn how to access fan data
+2. Check out the [Posts API](/posts) documentation to learn how to retrieve social media posts
+3. Join our community (coming soon) to get help and share your experience
+
+## Support
+
+If you need help or have questions about the API, please contact our support team at support@recoupable.com.
