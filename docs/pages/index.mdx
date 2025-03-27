@@ -2,15 +2,26 @@
 layout: landing
 ---
 
-import { HomePage } from 'vocs/components'
+import { HomePage } from "vocs/components";
 
 <HomePage.Root>
   <HomePage.Logo />
-  <HomePage.Tagline>My Awesome Docs</HomePage.Tagline>
-  <HomePage.InstallPackage name="vocs" type="init" />
-  <HomePage.Description>This is a description of my documentation website.</HomePage.Description>
+  <HomePage.Tagline>
+    Access and analyze social media data for artists across all major platforms. 
+    Get detailed insights into fan engagement, post performance, and audience demographics.
+  </HomePage.Tagline>
+
+  <div className="max-w-2xl mx-auto px-4 py-10 text-center">
+    <h2 className="text-2xl font-bold mb-4">Quick Start</h2>
+    ```bash
+    # Get fan data for an artist
+    curl -X GET "https://api.recoupable.com/api/fans?artist_account_id=YOUR_ARTIST_ACCOUNT_ID" \
+      -H "Content-Type: application/json"
+    ```
+  </div>
+  
   <HomePage.Buttons>
-    <HomePage.Button href="/getting-started" variant="accent">Get started</HomePage.Button>
-    <HomePage.Button href="https://github.com/wevm/vocs">GitHub</HomePage.Button>
+    <HomePage.Button href="/getting-started" variant="accent">Get Started</HomePage.Button>
+    <HomePage.Button href="/fans">API Reference</HomePage.Button>
   </HomePage.Buttons>
 </HomePage.Root>
