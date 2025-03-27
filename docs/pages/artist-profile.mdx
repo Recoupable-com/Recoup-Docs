@@ -1,0 +1,212 @@
+---
+title: Get Artist Profile
+description: Retrieve comprehensive artist profile information across all social media platforms.
+---
+
+# Get Artist Profile
+
+Retrieve comprehensive profile information for an artist across all connected social media platforms, including profile details and post metrics.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/artist-profile
+```
+
+## Parameters
+
+| Name              | Type   | Required | Description                                                           |
+| ----------------- | ------ | -------- | --------------------------------------------------------------------- |
+| artist_account_id | string | Yes      | The unique identifier of the artist account to fetch profile data for |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/artist-profile?artist_account_id=YOUR_ARTIST_ACCOUNT_ID" \
+  -H "Content-Type: application/json"
+  # -H "Authorization: Bearer YOUR_API_KEY" # Coming soon
+```
+
+```python [Python]
+import requests
+
+def get_artist_profile(artist_account_id):
+    try:
+        url = "https://api.recoupable.com/api/artist-profile"
+        params = {
+            "artist_account_id": artist_account_id
+        }
+        headers = {
+            "Content-Type": "application/json",
+            # "Authorization": "Bearer YOUR_API_KEY"  # Coming soon
+        }
+
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()
+
+        return response.json()
+    except requests.exceptions.RequestException as error:
+        print(f"Error fetching artist profile: {error}")
+        raise
+```
+
+```javascript [JavaScript]
+async function getArtistProfile(artistAccountId) {
+  try {
+    const params = new URLSearchParams({
+      artist_account_id: artistAccountId,
+    });
+
+    const response = await fetch(
+      `https://api.recoupable.com/api/artist-profile?${params}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          // "Authorization": "Bearer YOUR_API_KEY"  // Coming soon
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching artist profile:", error);
+    throw error;
+  }
+}
+```
+
+```typescript [TypeScript]
+interface SocialProfile {
+  id: string;
+  username: string;
+  profile_url: string;
+  avatar: string | null;
+  bio: string | null;
+  follower_count: number | null;
+  following_count: number | null;
+  post_count: number | null;
+  region: string | null;
+  updated_at: string;
+}
+
+interface ArtistProfile {
+  id: string;
+  profiles: SocialProfile[];
+  total_followers: number;
+  total_following: number;
+  total_posts: number;
+  updated_at: string;
+}
+
+interface ArtistProfileResponse {
+  status: string;
+  profile: ArtistProfile;
+}
+
+async function getArtistProfile(
+  artistAccountId: string
+): Promise<ArtistProfileResponse> {
+  try {
+    const params = new URLSearchParams({
+      artist_account_id: artistAccountId,
+    });
+
+    const response = await fetch(
+      `https://api.recoupable.com/api/artist-profile?${params}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          // "Authorization": "Bearer YOUR_API_KEY"  // Coming soon
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: ArtistProfileResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching artist profile:", error);
+    throw error;
+  }
+}
+```
+
+:::
+
+## Response Format
+
+The API returns JSON responses. Here's an example success response:
+
+```json filename="Response"
+{
+  "status": "success",
+  "profile": {
+    "id": "artist123",
+    "profiles": [
+      {
+        "id": "social123",
+        "username": "@artistname",
+        "profile_url": "https://twitter.com/artistname",
+        "avatar": "https://example.com/avatar.jpg",
+        "bio": "Official account of Artist Name",
+        "follower_count": 50000,
+        "following_count": 1000,
+        "post_count": 5000,
+        "region": "US",
+        "updated_at": "2024-03-27T12:00:00Z"
+      },
+      {
+        "id": "social456",
+        "username": "artistname",
+        "profile_url": "https://instagram.com/artistname",
+        "avatar": "https://example.com/avatar2.jpg",
+        "bio": "🎨 Artist | Creator | Innovator",
+        "follower_count": 100000,
+        "following_count": 500,
+        "post_count": 1000,
+        "region": "US",
+        "updated_at": "2024-03-27T14:30:00Z"
+      }
+    ],
+    "total_followers": 150000,
+    "total_following": 1500,
+    "total_posts": 6000,
+    "updated_at": "2024-03-27T15:00:00Z"
+  }
+}
+```
+
+## Response Properties
+
+### Response Object
+
+| Property                           | Type           | Description                                        |
+| ---------------------------------- | -------------- | -------------------------------------------------- |
+| status                             | string         | Status of the request ("success" or "error")       |
+| profile                            | object         | The artist's comprehensive profile information     |
+| profile.id                         | string         | Unique identifier for the artist                   |
+| profile.profiles                   | array          | List of social media profiles                      |
+| profile.profiles[].id              | string         | Unique identifier for the social profile           |
+| profile.profiles[].username        | string         | Username on the platform                           |
+| profile.profiles[].profile_url     | string         | Direct URL to the profile                          |
+| profile.profiles[].avatar          | string \| null | URL to the profile avatar image                    |
+| profile.profiles[].bio             | string \| null | Profile biography or description                   |
+| profile.profiles[].follower_count  | number \| null | Number of followers on this platform               |
+| profile.profiles[].following_count | number \| null | Number of accounts followed on this platform       |
+| profile.profiles[].post_count      | number \| null | Number of posts on this platform                   |
+| profile.profiles[].region          | string \| null | Geographic region of the profile                   |
+| profile.profiles[].updated_at      | string         | ISO timestamp of when the profile was last updated |
+| profile.total_followers            | number         | Sum of followers across all platforms              |
+| profile.total_following            | number         | Sum of following across all platforms              |
+| profile.total_posts                | number         | Sum of posts across all platforms                  |
+| profile.updated_at                 | string         | ISO timestamp of when the data was last updated    |

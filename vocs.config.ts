@@ -11,6 +11,10 @@ export default defineConfig({
       text: "API Reference",
       items: [
         {
+          text: "Artist Profile",
+          link: "/artist-profile",
+        },
+        {
           text: "Fans",
           link: "/fans",
         },
