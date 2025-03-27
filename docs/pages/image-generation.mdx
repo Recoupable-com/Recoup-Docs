@@ -1,0 +1,199 @@
+---
+title: Generate Image
+description: Generate high-quality images using GPT-4o and store them on Arweave blockchain.
+---
+
+# Generate Image
+
+Generate high-quality images using OpenAI's GPT-4o model. Images are automatically stored on the Arweave blockchain and associated with your artist profile.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/image-generation
+```
+
+## Parameters
+
+| Name              | Type   | Required | Description                                              |
+| ----------------- | ------ | -------- | -------------------------------------------------------- |
+| prompt            | string | Yes      | Text description of the image you want to generate       |
+| artist_account_id | string | Yes      | The unique identifier of the artist generating the image |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/image-generation?prompt=A vibrant digital artwork of a sunset&artist_account_id=YOUR_ARTIST_ID" \
+  -H "Content-Type: application/json"
+  # -H "Authorization: Bearer YOUR_API_KEY" # Coming soon
+```
+
+```python [Python]
+import requests
+
+def generate_image(prompt: str, artist_account_id: str):
+    try:
+        url = "https://api.recoupable.com/api/image-generation"
+        params = {
+            "prompt": prompt,
+            "artist_account_id": artist_account_id
+        }
+        headers = {
+            "Content-Type": "application/json",
+            # "Authorization": "Bearer YOUR_API_KEY"  # Coming soon
+        }
+
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()
+
+        return response.json()
+    except requests.exceptions.RequestException as error:
+        print(f"Error generating image: {error}")
+        raise
+```
+
+```javascript [JavaScript]
+async function generateImage(prompt, artistAccountId) {
+  try {
+    const params = new URLSearchParams({
+      prompt: prompt,
+      artist_account_id: artistAccountId,
+    });
+
+    const response = await fetch(
+      `https://api.recoupable.com/api/image-generation?${params}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          // "Authorization": "Bearer YOUR_API_KEY"  // Coming soon
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error generating image:", error);
+    throw error;
+  }
+}
+```
+
+```typescript [TypeScript]
+interface ImageGenerationRequest {
+  prompt: string;
+  artist_account_id: string;
+}
+
+interface ImageGenerationResponse {
+  status: string;
+  data: {
+    image_url: string; // Arweave URL
+    post_id: string; // Associated post ID
+    artist_id: string; // Artist attribution
+    created_at: string; // Generation timestamp
+  };
+}
+
+async function generateImage(
+  prompt: string,
+  artistAccountId: string
+): Promise<ImageGenerationResponse> {
+  try {
+    const params = new URLSearchParams({
+      prompt: prompt,
+      artist_account_id: artistAccountId,
+    });
+
+    const response = await fetch(
+      `https://api.recoupable.com/api/image-generation?${params}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          // "Authorization": "Bearer YOUR_API_KEY"  // Coming soon
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: ImageGenerationResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error generating image:", error);
+    throw error;
+  }
+}
+```
+
+:::
+
+## Response Format
+
+The API returns JSON responses. Here's an example success response:
+
+```json filename="Response"
+{
+  "status": "success",
+  "data": {
+    "image_url": "https://arweave.net/YOUR_IMAGE_ID",
+    "post_id": "post123",
+    "artist_id": "artist123",
+    "created_at": "2024-03-27T15:00:00Z"
+  }
+}
+```
+
+## Response Properties
+
+### Response Object
+
+| Property        | Type   | Description                                     |
+| --------------- | ------ | ----------------------------------------------- |
+| status          | string | Status of the request ("success" or "error")    |
+| data            | object | The generated image data                        |
+| data.image_url  | string | Permanent Arweave URL where the image is stored |
+| data.post_id    | string | Unique identifier for the associated post       |
+| data.artist_id  | string | Artist identifier for attribution               |
+| data.created_at | string | ISO timestamp of when the image was generated   |
+
+## Error Responses
+
+The API returns error responses in the following format:
+
+```json filename="Error Response"
+{
+  "status": "error",
+  "error": {
+    "code": "invalid_prompt",
+    "message": "The provided prompt is invalid or empty"
+  }
+}
+```
+
+### Common Error Codes
+
+| Code                | Description                                              |
+| ------------------- | -------------------------------------------------------- |
+| invalid_prompt      | The provided prompt is empty or contains invalid content |
+| invalid_artist      | The provided artist_account_id is invalid or not found   |
+| generation_failed   | The image generation process failed                      |
+| storage_failed      | Failed to store the image on Arweave                     |
+| rate_limit_exceeded | You have exceeded the rate limit for image generation    |
+
+## Notes
+
+- Images are generated using OpenAI's GPT-4o model
+- All generated images are automatically stored on the Arweave blockchain
+- Each generation creates an associated post with proper artist attribution
+- The API has rate limits for image generation (contact support for details)
+- Generated images are permanent and cannot be deleted from Arweave
+- Content filtering is applied to all prompts to ensure appropriate content
