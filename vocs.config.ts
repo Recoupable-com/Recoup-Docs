@@ -1,15 +1,28 @@
-import { defineConfig } from 'vocs'
+import { defineConfig } from "vocs";
 
 export default defineConfig({
-  title: 'Docs',
+  title: "Recoup API",
   sidebar: [
     {
-      text: 'Getting Started',
-      link: '/getting-started',
+      text: "Getting Started",
+      link: "/getting-started",
     },
     {
-      text: 'Example',
-      link: '/example',
+      text: "Example",
+      link: "/example",
+    },
+    {
+      text: "API Reference",
+      items: [
+        {
+          text: "Fans",
+          link: "/fans",
+        },
+        {
+          text: "Posts",
+          link: "/posts",
+        },
+      ],
     },
   ],
-})
+});

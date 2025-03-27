@@ -23,12 +23,14 @@ GET https://api.recoupable.com/api/fans
 
 ## Request Examples
 
-```bash filename="cURL"
+:::code-group
+
+```bash [cURL]
 curl -X GET "https://api.recoupable.com/api/fans?artist_account_id=YOUR_ARTIST_ACCOUNT_ID&page=1&limit=20" \
   -H "Content-Type: application/json"
 ```
 
-```python filename="Python"
+```python [Python]
 import requests
 
 url = "https://api.recoupable.com/api/fans"
@@ -43,7 +45,7 @@ response = requests.get(url, params=params, headers=headers)
 data = response.json()
 ```
 
-```javascript filename="JavaScript"
+```javascript [JavaScript]
 fetch(
   "https://api.recoupable.com/api/fans?artist_account_id=YOUR_ARTIST_ACCOUNT_ID&page=1&limit=20",
   {
@@ -56,7 +58,7 @@ fetch(
   .then((data) => console.log(data));
 ```
 
-```typescript filename="TypeScript"
+```typescript [TypeScript]
 async function getFans(
   artistAccountId: string,
   page: number = 1,
@@ -73,6 +75,8 @@ async function getFans(
   return await response.json();
 }
 ```
+
+:::
 
 ## Response Format
 
