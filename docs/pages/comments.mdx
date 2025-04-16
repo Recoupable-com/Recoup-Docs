@@ -1,0 +1,213 @@
+---
+title: Get Comments
+description: Retrieve comments for an artist or specific post with pagination support.
+---
+
+# Get Comments
+
+Retrieve comments associated with an artist or a specific post, with support for pagination.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/comments
+```
+
+## Parameters
+
+| Name              | Type   | Required | Description                                 |
+| ----------------- | ------ | -------- | ------------------------------------------- |
+| artist_account_id | string | Yes      | The unique identifier of the artist account |
+| post_id           | string | No       | Filter comments by specific post            |
+| page              | number | No       | Page number for pagination (default: 1)     |
+| limit             | number | No       | Number of comments per page (default: 10)   |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/comments?artist_account_id=YOUR_ARTIST_ID&page=1&limit=10" \
+  -H "Content-Type: application/json"
+  # -H "Authorization: Bearer YOUR_API_KEY" # Coming soon
+```
+
+```python [Python]
+import requests
+
+def get_comments(artist_account_id: str, post_id: str = None, page: int = 1, limit: int = 10):
+    try:
+        url = "https://api.recoupable.com/api/comments"
+        params = {
+            "artist_account_id": artist_account_id,
+            "page": page,
+            "limit": limit
+        }
+        if post_id:
+            params["post_id"] = post_id
+
+        headers = {
+            "Content-Type": "application/json",
+            # "Authorization": "Bearer YOUR_API_KEY"  # Coming soon
+        }
+
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()
+
+        return response.json()
+    except requests.exceptions.RequestException as error:
+        print(f"Error fetching comments: {error}")
+        raise
+```
+
+```javascript [JavaScript]
+async function getComments(
+  artistAccountId,
+  postId = null,
+  page = 1,
+  limit = 10
+) {
+  try {
+    const params = new URLSearchParams({
+      artist_account_id: artistAccountId,
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    if (postId) {
+      params.append("post_id", postId);
+    }
+
+    const response = await fetch(
+      `https://api.recoupable.com/api/comments?${params}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          // "Authorization": "Bearer YOUR_API_KEY"  // Coming soon
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    throw error;
+  }
+}
+```
+
+```typescript [TypeScript]
+interface Comment {
+  id: string; // UUID of the comment
+  post_id: string; // UUID of the associated post
+  social_id: string; // UUID of the social profile
+  comment: string; // Comment text content
+  commented_at: string; // Timestamp with timezone
+}
+
+interface CommentsResponse {
+  status: string;
+  data: {
+    comments: Comment[];
+    pagination: {
+      current_page: number;
+      total_pages: number;
+      total_comments: number;
+      per_page: number;
+    };
+  };
+}
+
+async function getComments(
+  artistAccountId: string,
+  postId?: string,
+  page: number = 1,
+  limit: number = 10
+): Promise<CommentsResponse> {
+  try {
+    const params = new URLSearchParams({
+      artist_account_id: artistAccountId,
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    if (postId) {
+      params.append("post_id", postId);
+    }
+
+    const response = await fetch(
+      `https://api.recoupable.com/api/comments?${params}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          // "Authorization": "Bearer YOUR_API_KEY"  # Coming soon
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: CommentsResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    throw error;
+  }
+}
+```
+
+:::
+
+## Response Format
+
+The API returns JSON responses. Here's an example success response:
+
+```json filename="Response"
+{
+  "status": "success",
+  "data": {
+    "comments": [
+      {
+        "id": "123e4567-e89b-12d3-a456-426614174000",
+        "post_id": "123e4567-e89b-12d3-a456-426614174001",
+        "social_id": "123e4567-e89b-12d3-a456-426614174002",
+        "comment": "Great post!",
+        "commented_at": "2024-03-27T12:00:00Z"
+      }
+    ],
+    "pagination": {
+      "current_page": 1,
+      "total_pages": 5,
+      "total_comments": 48,
+      "per_page": 10
+    }
+  }
+}
+```
+
+## Response Properties
+
+### Response Object
+
+| Property                       | Type   | Description                                               |
+| ------------------------------ | ------ | --------------------------------------------------------- |
+| status                         | string | Status of the request ("success" or "error")              |
+| data                           | object | The response data containing comments and pagination info |
+| data.comments                  | array  | List of comment objects                                   |
+| data.comments[].id             | string | UUID of the comment                                       |
+| data.comments[].post_id        | string | UUID of the associated post                               |
+| data.comments[].social_id      | string | UUID of the social profile                                |
+| data.comments[].comment        | string | Comment text content                                      |
+| data.comments[].commented_at   | string | Timestamp with timezone of when the comment was made      |
+| data.pagination                | object | Pagination information                                    |
+| data.pagination.current_page   | number | Current page number                                       |
+| data.pagination.total_pages    | number | Total number of pages                                     |
+| data.pagination.total_comments | number | Total number of comments                                  |
+| data.pagination.per_page       | number | Number of comments per page                               |
