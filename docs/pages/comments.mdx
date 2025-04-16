@@ -112,14 +112,12 @@ interface Comment {
 
 interface CommentsResponse {
   status: string;
-  data: {
-    comments: Comment[];
-    pagination: {
-      current_page: number;
-      total_pages: number;
-      total_comments: number;
-      per_page: number;
-    };
+  comments: Comment[];
+  pagination: {
+    total_count: number;
+    page: number;
+    limit: number;
+    total_pages: number;
   };
 }
 
@@ -172,22 +170,20 @@ The API returns JSON responses. Here's an example success response:
 ```json filename="Response"
 {
   "status": "success",
-  "data": {
-    "comments": [
-      {
-        "id": "123e4567-e89b-12d3-a456-426614174000",
-        "post_id": "123e4567-e89b-12d3-a456-426614174001",
-        "social_id": "123e4567-e89b-12d3-a456-426614174002",
-        "comment": "Great post!",
-        "commented_at": "2024-03-27T12:00:00Z"
-      }
-    ],
-    "pagination": {
-      "current_page": 1,
-      "total_pages": 5,
-      "total_comments": 48,
-      "per_page": 10
+  "comments": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "post_id": "123e4567-e89b-12d3-a456-426614174001",
+      "social_id": "123e4567-e89b-12d3-a456-426614174002",
+      "comment": "Great post!",
+      "commented_at": "2024-03-27T12:00:00Z"
     }
+  ],
+  "pagination": {
+    "total_count": 48,
+    "page": 1,
+    "limit": 10,
+    "total_pages": 5
   }
 }
 ```
@@ -196,18 +192,17 @@ The API returns JSON responses. Here's an example success response:
 
 ### Response Object
 
-| Property                       | Type   | Description                                               |
-| ------------------------------ | ------ | --------------------------------------------------------- |
-| status                         | string | Status of the request ("success" or "error")              |
-| data                           | object | The response data containing comments and pagination info |
-| data.comments                  | array  | List of comment objects                                   |
-| data.comments[].id             | string | UUID of the comment                                       |
-| data.comments[].post_id        | string | UUID of the associated post                               |
-| data.comments[].social_id      | string | UUID of the social profile                                |
-| data.comments[].comment        | string | Comment text content                                      |
-| data.comments[].commented_at   | string | Timestamp with timezone of when the comment was made      |
-| data.pagination                | object | Pagination information                                    |
-| data.pagination.current_page   | number | Current page number                                       |
-| data.pagination.total_pages    | number | Total number of pages                                     |
-| data.pagination.total_comments | number | Total number of comments                                  |
-| data.pagination.per_page       | number | Number of comments per page                               |
+| Property                | Type   | Description                                          |
+| ----------------------- | ------ | ---------------------------------------------------- |
+| status                  | string | Status of the request ("success" or "error")         |
+| comments                | array  | List of comment objects                              |
+| comments[].id           | string | UUID of the comment                                  |
+| comments[].post_id      | string | UUID of the associated post                          |
+| comments[].social_id    | string | UUID of the social profile                           |
+| comments[].comment      | string | Comment text content                                 |
+| comments[].commented_at | string | Timestamp with timezone of when the comment was made |
+| pagination              | object | Pagination information                               |
+| pagination.total_count  | number | Total number of comments available                   |
+| pagination.page         | number | Current page number                                  |
+| pagination.limit        | number | Number of comments per page                          |
+| pagination.total_pages  | number | Total number of pages available                      |
