@@ -19,6 +19,10 @@ export default defineConfig({
           link: "/artist-profile",
         },
         {
+          text: "Comments",
+          link: "/comments",
+        },
+        {
           text: "Fans",
           link: "/fans",
         },
