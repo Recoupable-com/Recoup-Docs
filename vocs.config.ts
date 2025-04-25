@@ -11,25 +11,70 @@ export default defineConfig({
       text: "API Reference",
       items: [
         {
-          text: "Image Generation",
-          link: "/image-generation",
+          text: "Artist",
+          items: [
+            {
+              text: "Artist Profile",
+              link: "/artist-profile",
+            },
+            {
+              text: "Artist Segments",
+              link: "/artist/segments",
+            },
+          ],
         },
         {
-          text: "Artist Profile",
-          link: "/artist-profile",
+          text: "Social",
+          items: [
+            {
+              text: "Social Posts (Coming Soon)",
+              link: "/social/posts",
+            },
+          ],
         },
         {
-          text: "Comments",
-          link: "/comments",
+          text: "Segment",
+          items: [
+            {
+              text: "Segment Fans (Coming Soon)",
+              link: "/segment/fans",
+            },
+          ],
         },
         {
-          text: "Fans",
-          link: "/fans",
+          text: "Post",
+          items: [
+            {
+              text: "Post Comments (Coming Soon)",
+              link: "/post/comments",
+            },
+          ],
         },
-
         {
-          text: "Posts",
-          link: "/posts",
+          text: "Legacy API (Deprecated)",
+          items: [
+            {
+              text: "Comments (Deprecated)",
+              link: "/comments",
+            },
+            {
+              text: "Fans (Deprecated)",
+              link: "/fans",
+            },
+            {
+              text: "Posts (Deprecated)",
+              link: "/posts",
+            },
+          ],
+        },
+        {
+          text: "Additional Features",
+          items: [
+            {
+              text: "Image Generation",
+              link: "/image-generation",
+            },
+          ],
         },
       ],
     },
