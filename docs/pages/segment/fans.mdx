@@ -218,7 +218,9 @@ Example workflow:
 
 ```javascript
 // Step 1: Get all segments for an artist
-const segmentsResponse = await getArtistSegments("artist123");
+const segmentsResponse = await getArtistSegments(
+  "10fd2b53-3fb8-4d75-bd23-f28520a3c7fc"
+);
 
 // Step 2: Use a segment ID to get fans for a specific segment
 const segmentId = segmentsResponse.segments[0].segment_id;
