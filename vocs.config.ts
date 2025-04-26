@@ -36,7 +36,7 @@ export default defineConfig({
           text: "Segment",
           items: [
             {
-              text: "Segment Fans (Coming Soon)",
+              text: "Segment Fans",
               link: "/segment/fans",
             },
           ],
