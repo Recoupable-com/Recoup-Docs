@@ -1,0 +1,243 @@
+---
+title: Get Artist Socials
+description: Retrieve comprehensive artist social media profiles across all platforms.
+---
+
+# Get Artist Socials
+
+Retrieve comprehensive social media profile information for an artist across all connected platforms, including profile details and post metrics.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/artist/socials
+```
+
+## Parameters
+
+| Name              | Type   | Required | Description                                                           |
+| ----------------- | ------ | -------- | --------------------------------------------------------------------- |
+| artist_account_id | string | Yes      | The unique identifier of the artist account to fetch profile data for |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/artist/socials?artist_account_id=YOUR_ARTIST_ACCOUNT_ID" \
+  -H "Content-Type: application/json"
+  # -H "Authorization: Bearer YOUR_API_KEY" # Coming soon
+```
+
+```python [Python]
+import requests
+
+def get_artist_socials(artist_account_id):
+    try:
+        url = "https://api.recoupable.com/api/artist/socials"
+        params = {
+            "artist_account_id": artist_account_id
+        }
+        headers = {
+            "Content-Type": "application/json",
+            # "Authorization": "Bearer YOUR_API_KEY"  # Coming soon
+        }
+
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()
+
+        return response.json()
+    except requests.exceptions.RequestException as error:
+        print(f"Error fetching artist socials: {error}")
+        raise
+```
+
+```javascript [JavaScript]
+async function getArtistSocials(artistAccountId) {
+  try {
+    const params = new URLSearchParams({
+      artist_account_id: artistAccountId,
+    });
+
+    const response = await fetch(
+      `https://api.recoupable.com/api/artist/socials?${params}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          // "Authorization": "Bearer YOUR_API_KEY"  // Coming soon
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching artist socials:", error);
+    throw error;
+  }
+}
+```
+
+```typescript [TypeScript]
+interface SocialProfile {
+  id: string; // UUID of the artist's account_socials record
+  social_id: string; // UUID of the artist's socials account
+  username: string; // Username on the platform
+  profile_url: string; // Direct URL to the profile
+  avatar: string | null; // URL to the profile avatar image
+  bio: string | null; // Profile biography or description
+  follower_count: number | null; // Number of followers on this platform
+  following_count: number | null; // Number of accounts followed on this platform
+  region: string | null; // Geographic region of the profile
+  updated_at: string; // ISO timestamp of when the profile was last updated
+}
+
+interface ArtistSocials {
+  id: string; // UUID of the artist
+  artist_name: string; // Name of the artist
+  socials: SocialProfile[]; // List of social media profiles
+  total_followers: number; // Sum of followers across all platforms
+  total_following: number; // Sum of following across all platforms
+  total_posts: number; // Sum of posts across all platforms
+  updated_at: string; // ISO timestamp of when the data was last updated
+}
+
+interface ArtistSocialsResponse {
+  status: string;
+  data: ArtistSocials;
+}
+
+async function getArtistSocials(
+  artistAccountId: string
+): Promise<ArtistSocialsResponse> {
+  try {
+    const params = new URLSearchParams({
+      artist_account_id: artistAccountId,
+    });
+
+    const response = await fetch(
+      `https://api.recoupable.com/api/artist/socials?${params}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          // "Authorization": "Bearer YOUR_API_KEY"  // Coming soon
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: ArtistSocialsResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching artist socials:", error);
+    throw error;
+  }
+}
+```
+
+:::
+
+## Response Format
+
+The API returns JSON responses. Here's an example success response:
+
+```json filename="Response"
+{
+  "status": "success",
+  "data": {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "artist_name": "Artist Name",
+    "socials": [
+      {
+        "id": "123e4567-e89b-12d3-a456-426614174001",
+        "social_id": "123e4567-e89b-12d3-a456-426614174005",
+        "username": "@artistname",
+        "profile_url": "https://twitter.com/artistname",
+        "avatar": "https://example.com/avatar.jpg",
+        "bio": "Official account of Artist Name",
+        "follower_count": 50000,
+        "following_count": 1000,
+        "region": "US",
+        "updated_at": "2024-03-27T12:00:00Z"
+      },
+      {
+        "id": "123e4567-e89b-12d3-a456-426614174002",
+        "social_id": "123e4567-e89b-12d3-a456-426614174006",
+        "username": "artistname",
+        "profile_url": "https://instagram.com/artistname",
+        "avatar": "https://example.com/avatar2.jpg",
+        "bio": "🎨 Artist | Creator | Innovator",
+        "follower_count": 100000,
+        "following_count": 500,
+        "region": "US",
+        "updated_at": "2024-03-27T14:30:00Z"
+      }
+    ],
+    "total_followers": 150000,
+    "total_following": 1500,
+    "total_posts": 6000,
+    "updated_at": "2024-03-27T15:00:00Z"
+  }
+}
+```
+
+## Response Properties
+
+### Response Object
+
+| Property                       | Type           | Description                                        |
+| ------------------------------ | -------------- | -------------------------------------------------- |
+| status                         | string         | Status of the request ("success" or "error")       |
+| data                           | object         | The artist's comprehensive socials information     |
+| data.id                        | string         | UUID of the artist                                 |
+| data.artist_name               | string         | Name of the artist                                 |
+| data.socials                   | array          | List of social media profiles                      |
+| data.socials[].id              | string         | UUID of the artist's `account_socials` record      |
+| data.socials[].social_id       | string         | UUID of the artist's `socials` record              |
+| data.socials[].username        | string         | Username on the platform                           |
+| data.socials[].profile_url     | string         | Direct URL to the profile                          |
+| data.socials[].avatar          | string \| null | URL to the profile avatar image                    |
+| data.socials[].bio             | string \| null | Profile biography or description                   |
+| data.socials[].follower_count  | number \| null | Number of followers on this platform               |
+| data.socials[].following_count | number \| null | Number of accounts followed on this platform       |
+| data.socials[].region          | string \| null | Geographic region of the profile                   |
+| data.socials[].updated_at      | string         | ISO timestamp of when the profile was last updated |
+| data.total_followers           | number         | Sum of followers across all platforms              |
+| data.total_following           | number         | Sum of following across all platforms              |
+| data.total_posts               | number         | Sum of posts across all platforms                  |
+| data.updated_at                | string         | ISO timestamp of when the data was last updated    |
+
+## Workflow Guide
+
+This endpoint can be used in conjunction with other endpoints for a comprehensive workflow:
+
+1. Call this endpoint to get an overview of an artist's social media presence
+2. Use the `id` values from the `socials` array to work with the **[Social Posts](/social/posts)** endpoint
+3. Use the `artist_account_id` to call the **[Artist Segments](/artist/segments)** endpoint
+
+Example workflow:
+
+```javascript
+// Step 1: Get artist's social profiles
+const socialsResponse = await getArtistSocials(
+  "123e4567-e89b-12d3-a456-426614174000"
+);
+
+// Step 2: Use a social ID to get posts for a specific social profile
+const socialId = socialsResponse.data.socials[0].social_id;
+const postsResponse = await getSocialPosts(socialId);
+
+// Step 3: Get artist's segments
+const segmentsResponse = await getArtistSegments(socialsResponse.data.id);
+
+// Step 4: Get fans for a specific segment
+const segmentId = segmentsResponse.segments[0].segment_id;
+const fansResponse = await getSegmentFans(segmentId);
+```
