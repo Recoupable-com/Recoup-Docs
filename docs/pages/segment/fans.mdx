@@ -188,13 +188,13 @@ The API returns JSON responses. Here's an example success response:
 | ---------------------- | ------ | --------------------------------------------------- |
 | status                 | string | Status of the request ("success" or "error")        |
 | fans                   | array  | List of social profiles from fans in the segment    |
-| fans[].id              | string | Unique identifier for the fan's social profile      |
+| fans[].id              | string | Unique identifier for the `fan_segments` record     |
 | fans[].username        | string | Username or handle on the platform                  |
 | fans[].avatar          | string | URL to the fan's avatar/profile image               |
 | fans[].profile_url     | string | Full URL to the fan's profile on the platform       |
-| fans[].segment_id      | string | UUID of the segment this fan belongs to             |
+| fans[].segment_id      | string | UUID of the fan's `segments` record                 |
 | fans[].segment_name    | string | Name of the segment (e.g., "Twitter Followers")     |
-| fans[].fan_social_id   | string | UUID of the fan's social media profile account      |
+| fans[].fan_social_id   | string | UUID of the fan's `socials` media profile account   |
 | fans[].region          | string | Geographic region or location of the fan            |
 | fans[].bio             | string | Fan's biography or profile description              |
 | fans[].follower_count  | number | Number of followers the fan has                     |
