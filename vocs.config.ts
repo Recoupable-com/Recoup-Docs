@@ -45,8 +45,17 @@ export default defineConfig({
           text: "Post",
           items: [
             {
-              text: "Post Comments (Coming Soon)",
+              text: "Post Comments",
               link: "/post/comments",
+            },
+          ],
+        },
+        {
+          text: "Additional Features",
+          items: [
+            {
+              text: "Image Generation",
+              link: "/image-generation",
             },
           ],
         },
@@ -68,15 +77,6 @@ export default defineConfig({
             {
               text: "Posts (Deprecated)",
               link: "/posts",
-            },
-          ],
-        },
-        {
-          text: "Additional Features",
-          items: [
-            {
-              text: "Image Generation",
-              link: "/image-generation",
             },
           ],
         },
