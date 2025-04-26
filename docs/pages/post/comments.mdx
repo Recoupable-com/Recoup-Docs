@@ -50,6 +50,19 @@ def get_post_comments(post_id: str, page: int = 1, limit: int = 20):
     except requests.exceptions.RequestException as error:
         print(f"Error fetching post comments: {error}")
         raise
+
+# Example of accessing a field on the first comment
+def print_comment_info(post_id: str):
+    response = get_post_comments(post_id)
+    if response["status"] == "success" and len(response["comments"]) > 0:
+        comment = response["comments"][0]
+        print(f"Comment by {comment['username']} ({comment['region'] or 'Unknown region'}):")
+        print(f"On post: {comment['post_url']}")
+        print(f"Bio: {comment['bio'] or 'No bio available'}")
+        print(f"Followers: {comment['follower_count'] or 0}")
+        print(f"Following: {comment['following_count'] or 0}")
+        print(f"Comment: {comment['comment']}")
+        print(f"Posted at: {comment['commented_at']}")
 ```
 
 ```javascript [JavaScript]
@@ -81,6 +94,36 @@ async function getPostComments(postId, page = 1, limit = 20) {
     throw error;
   }
 }
+
+// Example of using the comment data
+async function displayCommentInfo(postId) {
+  try {
+    const data = await getPostComments(postId);
+
+    if (data.status === "success" && data.comments.length > 0) {
+      const comments = data.comments;
+
+      // Display details about commenters
+      comments.forEach((comment) => {
+        console.log(`${comment.username} commented: "${comment.comment}"`);
+        console.log(`Profile: ${comment.profile_url}`);
+        console.log(`Post URL: ${comment.post_url}`);
+        console.log(`Followers: ${comment.follower_count || "N/A"}`);
+        console.log(`Region: ${comment.region || "Unknown"}`);
+        console.log(
+          `Posted at: ${new Date(comment.commented_at).toLocaleString()}`
+        );
+        console.log("---");
+      });
+
+      console.log(`Total comments: ${data.pagination.total_count}`);
+    } else {
+      console.log("No comments found for this post");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
 ```
 
 ```typescript [TypeScript]
@@ -90,6 +133,14 @@ interface Comment {
   social_id: string; // UUID of the social profile that made the comment
   comment: string; // Text content of the comment
   commented_at: string; // ISO timestamp of when the comment was posted
+  username: string; // Username of the commenter
+  avatar: string | null; // URL to the commenter's avatar image
+  profile_url: string; // URL to the commenter's profile
+  post_url: string; // URL to the post where the comment was made
+  region: string | null; // Geographic region of the commenter
+  bio: string | null; // Commenter's biography or description
+  follower_count: number | null; // Number of followers the commenter has
+  following_count: number | null; // Number of accounts the commenter follows
 }
 
 interface PostCommentsResponse {
@@ -123,6 +174,59 @@ async function getPostComments(
 
   return await response.json();
 }
+
+// Example of using the response with TypeScript
+async function displayCommenterStats(postId: string): Promise<void> {
+  try {
+    const { comments, pagination } = await getPostComments(postId);
+
+    // Calculate average follower count
+    const totalFollowers = comments.reduce(
+      (sum, comment) => sum + (comment.follower_count || 0),
+      0
+    );
+
+    const avgFollowers =
+      comments.length > 0 ? totalFollowers / comments.length : 0;
+
+    console.log(`Average follower count: ${avgFollowers.toFixed(0)}`);
+
+    // Extract source domains from post URLs
+    const sourceDomains = comments.map((comment) => {
+      try {
+        const url = new URL(comment.post_url);
+        return url.hostname;
+      } catch {
+        return "unknown";
+      }
+    });
+
+    // Count comments by domain
+    const commentsByDomain = sourceDomains.reduce(
+      (acc: Record<string, number>, domain) => {
+        acc[domain] = (acc[domain] || 0) + 1;
+        return acc;
+      },
+      {}
+    );
+
+    // Get comments by region
+    const commentsByRegion = comments.reduce(
+      (acc: Record<string, number>, comment) => {
+        const region = comment.region || "Unknown";
+        acc[region] = (acc[region] || 0) + 1;
+        return acc;
+      },
+      {}
+    );
+
+    console.log("Comments by source platform:", commentsByDomain);
+    console.log("Comments by region:", commentsByRegion);
+    console.log(`Total comments: ${pagination.total_count}`);
+  } catch (error) {
+    console.error("Error displaying commenter stats:", error);
+  }
+}
 ```
 
 :::
@@ -140,14 +244,30 @@ The API returns JSON responses. Here's an example success response:
       "post_id": "123e4567-e89b-12d3-a456-426614174001",
       "social_id": "123e4567-e89b-12d3-a456-426614174002",
       "comment": "Great post! Looking forward to more content.",
-      "commented_at": "2024-04-01T14:30:00Z"
+      "commented_at": "2024-04-01T14:30:00Z",
+      "username": "@superfan",
+      "avatar": "https://example.com/avatar1.jpg",
+      "profile_url": "https://twitter.com/superfan",
+      "post_url": "https://twitter.com/artistname/status/123456789",
+      "region": "US",
+      "bio": "Music lover and digital art collector",
+      "follower_count": 1234,
+      "following_count": 567
     },
     {
       "id": "123e4567-e89b-12d3-a456-426614174003",
       "post_id": "123e4567-e89b-12d3-a456-426614174001",
       "social_id": "123e4567-e89b-12d3-a456-426614174004",
       "comment": "This is amazing! 🔥",
-      "commented_at": "2024-04-01T15:15:00Z"
+      "commented_at": "2024-04-01T15:15:00Z",
+      "username": "artcollector",
+      "avatar": "https://example.com/avatar2.jpg",
+      "profile_url": "https://instagram.com/artcollector",
+      "post_url": "https://twitter.com/artistname/status/123456789",
+      "region": "UK",
+      "bio": "Supporting emerging artists 🎨",
+      "follower_count": 5678,
+      "following_count": 432
     }
   ],
   "pagination": {
@@ -163,20 +283,28 @@ The API returns JSON responses. Here's an example success response:
 
 ### Response Object
 
-| Property                | Type   | Description                                      |
-| ----------------------- | ------ | ------------------------------------------------ |
-| status                  | string | Status of the request ("success" or "error")     |
-| comments                | array  | List of comments for the specified post          |
-| comments[].id           | string | UUID of the comment record                       |
-| comments[].post_id      | string | UUID of the post this comment belongs to         |
-| comments[].social_id    | string | UUID of the social profile that made the comment |
-| comments[].comment      | string | Text content of the comment                      |
-| comments[].commented_at | string | ISO timestamp of when the comment was posted     |
-| pagination              | object | Pagination metadata for the response             |
-| pagination.total_count  | number | Total number of comments available               |
-| pagination.page         | number | Current page number                              |
-| pagination.limit        | number | Number of comments per page                      |
-| pagination.total_pages  | number | Total number of pages available                  |
+| Property                   | Type           | Description                                      |
+| -------------------------- | -------------- | ------------------------------------------------ |
+| status                     | string         | Status of the request ("success" or "error")     |
+| comments                   | array          | List of comments for the specified post          |
+| comments[].id              | string         | UUID of the comment record                       |
+| comments[].post_id         | string         | UUID of the post this comment belongs to         |
+| comments[].social_id       | string         | UUID of the social profile that made the comment |
+| comments[].comment         | string         | Text content of the comment                      |
+| comments[].commented_at    | string         | ISO timestamp of when the comment was posted     |
+| comments[].username        | string         | Username of the commenter                        |
+| comments[].avatar          | string \| null | URL to the commenter's avatar image              |
+| comments[].profile_url     | string         | URL to the commenter's profile                   |
+| comments[].post_url        | string         | URL to the post where the comment was made       |
+| comments[].region          | string \| null | Geographic region of the commenter               |
+| comments[].bio             | string \| null | Commenter's biography or description             |
+| comments[].follower_count  | number \| null | Number of followers the commenter has            |
+| comments[].following_count | number \| null | Number of accounts the commenter follows         |
+| pagination                 | object         | Pagination metadata for the response             |
+| pagination.total_count     | number         | Total number of comments available               |
+| pagination.page            | number         | Current page number                              |
+| pagination.limit           | number         | Number of comments per page                      |
+| pagination.total_pages     | number         | Total number of pages available                  |
 
 ## Workflow Guide
 

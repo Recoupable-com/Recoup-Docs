@@ -51,15 +51,6 @@ export default defineConfig({
           ],
         },
         {
-          text: "Additional Features",
-          items: [
-            {
-              text: "Image Generation",
-              link: "/image-generation",
-            },
-          ],
-        },
-        {
           text: "Legacy API (Deprecated)",
           items: [
             {
@@ -77,6 +68,15 @@ export default defineConfig({
             {
               text: "Posts (Deprecated)",
               link: "/posts",
+            },
+          ],
+        },
+        {
+          text: "Additional Features",
+          items: [
+            {
+              text: "Image Generation",
+              link: "/image-generation",
             },
           ],
         },
