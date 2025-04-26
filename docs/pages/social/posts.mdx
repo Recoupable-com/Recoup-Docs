@@ -194,7 +194,7 @@ This endpoint is part of a workflow involving the Artist Socials endpoint:
 1. First, call the **[Artist Socials](/artist/socials)** endpoint with an `artist_account_id` to retrieve social profiles
 2. From the response, select the desired `social_id` value
 3. Use that `social_id` to call this Social Posts endpoint
-4. Optionally use a post's ID to retrieve comments with the Post Comments endpoint (coming soon)
+4. Optionally use a post's ID to retrieve comments with the **[Post Comments](/post/comments)** endpoint
 
 Example workflow:
 
@@ -211,6 +211,6 @@ const socialId = socialsResponse.socials[0].social_id;
 const postsResponse = await getSocialPosts(socialId, true);
 
 // Step 4: Optionally, get comments for a specific post
-// const postId = postsResponse.posts[0].post_id;
-// const commentsResponse = await getPostComments(postId);
+const postId = postsResponse.posts[0].post_id;
+const commentsResponse = await getPostComments(postId);
 ```

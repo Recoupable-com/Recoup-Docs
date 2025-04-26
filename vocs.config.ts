@@ -45,7 +45,7 @@ export default defineConfig({
           text: "Post",
           items: [
             {
-              text: "Post Comments (Coming Soon)",
+              text: "Post Comments",
               link: "/post/comments",
             },
           ],
