@@ -96,19 +96,15 @@ interface SocialProfile {
   updated_at: string; // ISO timestamp of when the profile was last updated
 }
 
-interface ArtistSocials {
-  id: string; // UUID of the artist
-  artist_name: string; // Name of the artist
-  socials: SocialProfile[]; // List of social media profiles
-  total_followers: number; // Sum of followers across all platforms
-  total_following: number; // Sum of following across all platforms
-  total_posts: number; // Sum of posts across all platforms
-  updated_at: string; // ISO timestamp of when the data was last updated
-}
-
 interface ArtistSocialsResponse {
   status: string;
-  data: ArtistSocials;
+  socials: SocialProfile[];
+  pagination: {
+    total_count: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+  };
 }
 
 async function getArtistSocials(
@@ -151,39 +147,37 @@ The API returns JSON responses. Here's an example success response:
 ```json filename="Response"
 {
   "status": "success",
-  "data": {
-    "id": "123e4567-e89b-12d3-a456-426614174000",
-    "artist_name": "Artist Name",
-    "socials": [
-      {
-        "id": "123e4567-e89b-12d3-a456-426614174001",
-        "social_id": "123e4567-e89b-12d3-a456-426614174005",
-        "username": "@artistname",
-        "profile_url": "https://twitter.com/artistname",
-        "avatar": "https://example.com/avatar.jpg",
-        "bio": "Official account of Artist Name",
-        "follower_count": 50000,
-        "following_count": 1000,
-        "region": "US",
-        "updated_at": "2024-03-27T12:00:00Z"
-      },
-      {
-        "id": "123e4567-e89b-12d3-a456-426614174002",
-        "social_id": "123e4567-e89b-12d3-a456-426614174006",
-        "username": "artistname",
-        "profile_url": "https://instagram.com/artistname",
-        "avatar": "https://example.com/avatar2.jpg",
-        "bio": "🎨 Artist | Creator | Innovator",
-        "follower_count": 100000,
-        "following_count": 500,
-        "region": "US",
-        "updated_at": "2024-03-27T14:30:00Z"
-      }
-    ],
-    "total_followers": 150000,
-    "total_following": 1500,
-    "total_posts": 6000,
-    "updated_at": "2024-03-27T15:00:00Z"
+  "socials": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174001",
+      "social_id": "123e4567-e89b-12d3-a456-426614174005",
+      "username": "@artistname",
+      "profile_url": "https://twitter.com/artistname",
+      "avatar": "https://example.com/avatar.jpg",
+      "bio": "Official account of Artist Name",
+      "follower_count": 50000,
+      "following_count": 1000,
+      "region": "US",
+      "updated_at": "2024-03-27T12:00:00Z"
+    },
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174002",
+      "social_id": "123e4567-e89b-12d3-a456-426614174006",
+      "username": "artistname",
+      "profile_url": "https://instagram.com/artistname",
+      "avatar": "https://example.com/avatar2.jpg",
+      "bio": "🎨 Artist | Creator | Innovator",
+      "follower_count": 100000,
+      "following_count": 500,
+      "region": "US",
+      "updated_at": "2024-03-27T14:30:00Z"
+    }
+  ],
+  "pagination": {
+    "total_count": 2,
+    "page": 1,
+    "limit": 20,
+    "total_pages": 1
   }
 }
 ```
@@ -192,27 +186,25 @@ The API returns JSON responses. Here's an example success response:
 
 ### Response Object
 
-| Property                       | Type           | Description                                        |
-| ------------------------------ | -------------- | -------------------------------------------------- |
-| status                         | string         | Status of the request ("success" or "error")       |
-| data                           | object         | The artist's comprehensive socials information     |
-| data.id                        | string         | UUID of the artist's `accounts` record             |
-| data.artist_name               | string         | Name of the artist                                 |
-| data.socials                   | array          | List of social media profiles                      |
-| data.socials[].id              | string         | UUID of the artist's `account_socials` record      |
-| data.socials[].social_id       | string         | UUID of the artist's `socials` record              |
-| data.socials[].username        | string         | Username on the platform                           |
-| data.socials[].profile_url     | string         | Direct URL to the profile                          |
-| data.socials[].avatar          | string \| null | URL to the profile avatar image                    |
-| data.socials[].bio             | string \| null | Profile biography or description                   |
-| data.socials[].follower_count  | number \| null | Number of followers on this platform               |
-| data.socials[].following_count | number \| null | Number of accounts followed on this platform       |
-| data.socials[].region          | string \| null | Geographic region of the profile                   |
-| data.socials[].updated_at      | string         | ISO timestamp of when the profile was last updated |
-| data.total_followers           | number         | Sum of followers across all platforms              |
-| data.total_following           | number         | Sum of following across all platforms              |
-| data.total_posts               | number         | Sum of posts across all platforms                  |
-| data.updated_at                | string         | ISO timestamp of when the data was last updated    |
+| Property                  | Type           | Description                                        |
+| ------------------------- | -------------- | -------------------------------------------------- |
+| status                    | string         | Status of the request ("success" or "error")       |
+| socials                   | array          | List of social media profiles                      |
+| socials[].id              | string         | UUID of the artist's `account_socials` record      |
+| socials[].social_id       | string         | UUID of the artist's `socials` record              |
+| socials[].username        | string         | Username on the platform                           |
+| socials[].profile_url     | string         | Direct URL to the profile                          |
+| socials[].avatar          | string \| null | URL to the profile avatar image                    |
+| socials[].bio             | string \| null | Profile biography or description                   |
+| socials[].follower_count  | number \| null | Number of followers on this platform               |
+| socials[].following_count | number \| null | Number of accounts followed on this platform       |
+| socials[].region          | string \| null | Geographic region of the profile                   |
+| socials[].updated_at      | string         | ISO timestamp of when the profile was last updated |
+| pagination                | object         | Pagination metadata for the response               |
+| pagination.total_count    | number         | Total number of social profiles available          |
+| pagination.page           | number         | Current page number                                |
+| pagination.limit          | number         | Number of social profiles per page                 |
+| pagination.total_pages    | number         | Total number of pages available                    |
 
 ## Workflow Guide
 
@@ -231,11 +223,13 @@ const socialsResponse = await getArtistSocials(
 );
 
 // Step 2: Use a social ID to get posts for a specific social profile
-const socialId = socialsResponse.data.socials[0].social_id;
+const socialId = socialsResponse.socials[0].social_id;
 const postsResponse = await getSocialPosts(socialId);
 
 // Step 3: Get artist's segments
-const segmentsResponse = await getArtistSegments(socialsResponse.data.id);
+const segmentsResponse = await getArtistSegments(
+  "123e4567-e89b-12d3-a456-426614174000"
+);
 
 // Step 4: Get fans for a specific segment
 const segmentId = segmentsResponse.segments[0].segment_id;
