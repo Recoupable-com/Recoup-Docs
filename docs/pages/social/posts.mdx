@@ -1,0 +1,216 @@
+---
+title: Get Social Posts
+description: API endpoint to retrieve social media posts from a specific social profile.
+---
+
+# Get Social Posts
+
+Retrieve all social media posts from a specific social profile. This endpoint should be called after obtaining social IDs from the **[Artist Socials Endpoint](/artist/socials)**.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/social/posts
+```
+
+## Parameters
+
+| Name        | Type    | Required | Description                                                    |
+| ----------- | ------- | -------- | -------------------------------------------------------------- |
+| social_id   | string  | Yes      | The unique identifier of the social profile to fetch posts for |
+| latestFirst | boolean | No       | Sort posts by most recent first (default: true)                |
+| page        | number  | No       | The page number to retrieve (default: 1)                       |
+| limit       | number  | No       | The number of records per page (default: 20, max: 100)         |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/social/posts?social_id=YOUR_SOCIAL_ID&latestFirst=true&page=1&limit=20" \
+  -H "Content-Type: application/json"
+```
+
+```python [Python]
+import requests
+
+def get_social_posts(social_id: str, latest_first: bool = True, page: int = 1, limit: int = 20):
+    try:
+        url = "https://api.recoupable.com/api/social/posts"
+        params = {
+            "social_id": social_id,
+            "latestFirst": latest_first,
+            "page": page,
+            "limit": limit
+        }
+        headers = {"Content-Type": "application/json"}
+
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()
+
+        return response.json()
+    except requests.exceptions.RequestException as error:
+        print(f"Error fetching social posts: {error}")
+        raise
+```
+
+```javascript [JavaScript]
+async function getSocialPosts(
+  socialId,
+  latestFirst = true,
+  page = 1,
+  limit = 20
+) {
+  try {
+    const params = new URLSearchParams({
+      social_id: socialId,
+      latestFirst: latestFirst.toString(),
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    const response = await fetch(
+      `https://api.recoupable.com/api/social/posts?${params}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching social posts:", error);
+    throw error;
+  }
+}
+```
+
+```typescript [TypeScript]
+interface Post {
+  id: string; // UUID of the social's social_posts record
+  post_id: string; // UUID of the social's posts record
+  social_id: string; // UUID of the social's socials record
+  post_url: string; // Direct URL to the post on the platform
+  updated_at: string; // ISO timestamp of when the post data was last updated
+}
+
+interface SocialPostsResponse {
+  status: string;
+  posts: Post[];
+  pagination: {
+    total_count: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+  };
+}
+
+async function getSocialPosts(
+  socialId: string,
+  latestFirst: boolean = true,
+  page: number = 1,
+  limit: number = 20
+): Promise<SocialPostsResponse> {
+  const response = await fetch(
+    `https://api.recoupable.com/api/social/posts?social_id=${socialId}&latestFirst=${latestFirst}&page=${page}&limit=${limit}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return await response.json();
+}
+```
+
+:::
+
+## Response Format
+
+The API returns JSON responses. Here's an example success response:
+
+```json filename="Response"
+{
+  "status": "success",
+  "posts": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "post_id": "123e4567-e89b-12d3-a456-426614174001",
+      "social_id": "123e4567-e89b-12d3-a456-426614174002",
+      "post_url": "https://twitter.com/artistname/status/123456789",
+      "updated_at": "2024-04-01T15:33:27Z"
+    },
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174003",
+      "post_id": "123e4567-e89b-12d3-a456-426614174004",
+      "social_id": "123e4567-e89b-12d3-a456-426614174002",
+      "post_url": "https://twitter.com/artistname/status/123456790",
+      "updated_at": "2024-03-30T20:15:45Z"
+    }
+  ],
+  "pagination": {
+    "total_count": 42,
+    "page": 1,
+    "limit": 20,
+    "total_pages": 3
+  }
+}
+```
+
+## Response Properties
+
+### Response Object
+
+| Property               | Type   | Description                                          |
+| ---------------------- | ------ | ---------------------------------------------------- |
+| status                 | string | Status of the request ("success" or "error")         |
+| posts                  | array  | List of social media posts                           |
+| posts[].id             | string | UUID of the social's `social_posts` record           |
+| posts[].post_id        | string | UUID of the social's `posts` record                  |
+| posts[].social_id      | string | UUID of the social's `socials` record                |
+| posts[].post_url       | string | Direct URL to the post on the platform               |
+| posts[].updated_at     | string | ISO timestamp of when the post data was last updated |
+| pagination             | object | Pagination metadata for the response                 |
+| pagination.total_count | number | Total number of posts available                      |
+| pagination.page        | number | Current page number                                  |
+| pagination.limit       | number | Number of posts per page                             |
+| pagination.total_pages | number | Total number of pages available                      |
+
+## Workflow Guide
+
+This endpoint is part of a workflow involving the Artist Socials endpoint:
+
+1. First, call the **[Artist Socials](/artist/socials)** endpoint with an `artist_account_id` to retrieve social profiles
+2. From the response, select the desired `social_id` value
+3. Use that `social_id` to call this Social Posts endpoint
+4. Optionally use a post's ID to retrieve comments with the Post Comments endpoint (coming soon)
+
+Example workflow:
+
+```javascript
+// Step 1: Get all social profiles for an artist
+const socialsResponse = await getArtistSocials(
+  "123e4567-e89b-12d3-a456-426614174000"
+);
+
+// Step 2: Select a social profile to get posts from
+const socialId = socialsResponse.socials[0].social_id;
+
+// Step 3: Get posts for the selected social profile
+const postsResponse = await getSocialPosts(socialId, true);
+
+// Step 4: Optionally, get comments for a specific post
+// const postId = postsResponse.posts[0].post_id;
+// const commentsResponse = await getPostComments(postId);
+```

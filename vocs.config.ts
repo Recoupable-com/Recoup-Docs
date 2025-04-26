@@ -27,7 +27,7 @@ export default defineConfig({
           text: "Social",
           items: [
             {
-              text: "Social Posts (Coming Soon)",
+              text: "Social Posts",
               link: "/social/posts",
             },
           ],
