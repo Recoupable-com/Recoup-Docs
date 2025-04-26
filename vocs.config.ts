@@ -14,8 +14,8 @@ export default defineConfig({
           text: "Artist",
           items: [
             {
-              text: "Artist Profile",
-              link: "/artist-profile",
+              text: "Artist Socials",
+              link: "/artist/socials",
             },
             {
               text: "Artist Segments",
@@ -53,6 +53,10 @@ export default defineConfig({
         {
           text: "Legacy API (Deprecated)",
           items: [
+            {
+              text: "Artist Profile (Deprecated)",
+              link: "/artist-profile",
+            },
             {
               text: "Comments (Deprecated)",
               link: "/comments",
