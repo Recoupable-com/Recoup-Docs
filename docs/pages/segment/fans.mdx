@@ -91,6 +91,7 @@ interface Fan {
   profile_url: string; // Full URL to the fan's profile on the platform
   segment_id: string; // UUID of the segment this fan belongs to
   segment_name: string; // Name of the segment (e.g., "Twitter Followers")
+  fan_social_id: string; // UUID of the fan's social profile
   region: string; // Geographic region or location of the fan
   bio: string; // Fan's biography or profile description
   follower_count: number; // Number of followers the fan has
@@ -148,6 +149,7 @@ The API returns JSON responses. Here's an example success response:
       "profile_url": "https://twitter.com/superfan",
       "segment_id": "123e4567-e89b-12d3-a456-426614174002",
       "segment_name": "Twitter Followers",
+      "fan_social_id": "123e4567-e89b-12d3-a456-426614174005",
       "region": "US",
       "bio": "Music lover and digital art collector",
       "follower_count": 1234,
@@ -161,6 +163,7 @@ The API returns JSON responses. Here's an example success response:
       "profile_url": "https://instagram.com/artcollector",
       "segment_id": "123e4567-e89b-12d3-a456-426614174002",
       "segment_name": "Twitter Followers",
+      "fan_social_id": "123e4567-e89b-12d3-a456-426614174006",
       "region": "UK",
       "bio": "Supporting emerging artists 🎨",
       "follower_count": 5678,
@@ -191,6 +194,7 @@ The API returns JSON responses. Here's an example success response:
 | fans[].profile_url     | string | Full URL to the fan's profile on the platform       |
 | fans[].segment_id      | string | UUID of the segment this fan belongs to             |
 | fans[].segment_name    | string | Name of the segment (e.g., "Twitter Followers")     |
+| fans[].fan_social_id   | string | UUID of the fan's social media profile account      |
 | fans[].region          | string | Geographic region or location of the fan            |
 | fans[].bio             | string | Fan's biography or profile description              |
 | fans[].follower_count  | number | Number of followers the fan has                     |
