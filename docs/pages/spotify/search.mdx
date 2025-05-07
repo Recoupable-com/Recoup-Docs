@@ -1,0 +1,165 @@
+---
+title: Spotify Search API
+description: Search for artists, albums, tracks, and playlists using the Spotify API.
+---
+
+# Spotify Search API
+
+Search for artists, albums, tracks, and playlists using the Spotify API. This endpoint is a proxy to the official [Spotify Search API](https://developer.spotify.com/documentation/web-api/reference/search).
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/spotify/search
+```
+
+## Parameters
+
+| Name   | Type   | Required | Description                                                                |
+| ------ | ------ | -------- | -------------------------------------------------------------------------- |
+| q      | string | Yes      | The search query keywords and optional field filters.                      |
+| type   | string | Yes      | A comma-separated list of item types to search across: album, artist, etc. |
+| market | string | No       | An ISO 3166-1 alpha-2 country code or "from_token".                        |
+| limit  | int    | No       | Maximum number of results to return (default: 20, min: 1, max: 50).        |
+| offset | int    | No       | The index of the first result to return (default: 0, max: 10,000).         |
+
+**Supported types:** `album`, `artist`, `playlist`, `track`, `show`, `episode`, `audiobook`
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/spotify/search?q=radiohead&type=artist" \
+  -H "Content-Type: application/json"
+```
+
+```python [Python]
+import requests
+
+def search_spotify(q, type_, market=None, limit=20, offset=0):
+    url = "https://api.recoupable.com/api/spotify/search"
+    params = {"q": q, "type": type_}
+    if market:
+        params["market"] = market
+    if limit:
+        params["limit"] = limit
+    if offset:
+        params["offset"] = offset
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+# search_spotify("radiohead", "artist")
+```
+
+```javascript [JavaScript]
+async function searchSpotify(q, type, market, limit = 20, offset = 0) {
+  const params = new URLSearchParams({ q, type });
+  if (market) params.append("market", market);
+  if (limit) params.append("limit", limit.toString());
+  if (offset) params.append("offset", offset.toString());
+  const response = await fetch(
+    `https://api.recoupable.com/api/spotify/search?${params}`,
+    { headers: { "Content-Type": "application/json" } }
+  );
+  if (!response.ok) throw new Error("Spotify search failed");
+  return await response.json();
+}
+```
+
+```typescript [TypeScript]
+interface SpotifyArtist {
+  id: string;
+  name: string;
+  type: string;
+  uri: string;
+  external_urls: { spotify: string };
+  images?: { url: string; height: number; width: number }[];
+}
+
+interface SpotifySearchResponse {
+  artists?: {
+    items: SpotifyArtist[];
+    total: number;
+    limit: number;
+    offset: number;
+    href: string;
+    next?: string;
+    previous?: string;
+  };
+  // ... similar for albums, tracks, playlists, etc.
+}
+
+// Example usage:
+// const data = await searchSpotify("radiohead", "artist");
+```
+
+:::
+
+## Example Response
+
+```json filename="Response"
+{
+  "artists": {
+    "href": "https://api.spotify.com/v1/search?query=radiohead&type=artist&offset=0&limit=2",
+    "items": [
+      {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/artist/4Z8W4fKeB5YxbusRsdQVPb"
+        },
+        "followers": { "href": null, "total": 5000000 },
+        "genres": ["alternative rock", "rock"],
+        "id": "4Z8W4fKeB5YxbusRsdQVPb",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
+            "height": 300,
+            "width": 300
+          }
+        ],
+        "name": "Radiohead",
+        "popularity": 85,
+        "type": "artist",
+        "uri": "spotify:artist:4Z8W4fKeB5YxbusRsdQVPb"
+      }
+    ],
+    "limit": 2,
+    "next": "https://api.spotify.com/v1/search?query=radiohead&type=artist&offset=2&limit=2",
+    "offset": 0,
+    "previous": null,
+    "total": 1
+  }
+}
+```
+
+## Response Properties
+
+| Property                      | Type   | Description                                          |
+| ----------------------------- | ------ | ---------------------------------------------------- |
+| artists                       | object | Search results for artists (if type includes artist) |
+| artists.items                 | array  | List of artist objects                               |
+| artists.items[].id            | string | Spotify artist ID                                    |
+| artists.items[].name          | string | Artist name                                          |
+| artists.items[].type          | string | Always "artist"                                      |
+| artists.items[].uri           | string | Spotify URI for the artist                           |
+| artists.items[].external_urls | object | External URLs, including Spotify web link            |
+| artists.items[].images        | array  | Array of image objects (url, height, width)          |
+| artists.items[].popularity    | int    | Popularity score (0-100)                             |
+| artists.items[].genres        | array  | List of genres                                       |
+| artists.items[].followers     | object | Follower info (total, href)                          |
+| artists.limit                 | int    | Max results returned                                 |
+| artists.offset                | int    | Index of first result                                |
+| artists.total                 | int    | Total number of results                              |
+| artists.next                  | string | URL to next page of results (if any)                 |
+| artists.previous              | string | URL to previous page of results (if any)             |
+
+_See the [Spotify Search API Reference](https://developer.spotify.com/documentation/web-api/reference/search) for full details on all item types and fields._
+
+## Notes
+
+- This endpoint requires a valid Spotify access token (handled by the Recoup API backend).
+- You can search for multiple types at once (e.g., `type=artist,album`).
+- Results are paginated; use `limit` and `offset` for navigation.
+- For more details, see the [official Spotify Search API documentation](https://developer.spotify.com/documentation/web-api/reference/search).

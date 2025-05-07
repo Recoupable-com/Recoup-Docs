@@ -30,6 +30,10 @@ export default defineConfig({
               text: "Social Posts",
               link: "/social/posts",
             },
+            {
+              text: "Spotify Search API",
+              link: "/spotify/search",
+            },
           ],
         },
         {
@@ -51,6 +55,15 @@ export default defineConfig({
           ],
         },
         {
+          text: "Additional Features",
+          items: [
+            {
+              text: "Image Generation",
+              link: "/image-generation",
+            },
+          ],
+        },
+        {
           text: "Legacy API (Deprecated)",
           items: [
             {
@@ -68,15 +81,6 @@ export default defineConfig({
             {
               text: "Posts (Deprecated)",
               link: "/posts",
-            },
-          ],
-        },
-        {
-          text: "Additional Features",
-          items: [
-            {
-              text: "Image Generation",
-              link: "/image-generation",
             },
           ],
         },
