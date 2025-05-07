@@ -102,7 +102,6 @@ interface SpotifySearchResponse {
 
 ```json filename="Response"
 {
-  "status": "success",
   "artists": {
     "href": "https://api.spotify.com/v1/search?query=radiohead&type=artist&offset=0&limit=2",
     "items": [
@@ -131,12 +130,6 @@ interface SpotifySearchResponse {
     "offset": 0,
     "previous": null,
     "total": 1
-  },
-  "pagination": {
-    "total_count": 1,
-    "page": 1,
-    "limit": 2,
-    "total_pages": 1
   }
 }
 ```
@@ -145,7 +138,6 @@ interface SpotifySearchResponse {
 
 | Property                      | Type   | Description                                          |
 | ----------------------------- | ------ | ---------------------------------------------------- |
-| status                        | string | Status of the request ("success" or "error")         |
 | artists                       | object | Search results for artists (if type includes artist) |
 | artists.items                 | array  | List of artist objects                               |
 | artists.items[].id            | string | Spotify artist ID                                    |
@@ -162,11 +154,6 @@ interface SpotifySearchResponse {
 | artists.total                 | int    | Total number of results                              |
 | artists.next                  | string | URL to next page of results (if any)                 |
 | artists.previous              | string | URL to previous page of results (if any)             |
-| pagination                    | object | Pagination metadata for the response                 |
-| pagination.total_count        | int    | Total number of results (from Spotify's total)       |
-| pagination.page               | int    | Current page number (calculated from offset/limit)   |
-| pagination.limit              | int    | Number of results per page                           |
-| pagination.total_pages        | int    | Total number of pages (calculated)                   |
 
 _See the [Spotify Search API Reference](https://developer.spotify.com/documentation/web-api/reference/search) for full details on all item types and fields._
 
