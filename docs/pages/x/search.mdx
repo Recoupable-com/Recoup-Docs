@@ -129,6 +129,49 @@ interface TwitterSearchResponse {
       "urls": [],
       "permanentUrl": "https://twitter.com/sweetman_eth/status/1922396246674710840",
       "hashtags": []
+    },
+    {
+      "id": "1922358171726729721",
+      "text": "studying @duodomusica  \nwith the new attachments \nimages x deep artist research on @base https://t.co/lrtKU8rwsy",
+      "username": "sweetman_eth",
+      "timestamp": 1747160878000,
+      "createdAt": "2025-05-13T18:27:58.000Z",
+      "isReply": false,
+      "isRetweet": false,
+      "likes": 3,
+      "retweetCount": 1,
+      "replies": 2,
+      "photos": [
+        {
+          "id": "1922358115304960001",
+          "url": "https://pbs.twimg.com/media/Gq2WhVHXcAEid6E.jpg"
+        }
+      ],
+      "videos": [],
+      "urls": [],
+      "permanentUrl": "https://twitter.com/sweetman_eth/status/1922358171726729721",
+      "hashtags": []
+    },
+    {
+      "id": "1922310206895120515",
+      "text": "@BlackDave Looks like she used them for ticketing\n\nScreenshot from sza IG story shows link to tickets on itm\n\nhttps://t.co/VZi1v44Qem",
+      "username": "sweetman_eth",
+      "timestamp": 1747149442000,
+      "createdAt": "2025-05-13T15:17:22.000Z",
+      "isReply": true,
+      "isRetweet": false,
+      "likes": 0,
+      "retweetCount": 0,
+      "replies": 1,
+      "photos": [],
+      "videos": [],
+      "urls": [
+        "https://x.com/itmstudio/status/1921093688626704718?t=8PbP1GbmeR35dDMZsZijuA&s=19"
+      ],
+      "permanentUrl": "https://twitter.com/sweetman_eth/status/1922310206895120515",
+      "quotedStatusId": "1921093688626704718",
+      "inReplyToStatusId": "1922104626435821711",
+      "hashtags": []
     }
   ]
 }
@@ -154,6 +197,7 @@ interface TwitterSearchResponse {
 | tweets[].videos            | array   | Array of video objects (id, preview, url)           |
 | tweets[].urls              | array   | Array of URLs included in the tweet                 |
 | tweets[].permanentUrl      | string  | Permanent URL to the tweet                          |
+| tweets[].quotedStatusId    | string? | ID of the quoted tweet (if applicable)              |
 | tweets[].inReplyToStatusId | string? | ID of the tweet this is replying to (if applicable) |
 | tweets[].hashtags          | array   | Array of hashtags in the tweet                      |
 
