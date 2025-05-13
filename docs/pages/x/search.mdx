@@ -15,13 +15,13 @@ GET https://api.recoupable.com/api/x/search
 
 ## Parameters
 
-| Name       | Type   | Required | Description                                                                                      |
-| ---------- | ------ | -------- | ------------------------------------------------------------------------------------------------ |
-| query      | string | Yes      | The search query. Any Twitter-compatible query format can be used.                               |
-| maxTweets  | int    | Yes      | The maximum number of tweets to return.                                                          |
-| searchMode | string | No       | The category filter to apply to the search. One of `Top`, `Latest`, `People`. Defaults to `Top`. |
+| Name       | Type   | Required | Description                                                                                                            |
+| ---------- | ------ | -------- | ---------------------------------------------------------------------------------------------------------------------- |
+| query      | string | Yes      | The search query. Any Twitter-compatible query format can be used.                                                     |
+| maxTweets  | int    | Yes      | The maximum number of tweets to return.                                                                                |
+| searchMode | string | No       | The category filter to apply to the search. One of `Top`, `Latest`, `Photos`, `Videos`, `Users`. Defaults to `Latest`. |
 
-**Supported searchMode values:** `Top`, `Latest`, `People`
+**Supported searchMode values:** `Top`, `Latest`, `Photos`, `Videos`, `Users`
 
 ## Request Examples
 
