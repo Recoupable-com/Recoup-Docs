@@ -37,6 +37,15 @@ export default defineConfig({
           ],
         },
         {
+          text: "X / Twitter",
+          items: [
+            {
+              text: "Twitter Search Tweets",
+              link: "/social/twitter-search",
+            },
+          ],
+        },
+        {
           text: "Segment",
           items: [
             {
