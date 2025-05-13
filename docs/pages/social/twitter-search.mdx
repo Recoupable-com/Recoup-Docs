@@ -1,0 +1,172 @@
+---
+title: Twitter Search Tweets API
+description: Search for recent tweets using the Twitter Search API (via agent-twitter-client, no API key required).
+---
+
+# Twitter Search Tweets API
+
+Search for recent tweets using the Twitter Search API, powered by [agent-twitter-client](https://github.com/elizaOS/agent-twitter-client) (no Twitter API key required).
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/twitter/search
+```
+
+## Parameters
+
+| Name  | Type   | Required | Description                                                     |
+| ----- | ------ | -------- | --------------------------------------------------------------- |
+| query | string | Yes      | The search query (hashtag, keyword, or phrase).                 |
+| mode  | string | No       | Search mode: `Latest`, `Top`, or `People` (default: `Latest`).  |
+| limit | int    | No       | Max number of tweets to return (default: 20, min: 1, max: 100). |
+| lang  | string | No       | Language code (e.g., `en`, `es`).                               |
+
+**Supported modes:** `Latest`, `Top`, `People`
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/twitter/search?query=%23nodejs&mode=Latest&limit=10" \
+  -H "Content-Type: application/json"
+```
+
+```python [Python]
+import requests
+
+def search_twitter(query, mode="Latest", limit=20, lang=None):
+    url = "https://api.recoupable.com/api/twitter/search"
+    params = {"query": query, "mode": mode, "limit": limit}
+    if lang:
+        params["lang"] = lang
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+# search_twitter("#nodejs", mode="Latest", limit=10)
+```
+
+```javascript [JavaScript]
+async function searchTwitter(query, mode = "Latest", limit = 20, lang) {
+  const params = new URLSearchParams({ query, mode, limit: limit.toString() });
+  if (lang) params.append("lang", lang);
+  const response = await fetch(
+    `https://api.recoupable.com/api/twitter/search?${params}`,
+    { headers: { "Content-Type": "application/json" } }
+  );
+  if (!response.ok) throw new Error("Twitter search failed");
+  return await response.json();
+}
+```
+
+```typescript [TypeScript]
+interface TwitterUser {
+  id: string;
+  username: string;
+  displayName: string;
+  profileImageUrl: string;
+  verified: boolean;
+}
+
+interface Tweet {
+  id: string;
+  text: string;
+  createdAt: string;
+  url: string;
+  user: TwitterUser;
+  likeCount: number;
+  retweetCount: number;
+  replyCount: number;
+  quoteCount: number;
+  media?: any[];
+}
+
+interface TwitterSearchResponse {
+  status: string;
+  tweets: Tweet[];
+  pagination: {
+    total_count: number;
+    limit: number;
+  };
+}
+
+// Example usage:
+// const data = await searchTwitter("#nodejs", "Latest", 10);
+```
+
+:::
+
+## Example Response
+
+```json filename="Response"
+{
+  "status": "success",
+  "tweets": [
+    {
+      "id": "1781234567890123456",
+      "text": "Node.js 20 is out! 🚀 #nodejs",
+      "createdAt": "2024-06-01T12:34:56Z",
+      "url": "https://twitter.com/user/status/1781234567890123456",
+      "user": {
+        "id": "123456",
+        "username": "devguy",
+        "displayName": "Dev Guy",
+        "profileImageUrl": "https://pbs.twimg.com/profile_images/1234567890/abc.jpg",
+        "verified": true
+      },
+      "likeCount": 120,
+      "retweetCount": 30,
+      "replyCount": 5,
+      "quoteCount": 2,
+      "media": []
+    }
+  ],
+  "pagination": {
+    "total_count": 1,
+    "limit": 10
+  }
+}
+```
+
+## Response Properties
+
+| Property                      | Type    | Description                                  |
+| ----------------------------- | ------- | -------------------------------------------- |
+| status                        | string  | Status of the request ("success" or "error") |
+| tweets                        | array   | List of tweet objects                        |
+| tweets[].id                   | string  | Tweet ID                                     |
+| tweets[].text                 | string  | Tweet text content                           |
+| tweets[].createdAt            | string  | ISO timestamp of when the tweet was posted   |
+| tweets[].url                  | string  | Direct URL to the tweet                      |
+| tweets[].user                 | object  | Author information                           |
+| tweets[].user.id              | string  | Twitter user ID                              |
+| tweets[].user.username        | string  | Twitter handle                               |
+| tweets[].user.displayName     | string  | Display name                                 |
+| tweets[].user.profileImageUrl | string  | Profile image URL                            |
+| tweets[].user.verified        | boolean | Whether the user is verified                 |
+| tweets[].likeCount            | number  | Number of likes                              |
+| tweets[].retweetCount         | number  | Number of retweets                           |
+| tweets[].replyCount           | number  | Number of replies                            |
+| tweets[].quoteCount           | number  | Number of quote tweets                       |
+| tweets[].media                | array   | Media objects (if any)                       |
+| pagination                    | object  | Pagination metadata                          |
+| pagination.total_count        | number  | Total number of tweets returned              |
+| pagination.limit              | number  | Max results per request                      |
+
+## Workflow Guide
+
+This endpoint is typically used as part of a workflow to:
+
+1. Search for recent tweets matching a hashtag, keyword, or phrase
+2. Display tweet results with author and engagement info
+3. Optionally, use tweet IDs to fetch more details or replies
+
+## Notes
+
+- This endpoint uses [agent-twitter-client](https://github.com/elizaOS/agent-twitter-client) and does **not** require a Twitter API key.
+- Rate limits may apply (see [agent-twitter-client docs](https://github.com/elizaOS/agent-twitter-client)).
+- Results are real-time but may be subject to unofficial API limitations.
+- For advanced options, see the [agent-twitter-client documentation](https://github.com/elizaOS/agent-twitter-client).
