@@ -41,7 +41,7 @@ export default defineConfig({
           items: [
             {
               text: "Twitter Search Tweets",
-              link: "/social/twitter-search",
+              link: "/x/search",
             },
           ],
         },
