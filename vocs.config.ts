@@ -47,6 +47,10 @@ export default defineConfig({
               text: "Get User Tweets",
               link: "/x/get-tweets",
             },
+            {
+              text: "Get Trends",
+              link: "/x/trends",
+            },
           ],
         },
         {
