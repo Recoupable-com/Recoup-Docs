@@ -40,8 +40,12 @@ export default defineConfig({
           text: "X / Twitter",
           items: [
             {
-              text: "Twitter Search Tweets",
+              text: "Search",
               link: "/x/search",
+            },
+            {
+              text: "Get User Tweets",
+              link: "/x/get-tweets",
             },
           ],
         },
