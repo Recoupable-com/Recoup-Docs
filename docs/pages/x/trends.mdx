@@ -1,0 +1,92 @@
+---
+title: Twitter Get Trends API
+description: Retrieve the current trending topics from Twitter using the getTrends method (via agent-twitter-client, no API key required).
+---
+
+# Twitter Get Trends API
+
+Retrieve the current trending topics from Twitter using the `getTrends` method from [agent-twitter-client](https://github.com/elizaOS/agent-twitter-client) (no Twitter API key required).
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/x/trends
+```
+
+## Parameters
+
+This endpoint does not require any parameters.
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/x/trends" \
+  -H "Content-Type: application/json"
+```
+
+```python [Python]
+import requests
+
+def get_trends():
+    url = "https://api.recoupable.com/api/x/trends"
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+# get_trends()
+```
+
+```javascript [JavaScript]
+async function getTrends() {
+  const response = await fetch("https://api.recoupable.com/api/x/trends", {
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!response.ok) throw new Error("Twitter getTrends failed");
+  return await response.json();
+}
+```
+
+```typescript [TypeScript]
+interface TwitterTrendsResponse {
+  status: string;
+  trends: string[];
+}
+
+// Example usage:
+// const data = await getTrends();
+```
+
+:::
+
+## Example Response
+
+```json filename="Response"
+{
+  "status": "success",
+  "trends": ["#OpenAI", "#AI", "#NodeJS", "#ElonMusk", "#SpaceX"]
+}
+```
+
+## Response Properties
+
+| Property | Type     | Description                                  |
+| -------- | -------- | -------------------------------------------- |
+| status   | string   | Status of the request ("success" or "error") |
+| trends   | string[] | List of current trending topics on Twitter   |
+
+## Workflow Guide
+
+This endpoint is typically used as part of a workflow to:
+
+1. Retrieve the current trending topics on Twitter
+2. Display the list of trends to users or use them as search queries
+
+## Notes
+
+- This endpoint uses the `getTrends` method from [agent-twitter-client](https://github.com/elizaOS/agent-twitter-client) and does **not** require a Twitter API key.
+- Rate limits may apply (see [agent-twitter-client docs](https://github.com/elizaOS/agent-twitter-client)).
+- Results are real-time but may be subject to unofficial API limitations.
+- For advanced options, see the [agent-twitter-client documentation](https://github.com/elizaOS/agent-twitter-client).
