@@ -18,7 +18,7 @@ GET https://api.recoupable.com/api/x/tweets
 | Name      | Type   | Required | Description                                                      |
 | --------- | ------ | -------- | ---------------------------------------------------------------- |
 | user      | string | Yes      | The Twitter username or user ID whose tweets should be returned. |
-| maxTweets | int    | No       | The maximum number of tweets to return. Defaults to `200`.       |
+| maxTweets | int    | No       | The maximum number of tweets to return. Defaults to `1000`.      |
 
 ## Request Examples
 
@@ -32,7 +32,7 @@ curl -X GET "https://api.recoupable.com/api/x/get-tweets?user=elonmusk&maxTweets
 ```python [Python]
 import requests
 
-def get_user_tweets(user, maxTweets=200):
+def get_user_tweets(user, maxTweets=1000):
     url = "https://api.recoupable.com/api/x/get-tweets"
     params = {"user": user}
     if maxTweets is not None:
@@ -46,7 +46,7 @@ def get_user_tweets(user, maxTweets=200):
 ```
 
 ```javascript [JavaScript]
-async function getUserTweets(user, maxTweets = 200) {
+async function getUserTweets(user, maxTweets = 1000) {
   const params = new URLSearchParams({ user });
   if (maxTweets !== undefined) params.append("maxTweets", maxTweets.toString());
   const response = await fetch(
@@ -163,7 +163,7 @@ This endpoint is typically used as part of a workflow to:
 ## Notes
 
 - This endpoint uses the `getTweets` method from [agent-twitter-client](https://github.com/elizaOS/agent-twitter-client) and does **not** require a Twitter API key.
-- The `maxTweets` parameter defaults to 200 if not provided.
+- The `maxTweets` parameter defaults to 1000 if not provided.
 - Rate limits may apply (see [agent-twitter-client docs](https://github.com/elizaOS/agent-twitter-client)).
 - Results are real-time but may be subject to unofficial API limitations.
 - For advanced options, see the [agent-twitter-client documentation](https://github.com/elizaOS/agent-twitter-client).
