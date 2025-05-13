@@ -108,55 +108,54 @@ interface TwitterSearchResponse {
   "status": "success",
   "tweets": [
     {
-      "id": "1781234567890123456",
-      "text": "Node.js 20 is out! 🚀 #nodejs",
-      "createdAt": "2024-06-01T12:34:56Z",
-      "url": "https://twitter.com/user/status/1781234567890123456",
-      "user": {
-        "id": "123456",
-        "username": "devguy",
-        "displayName": "Dev Guy",
-        "profileImageUrl": "https://pbs.twimg.com/profile_images/1234567890/abc.jpg",
-        "verified": true
-      },
-      "likeCount": 120,
-      "retweetCount": 30,
-      "replyCount": 5,
-      "quoteCount": 2,
-      "media": []
+      "id": "1922396246674710840",
+      "text": "¡Nena revela su nueva web! Un espacio para artistas tras Bonfire con @n_e_n_x ! https://t.co/MZTXWRbn5V",
+      "username": "sweetman_eth",
+      "timestamp": 1747169956000,
+      "createdAt": "2025-05-13T20:59:16.000Z",
+      "isReply": false,
+      "isRetweet": false,
+      "likes": 0,
+      "retweetCount": 0,
+      "replies": 0,
+      "photos": [],
+      "videos": [
+        {
+          "id": "1922396229574512640",
+          "preview": "https://pbs.twimg.com/amplify_video_thumb/1922396229574512640/img/CePUg62SJxbOgOH4.jpg",
+          "url": "https://video.twimg.com/amplify_video/1922396229574512640/vid/avc1/720x1280/JBlyA2OcoPXMBEiu.mp4?tag=14"
+        }
+      ],
+      "urls": [],
+      "permanentUrl": "https://twitter.com/sweetman_eth/status/1922396246674710840",
+      "hashtags": []
     }
-  ],
-  "pagination": {
-    "total_count": 1,
-    "maxTweets": 10
-  }
+  ]
 }
 ```
 
 ## Response Properties
 
-| Property                      | Type    | Description                                  |
-| ----------------------------- | ------- | -------------------------------------------- |
-| status                        | string  | Status of the request ("success" or "error") |
-| tweets                        | array   | List of tweet objects                        |
-| tweets[].id                   | string  | Tweet ID                                     |
-| tweets[].text                 | string  | Tweet text content                           |
-| tweets[].createdAt            | string  | ISO timestamp of when the tweet was posted   |
-| tweets[].url                  | string  | Direct URL to the tweet                      |
-| tweets[].user                 | object  | Author information                           |
-| tweets[].user.id              | string  | Twitter user ID                              |
-| tweets[].user.username        | string  | Twitter handle                               |
-| tweets[].user.displayName     | string  | Display name                                 |
-| tweets[].user.profileImageUrl | string  | Profile image URL                            |
-| tweets[].user.verified        | boolean | Whether the user is verified                 |
-| tweets[].likeCount            | number  | Number of likes                              |
-| tweets[].retweetCount         | number  | Number of retweets                           |
-| tweets[].replyCount           | number  | Number of replies                            |
-| tweets[].quoteCount           | number  | Number of quote tweets                       |
-| tweets[].media                | array   | Media objects (if any)                       |
-| pagination                    | object  | Pagination metadata                          |
-| pagination.total_count        | number  | Total number of tweets returned              |
-| pagination.maxTweets          | number  | Max tweets requested                         |
+| Property                   | Type    | Description                                         |
+| -------------------------- | ------- | --------------------------------------------------- |
+| status                     | string  | Status of the request ("success" or "error")        |
+| tweets                     | array   | List of tweet objects                               |
+| tweets[].id                | string  | Tweet ID                                            |
+| tweets[].text              | string  | Tweet text content                                  |
+| tweets[].username          | string  | Username of the tweet author                        |
+| tweets[].timestamp         | number  | Unix timestamp (ms) of when the tweet was posted    |
+| tweets[].createdAt         | string  | ISO timestamp of when the tweet was posted          |
+| tweets[].isReply           | boolean | Whether the tweet is a reply                        |
+| tweets[].isRetweet         | boolean | Whether the tweet is a retweet                      |
+| tweets[].likes             | number  | Number of likes                                     |
+| tweets[].retweetCount      | number  | Number of retweets                                  |
+| tweets[].replies           | number  | Number of replies                                   |
+| tweets[].photos            | array   | Array of photo objects (id, url)                    |
+| tweets[].videos            | array   | Array of video objects (id, preview, url)           |
+| tweets[].urls              | array   | Array of URLs included in the tweet                 |
+| tweets[].permanentUrl      | string  | Permanent URL to the tweet                          |
+| tweets[].inReplyToStatusId | string? | ID of the tweet this is replying to (if applicable) |
+| tweets[].hashtags          | array   | Array of hashtags in the tweet                      |
 
 ## Workflow Guide
 
