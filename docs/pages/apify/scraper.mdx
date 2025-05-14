@@ -15,42 +15,39 @@ GET https://api.recoupable.com/api/apify/scraper
 
 ## Parameters
 
-| Name      | Type   | Required | Description                                  |
-| --------- | ------ | -------- | -------------------------------------------- |
-| runId     | string | Yes      | The ID of the Apify run to check status for  |
-| datasetId | string | Yes      | The ID of the dataset containing the results |
+| Name  | Type   | Required | Description                                 |
+| ----- | ------ | -------- | ------------------------------------------- |
+| runId | string | Yes      | The ID of the Apify run to check status for |
 
 ## Request Examples
 
 :::code-group
 
 ```bash [cURL]
-curl -X GET "https://api.recoupable.com/api/apify/scraper?runId=abc123xyz&datasetId=def456uvw" \
+curl -X GET "https://api.recoupable.com/api/apify/scraper?runId=abc123xyz" \
   -H "Content-Type: application/json"
 ```
 
 ```python [Python]
 import requests
 
-def get_apify_results(run_id, dataset_id):
+def get_apify_results(run_id):
     url = "https://api.recoupable.com/api/apify/scraper"
     params = {
-        "runId": run_id,
-        "datasetId": dataset_id
+        "runId": run_id
     }
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()
 
 # Example usage:
-# get_apify_results("abc123xyz", "def456uvw")
+# get_apify_results("abc123xyz")
 ```
 
 ```javascript [JavaScript]
-async function getApifyResults(runId, datasetId) {
+async function getApifyResults(runId) {
   const params = new URLSearchParams({
     runId,
-    datasetId,
   });
 
   const response = await fetch(
@@ -71,13 +68,9 @@ interface ActorRunStatus {
 // The response type will be either ActorRunStatus or the raw dataset items
 type ApifyResponse = ActorRunStatus | any[];
 
-async function getApifyResults(
-  runId: string,
-  datasetId: string
-): Promise<ApifyResponse> {
+async function getApifyResults(runId: string): Promise<ApifyResponse> {
   const params = new URLSearchParams({
     runId,
-    datasetId,
   });
 
   const response = await fetch(
@@ -89,7 +82,7 @@ async function getApifyResults(
 }
 
 // Example usage:
-// const data = await getApifyResults("abc123xyz", "def456uvw");
+// const data = await getApifyResults("abc123xyz");
 ```
 
 :::
