@@ -1,0 +1,145 @@
+---
+title: Apify Scraper Results API
+description: Check the status and retrieve results from Apify scraper runs using the [Apify API Client](https://docs.apify.com/api/client/js/docs#quick-start).
+---
+
+# Apify Scraper Results API
+
+Check the status and retrieve results from Apify scraper runs. This endpoint uses the [Apify API Client](https://docs.apify.com/api/client/js/docs#quick-start) to fetch the current status of a scraper run and its results if available.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/apify/scraper
+```
+
+## Parameters
+
+| Name      | Type   | Required | Description                                  |
+| --------- | ------ | -------- | -------------------------------------------- |
+| runId     | string | Yes      | The ID of the Apify run to check status for  |
+| datasetId | string | Yes      | The ID of the dataset containing the results |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/apify/scraper?runId=abc123xyz&datasetId=def456uvw" \
+  -H "Content-Type: application/json"
+```
+
+```python [Python]
+import requests
+
+def get_apify_results(run_id, dataset_id):
+    url = "https://api.recoupable.com/api/apify/scraper"
+    params = {
+        "runId": run_id,
+        "datasetId": dataset_id
+    }
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+# get_apify_results("abc123xyz", "def456uvw")
+```
+
+```javascript [JavaScript]
+async function getApifyResults(runId, datasetId) {
+  const params = new URLSearchParams({
+    runId,
+    datasetId,
+  });
+
+  const response = await fetch(
+    `https://api.recoupable.com/api/apify/scraper?${params}`,
+    { headers: { "Content-Type": "application/json" } }
+  );
+  if (!response.ok) throw new Error("Apify results fetch failed");
+  return await response.json();
+}
+```
+
+```typescript [TypeScript]
+interface ActorRunStatus {
+  status: string;
+  datasetId: string;
+}
+
+// The response type will be either ActorRunStatus or the raw dataset items
+type ApifyResponse = ActorRunStatus | any[];
+
+async function getApifyResults(
+  runId: string,
+  datasetId: string
+): Promise<ApifyResponse> {
+  const params = new URLSearchParams({
+    runId,
+    datasetId,
+  });
+
+  const response = await fetch(
+    `https://api.recoupable.com/api/apify/scraper?${params}`,
+    { headers: { "Content-Type": "application/json" } }
+  );
+  if (!response.ok) throw new Error("Apify results fetch failed");
+  return await response.json();
+}
+
+// Example usage:
+// const data = await getApifyResults("abc123xyz", "def456uvw");
+```
+
+:::
+
+## Example Responses
+
+### In Progress Response
+
+```json filename="In Progress Response"
+{
+  "status": "RUNNING",
+  "datasetId": "def456uvw"
+}
+```
+
+### Completed Response
+
+```json filename="Completed Response"
+[
+  {
+    "id": "123456789",
+    "username": "example_user",
+    "fullName": "Example User",
+    "biography": "This is a sample biography",
+    "followersCount": 1000,
+    "followsCount": 500,
+    "profilePicUrl": "https://example.com/profile.jpg"
+  }
+]
+```
+
+## Response Properties
+
+### In Progress Response
+
+| Property  | Type   | Description                                                              |
+| --------- | ------ | ------------------------------------------------------------------------ |
+| status    | string | Current status of the Apify run (e.g., "RUNNING", "SUCCEEDED", "FAILED") |
+| datasetId | string | ID of the dataset that will contain the results                          |
+
+### Completed Response
+
+When the scraper run is completed successfully, the response will be the raw dataset items from Apify. The exact structure of these items depends on the type of scraper that was run (Instagram Profile, Instagram Comments, etc.).
+
+## Notes
+
+- This endpoint uses the [Apify API Client](https://docs.apify.com/api/client/js/docs#quick-start) to fetch run status and results
+- The response format changes based on the run status:
+  - For in-progress runs: Returns status information
+  - For completed runs: Returns the raw dataset items
+- Rate limits may apply based on Apify's API restrictions
+- Results are not real-time and may be subject to Apify's rate limiting
+- The dataset items structure varies depending on the type of scraper that was run
