@@ -137,6 +137,9 @@ When the scraper run is completed successfully, the response will be the raw dat
 ## Notes
 
 - This endpoint uses the [Apify API Client](https://docs.apify.com/api/client/js/docs#quick-start) to fetch run status and results
+- To start a new scraper run, use one of these endpoints:
+  - [Instagram Profiles API](/instagram/profiles) - Scrape profile information
+  - [Instagram Comments API](/instagram/comments) - Scrape post comments
 - The response format changes based on the run status:
   - For in-progress runs: Returns status information
   - For completed runs: Returns the raw dataset items
