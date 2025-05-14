@@ -1,0 +1,96 @@
+---
+title: Instagram Profiles API
+description: Fetch Instagram profile information for multiple handles using Apify scraper.
+---
+
+# Instagram Profiles API
+
+Fetch Instagram profile information for multiple handles using the Apify scraper.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/instagram/profiles
+```
+
+## Parameters
+
+| Name    | Type          | Required | Description                                      |
+| ------- | ------------- | -------- | ------------------------------------------------ |
+| handles | array[string] | Yes      | Array of Instagram handles to fetch profiles for |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/instagram/profiles?handles=handle1&handles=handle2" \
+  -H "Content-Type: application/json"
+```
+
+```python [Python]
+import requests
+
+def get_instagram_profiles(handles):
+    url = "https://api.recoupable.com/api/instagram/profiles"
+    params = {"handles": handles}
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+# get_instagram_profiles(["handle1", "handle2"])
+```
+
+```javascript [JavaScript]
+async function getInstagramProfiles(handles) {
+  const params = new URLSearchParams();
+  handles.forEach((handle) => params.append("handles[]", handle));
+
+  const response = await fetch(
+    `https://api.recoupable.com/api/instagram/profiles?${params}`,
+    { headers: { "Content-Type": "application/json" } }
+  );
+  if (!response.ok) throw new Error("Instagram profiles fetch failed");
+  return await response.json();
+}
+```
+
+```typescript [TypeScript]
+interface ApifyRunResponse {
+  runId: string;
+  datasetId: string;
+  error?: string;
+}
+
+// Example usage:
+// const data = await getInstagramProfiles(["handle1", "handle2"]);
+```
+
+:::
+
+## Example Response
+
+```json filename="Response"
+{
+  "runId": "abc123xyz",
+  "datasetId": "def456uvw",
+  "error": null
+}
+```
+
+## Response Properties
+
+| Property  | Type   | Description                                               |
+| --------- | ------ | --------------------------------------------------------- |
+| runId     | string | Unique identifier for the Apify run                       |
+| datasetId | string | Unique identifier for the dataset containing scraped data |
+| error     | string | Error message if the run failed (null if successful)      |
+
+## Notes
+
+- This endpoint uses Apify to scrape Instagram profile data
+- The actual profile data will be available in the Apify dataset after the run completes
+- Rate limits may apply based on Instagram's restrictions
+- The scraping process may take some time to complete
+- Results are not real-time and may be subject to Instagram's rate limiting
