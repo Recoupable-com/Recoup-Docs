@@ -43,6 +43,10 @@ export default defineConfig({
               text: "Profiles",
               link: "/instagram/profiles",
             },
+            {
+              text: "Comments",
+              link: "/instagram/comments",
+            },
           ],
         },
         {
