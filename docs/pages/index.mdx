@@ -7,20 +7,14 @@ import { HomePage } from "vocs/components";
 <HomePage.Root>
   <HomePage.Logo />
   <HomePage.Tagline>
-    Access and analyze social media data for artists across all major platforms. 
-    Get detailed insights into fan engagement, post performance, and audience demographics.
+    Comprehensive API for artist data across social media, music platforms, and fan engagement.
+    Access profiles, posts, comments, trends, and generate AI-powered content with a single integration.
   </HomePage.Tagline>
 
-  <div className="max-w-2xl mx-auto px-4 py-10 text-center">
-    <h2 className="text-2xl font-bold mb-4">Quick Start (get artist fans)</h2>
-    ```bash
-    curl -X GET "https://api.recoupable.com/api/fans?artist_account_id=YOUR_ARTIST_ACCOUNT_ID" \
-      -H "Content-Type: application/json"
-    ```
-  </div>
-  
   <HomePage.Buttons>
-    <HomePage.Button href="/getting-started" variant="accent">Get Started</HomePage.Button>
-    <HomePage.Button href="/fans">API Reference</HomePage.Button>
+    <HomePage.Button href="/getting-started" variant="accent">
+      Get Started
+    </HomePage.Button>
+    <HomePage.Button href="/artist/socials">API Reference</HomePage.Button>
   </HomePage.Buttons>
 </HomePage.Root>

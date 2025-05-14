@@ -37,6 +37,15 @@ export default defineConfig({
           ],
         },
         {
+          text: "Instagram",
+          items: [
+            {
+              text: "Profiles",
+              link: "/instagram/profiles",
+            },
+          ],
+        },
+        {
           text: "X / Twitter",
           items: [
             {
