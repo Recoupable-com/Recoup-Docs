@@ -90,6 +90,15 @@ export default defineConfig({
           ],
         },
         {
+          text: "Apify",
+          items: [
+            {
+              text: "Scraper Results",
+              link: "/apify/scraper",
+            },
+          ],
+        },
+        {
           text: "Legacy API (Deprecated)",
           items: [
             {
