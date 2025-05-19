@@ -10,7 +10,7 @@ Get an artist's top tracks by country. This endpoint is a proxy to the official 
 ## Endpoint
 
 ```http
-GET https://api.recoupable.com/api/spotify/artistTopTracks
+GET https://api.recoupable.com/api/spotify/artist/topTracks
 ```
 
 ## Parameters
@@ -24,14 +24,14 @@ GET https://api.recoupable.com/api/spotify/artistTopTracks
 
 :::code-group
 ```bash [cURL]
-curl -X GET "https://api.recoupable.com/api/spotify/artistTopTracks?id=0TnOYISbd1XYRBk9myaseg&market=ES"
+curl -X GET "https://api.recoupable.com/api/spotify/artist/topTracks?id=0TnOYISbd1XYRBk9myaseg&market=ES"
 ```
 
 ```python [Python]
 import requests
 
 def get_artist_top_tracks(id: str, market: str | None = None):
-    url = "https://api.recoupable.com/api/spotify/artistTopTracks"
+    url = "https://api.recoupable.com/api/spotify/artist/topTracks"
     params = {"id": id}
     if market:
         params["market"] = market
@@ -46,7 +46,7 @@ async function getArtistTopTracks(id, market) {
   const params = new URLSearchParams({ id });
   if (market) params.append("market", market);
   const res = await fetch(
-    `https://api.recoupable.com/api/spotify/artistTopTracks?${params}`,
+    `https://api.recoupable.com/api/spotify/artist/topTracks?${params}`,
     { headers: { "Content-Type": "application/json" } }
   );
   if (!res.ok) throw new Error("Request failed");
@@ -167,4 +167,4 @@ async function getArtistTopTracks(id, market) {
 | tracks[].uri             | string | The Spotify URI for the track. |
 | tracks[].is_local        | boolean| Whether the track is from a local file. |
 
-_For full details, see the [official Spotify documentation](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-top-tracks)._ 
+_For full details, see the [official Spotify documentation](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-top-tracks)._
