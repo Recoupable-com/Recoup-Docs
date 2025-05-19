@@ -30,13 +30,22 @@ export default defineConfig({
               text: "Social Posts",
               link: "/social/posts",
             },
+          ],
+        },
+        {
+          text: "Spotify",
+          items: [
             {
-              text: "Spotify Search API",
+              text: "Search",
               link: "/spotify/search",
             },
             {
-              text: "Spotify Artist Albums",
+              text: "Artist Albums",
               link: "/spotify/artistAlbums",
+            },
+            {
+              text: "Album",
+              link: "/spotify/album",
             },
           ],
         },
