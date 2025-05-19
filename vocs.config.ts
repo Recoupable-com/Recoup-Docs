@@ -34,6 +34,10 @@ export default defineConfig({
               text: "Spotify Search API",
               link: "/spotify/search",
             },
+            {
+              text: "Spotify Artist Albums",
+              link: "/spotify/artistAlbums",
+            },
           ],
         },
         {

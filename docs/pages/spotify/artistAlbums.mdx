@@ -1,0 +1,194 @@
+---
+title: Spotify Get Artist's Albums API
+description: Retrieve Spotify catalog information about an artist's albums.
+---
+
+# Spotify Get Artist's Albums API
+
+Get Spotify catalog information about an artist's albums. This endpoint is a proxy to the official [Spotify Get Artist's Albums API](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-albums).
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/spotify/artistAlbums
+```
+
+## Parameters
+
+| Name            | Type    | Required | Description |
+| --------------- | ------- | -------- | ----------- |
+| id              | string  | Yes      | The Spotify ID of the artist. |
+| include_groups  | string  | No       | A comma-separated list of keywords to filter the response. Valid values are `album`, `single`, `appears_on`, `compilation`. |
+| market          | string  | No       | An ISO 3166-1 alpha-2 country code. If specified, only content available in that market will be returned. |
+| limit           | integer | No       | The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. |
+| offset          | integer | No       | The index of the first item to return. Default: 0. |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/spotify/artistAlbums?id=0TnOYISbd1XYRBk9myaseg&include_groups=single,appears_on&market=ES&limit=10&offset=5" \
+  -H "Content-Type: application/json"
+```
+
+```python [Python]
+import requests
+
+def get_artist_albums(id, include_groups=None, market=None, limit=20, offset=0):
+    url = "https://api.recoupable.com/api/spotify/artistAlbums"
+    params = {"id": id}
+    if include_groups:
+        params["include_groups"] = include_groups
+    if market:
+        params["market"] = market
+    if limit:
+        params["limit"] = limit
+    if offset:
+        params["offset"] = offset
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+# get_artist_albums("0TnOYISbd1XYRBk9myaseg")
+```
+
+```javascript [JavaScript]
+async function getArtistAlbums(id, includeGroups, market, limit = 20, offset = 0) {
+  const params = new URLSearchParams({ id });
+  if (includeGroups) params.append("include_groups", includeGroups);
+  if (market) params.append("market", market);
+  if (limit) params.append("limit", limit.toString());
+  if (offset) params.append("offset", offset.toString());
+  const response = await fetch(
+    `https://api.recoupable.com/api/spotify/artistAlbums?${params}`,
+    { headers: { "Content-Type": "application/json" } }
+  );
+  if (!response.ok) throw new Error("Spotify artist albums fetch failed");
+  return await response.json();
+}
+```
+
+```typescript [TypeScript]
+interface SimplifiedArtist {
+  external_urls: { spotify: string };
+  href: string;
+  id: string;
+  name: string;
+  type: "artist";
+  uri: string;
+}
+
+interface SimplifiedAlbum {
+  album_type: "album" | "single" | "compilation";
+  total_tracks: number;
+  available_markets: string[];
+  external_urls: { spotify: string };
+  href: string;
+  id: string;
+  images: { url: string; height: number; width: number }[];
+  name: string;
+  release_date: string;
+  release_date_precision: "year" | "month" | "day";
+  restrictions?: { reason: string };
+  type: "album";
+  uri: string;
+  artists: SimplifiedArtist[];
+  album_group?: "album" | "single" | "compilation" | "appears_on";
+}
+
+interface ArtistAlbumsResponse {
+  href: string;
+  limit: number;
+  next: string | null;
+  offset: number;
+  previous: string | null;
+  total: number;
+  items: SimplifiedAlbum[];
+}
+
+// Example usage:
+// const data = await getArtistAlbums("0TnOYISbd1XYRBk9myaseg");
+```
+
+:::
+
+## Example Response
+
+```json filename="Response"
+{
+  "href": "https://api.spotify.com/v1/me/shows?offset=0&limit=20",
+  "limit": 20,
+  "next": "https://api.spotify.com/v1/me/shows?offset=1&limit=1",
+  "offset": 0,
+  "previous": "https://api.spotify.com/v1/me/shows?offset=1&limit=1",
+  "total": 4,
+  "items": [
+    {
+      "album_type": "compilation",
+      "total_tracks": 9,
+      "available_markets": ["CA", "BR", "IT"],
+      "external_urls": {
+        "spotify": "string"
+      },
+      "href": "string",
+      "id": "2up3OPMp9Tb4dAKM2erWXQ",
+      "images": [
+        {
+          "url": "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
+          "height": 300,
+          "width": 300
+        }
+      ],
+      "name": "string",
+      "release_date": "1981-12",
+      "release_date_precision": "year",
+      "restrictions": {
+        "reason": "market"
+      },
+      "type": "album",
+      "uri": "spotify:album:2up3OPMp9Tb4dAKM2erWXQ",
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "string"
+          },
+          "href": "string",
+          "id": "string",
+          "name": "string",
+          "type": "artist",
+          "uri": "string"
+        }
+      ],
+      "album_group": "compilation"
+    }
+  ]
+}
+```
+
+## Response Properties
+
+| Property        | Type    | Description |
+| --------------- | ------- | ----------- |
+| href            | string  | A link to the Web API endpoint returning the full result of the request |
+| limit           | integer | The maximum number of items in the response |
+| next            | string  | URL to the next page of items (null if none) |
+| offset          | integer | The offset of the items returned |
+| previous        | string  | URL to the previous page of items (null if none) |
+| total           | integer | The total number of items available to return |
+| items           | array   | Array of simplified album objects |
+| items[].id      | string  | The Spotify ID for the album |
+| items[].name    | string  | The name of the album |
+| items[].artists | array   | The artists of the album |
+| items[].type    | string  | The object type, always `album` |
+| items[].uri     | string  | The Spotify URI for the album |
+
+_See the [Spotify Get Artist's Albums API Reference](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-albums) for full details._
+
+## Notes
+
+- This endpoint requires a valid Spotify access token (handled by the Recoup API backend).
+- Results are paginated; use `limit` and `offset` for navigation.
+- For more details, see the [official Spotify documentation](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-albums).
+
