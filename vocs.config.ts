@@ -44,6 +44,10 @@ export default defineConfig({
               link: "/spotify/artist-albums",
             },
             {
+              text: "Artist Top Tracks",
+              link: "/spotify/artist-top-tracks",
+            },
+            {
               text: "Album",
               link: "/spotify/album",
             },
