@@ -1,0 +1,170 @@
+---
+title: Spotify Get Artist Top Tracks
+description: Retrieve an artist's top tracks by country using the Spotify API.
+---
+
+# Spotify Get Artist Top Tracks
+
+Get an artist's top tracks by country. This endpoint is a proxy to the official [Get Artist's Top Tracks](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-top-tracks) endpoint.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/spotify/artistTopTracks
+```
+
+## Parameters
+
+| Name   | Type   | Required | Description |
+| ------ | ------ | -------- | ----------- |
+| id     | string | Yes      | The Spotify ID of the artist. |
+| market | string | No       | An ISO 3166-1 alpha-2 country code. If provided, only tracks available in that market are returned. When a valid user token is sent, the user's country takes priority. |
+
+## Request Examples
+
+:::code-group
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/spotify/artistTopTracks?id=0TnOYISbd1XYRBk9myaseg&market=ES"
+```
+
+```python [Python]
+import requests
+
+def get_artist_top_tracks(id: str, market: str | None = None):
+    url = "https://api.recoupable.com/api/spotify/artistTopTracks"
+    params = {"id": id}
+    if market:
+        params["market"] = market
+    resp = requests.get(url, params=params)
+    resp.raise_for_status()
+    return resp.json()
+# get_artist_top_tracks("0TnOYISbd1XYRBk9myaseg", "ES")
+```
+
+```javascript [JavaScript]
+async function getArtistTopTracks(id, market) {
+  const params = new URLSearchParams({ id });
+  if (market) params.append("market", market);
+  const res = await fetch(
+    `https://api.recoupable.com/api/spotify/artistTopTracks?${params}`,
+    { headers: { "Content-Type": "application/json" } }
+  );
+  if (!res.ok) throw new Error("Request failed");
+  return await res.json();
+}
+```
+:::
+
+## Example Response
+
+```json filename="Response"
+{
+  "tracks": [
+    {
+      "album": {
+        "album_type": "compilation",
+        "total_tracks": 9,
+        "available_markets": ["CA", "BR", "IT"],
+        "external_urls": {
+          "spotify": "string"
+        },
+        "href": "string",
+        "id": "2up3OPMp9Tb4dAKM2erWXQ",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
+            "height": 300,
+            "width": 300
+          }
+        ],
+        "name": "string",
+        "release_date": "1981-12",
+        "release_date_precision": "year",
+        "restrictions": {
+          "reason": "market"
+        },
+        "type": "album",
+        "uri": "spotify:album:2up3OPMp9Tb4dAKM2erWXQ",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "string"
+            },
+            "href": "string",
+            "id": "string",
+            "name": "string",
+            "type": "artist",
+            "uri": "string"
+          }
+        ]
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "string"
+          },
+          "href": "string",
+          "id": "string",
+          "name": "string",
+          "type": "artist",
+          "uri": "string"
+        }
+      ],
+      "available_markets": ["string"],
+      "disc_number": 0,
+      "duration_ms": 0,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "string",
+        "ean": "string",
+        "upc": "string"
+      },
+      "external_urls": {
+        "spotify": "string"
+      },
+      "href": "string",
+      "id": "string",
+      "is_playable": false,
+      "linked_from": {},
+      "restrictions": {
+        "reason": "string"
+      },
+      "name": "string",
+      "popularity": 0,
+      "preview_url": "string",
+      "track_number": 0,
+      "type": "track",
+      "uri": "string",
+      "is_local": false
+    }
+  ]
+}
+```
+
+## Response Properties
+
+| Property                 | Type   | Description |
+| ------------------------ | ------ | ----------- |
+| tracks                   | array  | Array of track objects. |
+| tracks[].album           | object | The album the track appears on. |
+| tracks[].artists         | array  | Artists who performed the track. |
+| tracks[].available_markets | array | Markets in which the track is available. |
+| tracks[].disc_number     | int    | Disc number the track is on. |
+| tracks[].duration_ms     | int    | Track length in milliseconds. |
+| tracks[].explicit        | boolean| Whether the track has explicit lyrics. |
+| tracks[].external_ids    | object | Known external IDs for the track. |
+| tracks[].external_urls   | object | Known external URLs for the track. |
+| tracks[].href            | string | Link to the Web API endpoint with full details. |
+| tracks[].id              | string | Spotify ID for the track. |
+| tracks[].is_playable     | boolean| If true, the track is playable in the given market. |
+| tracks[].linked_from     | object | Information about the originally requested track when track relinking is applied. |
+| tracks[].restrictions    | object | Content restriction information. |
+| tracks[].name            | string | Track name. |
+| tracks[].popularity      | int    | Popularity score (0-100). |
+| tracks[].preview_url     | string | URL to a 30 second preview, if available. |
+| tracks[].track_number    | int    | Track number on the album. |
+| tracks[].type            | string | The object type, always "track". |
+| tracks[].uri             | string | The Spotify URI for the track. |
+| tracks[].is_local        | boolean| Whether the track is from a local file. |
+
+_For full details, see the [official Spotify documentation](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-top-tracks)._ 
