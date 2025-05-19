@@ -36,11 +36,11 @@ export default defineConfig({
           text: "Spotify",
           items: [
             {
-              text: "Spotify Search API",
+              text: "Search",
               link: "/spotify/search",
             },
             {
-              text: "Spotify Album API",
+              text: "Album",
               link: "/spotify/album",
             },
           ],
