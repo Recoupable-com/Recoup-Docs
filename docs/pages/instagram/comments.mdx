@@ -18,7 +18,7 @@ GET https://api.recoupable.com/api/instagram/comments
 | Name             | Type          | Required | Description                                                                  |
 | ---------------- | ------------- | -------- | ---------------------------------------------------------------------------- |
 | postUrls         | array[string] | Yes      | Array of Instagram post URLs to fetch comments for                           |
-| resultsLimit     | number        | No       | Maximum number of comments to fetch (default: 100)                          |
+| resultsLimit     | number        | No       | Maximum number of comments to fetch (default: 10000)                        |
 | isNewestComments | boolean       | No       | Whether to fetch newest comments first (default: true)                      |
 
 ## Request Examples
@@ -33,7 +33,7 @@ curl -X GET "https://api.recoupable.com/api/instagram/comments?postUrls=https://
 ```python [Python]
 import requests
 
-def get_instagram_comments(post_urls, results_limit=100, is_newest_comments=True):
+def get_instagram_comments(post_urls, results_limit=10000, is_newest_comments=True):
     url = "https://api.recoupable.com/api/instagram/comments"
     params = {
         "postUrls": post_urls,
@@ -49,7 +49,7 @@ def get_instagram_comments(post_urls, results_limit=100, is_newest_comments=True
 ```
 
 ```javascript [JavaScript]
-async function getInstagramComments(postUrls, resultsLimit = 100, isNewestComments = true) {
+async function getInstagramComments(postUrls, resultsLimit = 10000, isNewestComments = true) {
   const params = new URLSearchParams();
   postUrls.forEach((url) => params.append("postUrls", url));
   params.append("resultsLimit", resultsLimit);
@@ -73,7 +73,7 @@ interface ApifyRunInfo {
 
 async function getInstagramComments(
   postUrls: string[], 
-  resultsLimit: number = 100, 
+  resultsLimit: number = 10000, 
   isNewestComments: boolean = true
 ): Promise<ApifyRunInfo> {
   const params = new URLSearchParams();
