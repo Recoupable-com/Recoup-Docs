@@ -15,37 +15,45 @@ GET https://api.recoupable.com/api/instagram/comments
 
 ## Parameters
 
-| Name     | Type          | Required | Description                                        |
-| -------- | ------------- | -------- | -------------------------------------------------- |
-| postUrls | array[string] | Yes      | Array of Instagram post URLs to fetch comments for |
+| Name             | Type          | Required | Description                                                                  |
+| ---------------- | ------------- | -------- | ---------------------------------------------------------------------------- |
+| postUrls         | array[string] | Yes      | Array of Instagram post URLs to fetch comments for                           |
+| resultsLimit     | number        | No       | Maximum number of comments to fetch (default: 100)                          |
+| isNewestComments | boolean       | No       | Whether to fetch newest comments first (default: true)                      |
 
 ## Request Examples
 
 :::code-group
 
 ```bash [cURL]
-curl -X GET "https://api.recoupable.com/api/instagram/comments?postUrls=https://instagram.com/p/abc123&postUrls=https://instagram.com/p/xyz789" \
+curl -X GET "https://api.recoupable.com/api/instagram/comments?postUrls=https://instagram.com/p/abc123&postUrls=https://instagram.com/p/xyz789&resultsLimit=50&isNewestComments=true" \
   -H "Content-Type: application/json"
 ```
 
 ```python [Python]
 import requests
 
-def get_instagram_comments(post_urls):
+def get_instagram_comments(post_urls, results_limit=100, is_newest_comments=True):
     url = "https://api.recoupable.com/api/instagram/comments"
-    params = {"postUrls": post_urls}
+    params = {
+        "postUrls": post_urls,
+        "resultsLimit": results_limit,
+        "isNewestComments": is_newest_comments
+    }
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()
 
 # Example usage:
-# get_instagram_comments(["https://instagram.com/p/abc123", "https://instagram.com/p/xyz789"])
+# get_instagram_comments(["https://instagram.com/p/abc123", "https://instagram.com/p/xyz789"], 50, True)
 ```
 
 ```javascript [JavaScript]
-async function getInstagramComments(postUrls) {
+async function getInstagramComments(postUrls, resultsLimit = 100, isNewestComments = true) {
   const params = new URLSearchParams();
   postUrls.forEach((url) => params.append("postUrls", url));
+  params.append("resultsLimit", resultsLimit);
+  params.append("isNewestComments", isNewestComments);
 
   const response = await fetch(
     `https://api.recoupable.com/api/instagram/comments?${params}`,
@@ -63,9 +71,15 @@ interface ApifyRunInfo {
   error?: string;
 }
 
-async function getInstagramComments(postUrls: string[]): Promise<ApifyRunInfo> {
+async function getInstagramComments(
+  postUrls: string[], 
+  resultsLimit: number = 100, 
+  isNewestComments: boolean = true
+): Promise<ApifyRunInfo> {
   const params = new URLSearchParams();
   postUrls.forEach((url) => params.append("postUrls", url));
+  params.append("resultsLimit", resultsLimit.toString());
+  params.append("isNewestComments", isNewestComments.toString());
 
   const response = await fetch(
     `https://api.recoupable.com/api/instagram/comments?${params}`,
@@ -76,7 +90,7 @@ async function getInstagramComments(postUrls: string[]): Promise<ApifyRunInfo> {
 }
 
 // Example usage:
-// const data = await getInstagramComments(["https://instagram.com/p/abc123", "https://instagram.com/p/xyz789"]);
+// const data = await getInstagramComments(["https://instagram.com/p/abc123", "https://instagram.com/p/xyz789"], 50, true);
 ```
 
 :::
@@ -107,3 +121,5 @@ async function getInstagramComments(postUrls: string[]): Promise<ApifyRunInfo> {
 - Rate limits may apply based on Instagram's restrictions
 - The scraping process may take some time to complete
 - Results are not real-time and may be subject to Instagram's rate limiting
+- Use `resultsLimit` to control how many comments to fetch per post (useful for performance optimization)
+- Set `isNewestComments` to `false` to retrieve oldest comments first instead of newest
