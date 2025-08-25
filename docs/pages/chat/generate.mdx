@@ -1,0 +1,369 @@
+---
+title: Chat Generate API
+description: Generate AI-powered text responses using the Recoup chat system.
+---
+
+# Chat Generate API
+
+Generate AI-powered text responses using the Recoup chat system. This endpoint processes chat requests and returns generated text along with metadata about the generation process.
+
+## Endpoint
+
+```http
+POST https://chat.recoupable.com/chat/generate
+```
+
+## Parameters
+
+| Name      | Type   | Required | Description                                                                                                  |
+| --------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------ |
+| messages  | array  | Yes      | Array of [UIMessage](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message#uimessage) objects for context |
+| roomId    | string | Yes      | The unique identifier of the chat room                                                                       |
+| artistId  | string | No       | The unique identifier of the artist (optional)                                                               |
+| accountId | string | Yes      | The unique identifier of the account making the request                                                      |
+| model     | string | No       | The AI model to use for text generation (optional)                                                           |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X POST "https://chat.recoupable.com/chat/generate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [
+      {
+        "id": "msg-1",
+        "role": "user",
+        "parts": [
+          {
+            "type": "text",
+            "text": "Hello, how are you?"
+          }
+        ]
+      }
+    ],
+    "roomId": "room-123",
+    "accountId": "your-account-id",
+    "model": "gpt-4"
+  }'
+```
+
+```python [Python]
+import requests
+
+def generate_chat(messages, room_id, account_id, artist_id=None, model=None):
+    url = "https://chat.recoupable.com/chat/generate"
+    payload = {
+        "messages": messages,
+        "roomId": room_id,
+        "accountId": account_id
+    }
+    if artist_id:
+        payload["artistId"] = artist_id
+    if model:
+        payload["model"] = model
+
+    response = requests.post(url, json=payload)
+    response.raise_for_status()
+    result = response.json()
+
+    # Extract text content from ContentPart array
+    text_content = ""
+    for part in result["text"]:
+        if part["type"] == "text":
+            text_content += part["text"]
+
+    print(f"Generated text: {text_content}")
+    return result
+
+# Example usage:
+# result = generate_chat([
+#     {
+#         "id": "msg-1",
+#         "role": "user",
+#         "parts": [{"type": "text", "text": "Hello"}]
+#     }
+# ], "room-123", "account123", model="gpt-4")
+#
+# # Access the text content
+# text_content = ""
+# for part in result["text"]:
+#     if part["type"] == "text":
+#         text_content += part["text"]
+```
+
+```javascript [JavaScript]
+async function generateChat(messages, roomId, accountId, artistId, model) {
+  const payload = {
+    messages,
+    roomId,
+    accountId,
+  };
+
+  if (artistId) {
+    payload.artistId = artistId;
+  }
+  if (model) {
+    payload.model = model;
+  }
+
+  const response = await fetch("https://chat.recoupable.com/chat/generate", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) throw new Error("Chat generation failed");
+  const result = await response.json();
+
+  // Extract text content from ContentPart array
+  const textContent = result.text
+    .filter((part) => part.type === "text")
+    .map((part) => part.text)
+    .join("");
+
+  console.log("Generated text:", textContent);
+
+  return result;
+}
+
+// Example usage:
+// const result = await generateChat([
+//   {
+//     id: "msg-1",
+//     role: "user",
+//     parts: [{ type: "text", text: "Hello" }]
+//   }
+// ], "room-123", "account123", undefined, "gpt-4");
+//
+// // Access the text content
+// const textContent = result.text
+//   .filter(part => part.type === 'text')
+//   .map(part => part.text)
+//   .join('');
+```
+
+```typescript [TypeScript]
+import { UIMessage, ContentPart } from "ai";
+
+interface ChatRequest {
+  messages: UIMessage[];
+  roomId: string;
+  artistId?: string;
+  accountId: string;
+  model?: string;
+}
+
+interface ChatResponse {
+  text: ContentPart[];
+  reasoningText?: string;
+  sources?: any[];
+  finishReason: string;
+  usage: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
+  response: {
+    messages: any[];
+    headers: any;
+    body: any;
+  };
+}
+
+async function generateChat(
+  messages: UIMessage[],
+  roomId: string,
+  accountId: string,
+  artistId?: string,
+  model?: string
+): Promise<ChatResponse> {
+  const payload: ChatRequest = {
+    messages,
+    roomId,
+    accountId,
+  };
+
+  if (artistId) {
+    payload.artistId = artistId;
+  }
+  if (model) {
+    payload.model = model;
+  }
+
+  const response = await fetch("https://chat.recoupable.com/chat/generate", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) throw new Error("Chat generation failed");
+  const result = await response.json();
+
+  // Extract text content from ContentPart array
+  const textContent = result.text
+    .filter((part) => part.type === "text")
+    .map((part) => part.text)
+    .join("");
+
+  console.log("Generated text:", textContent);
+
+  return result;
+}
+
+// Example usage:
+// const response = await generateChat([
+//   {
+//     id: "msg-1",
+//     role: "user",
+//     parts: [{ type: "text", text: "Hello" }]
+//   }
+// ], "room-123", "account123", undefined, "gpt-4");
+//
+// // Access the text content
+// const textContent = response.text
+//   .filter(part => part.type === 'text')
+//   .map(part => part.text)
+//   .join('');
+```
+
+:::
+
+## Example Response
+
+```json filename="Response"
+{
+  "text": "Hello! I'm doing well, thank you for asking. How can I help you today?",
+  "reasoningText": "The user asked a simple greeting question, so I responded with a friendly greeting and offered help.",
+  "sources": [],
+  "finishReason": "stop",
+  "usage": {
+    "promptTokens": 15,
+    "completionTokens": 25,
+    "totalTokens": 40
+  },
+  "response": {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "Hello! I'm doing well, thank you for asking. How can I help you today?"
+      }
+    ],
+    "headers": {},
+    "body": {}
+  }
+}
+```
+
+## Response Properties
+
+| Property      | Type                      | Description                                                                                                                                                  |
+| ------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| text          | Array<ContentPart<TOOLS>> | Array of content parts from the AI model response. [Learn more about ContentPart types](https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text#content) |
+| reasoningText | string                    | Optional reasoning or explanation for the response                                                                                                           |
+| sources       | array                     | Optional array of sources used for the response                                                                                                              |
+| finishReason  | string                    | The reason why the generation finished                                                                                                                       |
+| usage         | object                    | Token usage information                                                                                                                                      |
+| response      | object                    | Additional response metadata and information                                                                                                                 |
+
+## TypeScript Interfaces
+
+```typescript
+import { UIMessage, ContentPart } from "ai";
+
+interface ChatRequest {
+  messages: UIMessage[];
+  roomId: string;
+  artistId?: string;
+  accountId: string;
+  model?: string;
+}
+
+interface ChatResponse {
+  text: ContentPart[];
+  reasoningText?: string;
+  sources?: any[];
+  finishReason: string;
+  usage: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
+  response: {
+    messages: any[];
+    headers: any;
+    body: any;
+  };
+}
+
+async function generateChat(
+  messages: UIMessage[],
+  roomId: string,
+  accountId: string,
+  artistId?: string,
+  model?: string
+): Promise<ChatResponse> {
+  const payload: ChatRequest = {
+    messages,
+    roomId,
+    accountId,
+  };
+
+  if (artistId) {
+    payload.artistId = artistId;
+  }
+  if (model) {
+    payload.model = model;
+  }
+
+  const response = await fetch("https://chat.recoupable.com/chat/generate", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) throw new Error("Chat generation failed");
+  const result = await response.json();
+
+  // Extract text content from ContentPart array
+  const textContent = result.text
+    .filter((part) => part.type === "text")
+    .map((part) => part.text)
+    .join("");
+
+  console.log("Generated text:", textContent);
+
+  return result;
+}
+
+// Example usage:
+// const response = await generateChat([
+//   {
+//     id: "msg-1",
+//     role: "user",
+//     parts: [{ type: "text", text: "Hello" }]
+//   }
+// ], "room-123", "account123", undefined, "gpt-4");
+//
+// // Access the text content
+// const textContent = response.text
+//   .filter(part => part.type === 'text')
+//   .map(part => part.text)
+//   .join('');
+```
+
+## Notes
+
+- This endpoint supports CORS and handles preflight OPTIONS requests
+- Chat credits are automatically deducted based on token usage
+- The system automatically handles chat completion logging
+- Error notifications are sent to Telegram for monitoring
+- The endpoint supports various AI models (specify in the `model` parameter)
+- All requests are logged and tracked for analytics purposes
