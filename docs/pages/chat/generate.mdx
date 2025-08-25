@@ -45,7 +45,7 @@ curl -X POST "https://chat.recoupable.com/chat/generate" \
     ],
     "roomId": "room-123",
     "accountId": "your-account-id",
-    "model": "gpt-4"
+    "model": "openai/gpt-5-mini"
   }'
 ```
 
@@ -84,7 +84,7 @@ def generate_chat(messages, room_id, account_id, artist_id=None, model=None):
 #         "role": "user",
 #         "parts": [{"type": "text", "text": "Hello"}]
 #     }
-# ], "room-123", "account123", model="gpt-4")
+# ], "room-123", "account123", model="openai/gpt-5-mini")
 #
 # # Access the text content
 # text_content = ""
@@ -137,7 +137,7 @@ async function generateChat(messages, roomId, accountId, artistId, model) {
 //     role: "user",
 //     parts: [{ type: "text", text: "Hello" }]
 //   }
-// ], "room-123", "account123", undefined, "gpt-4");
+// ], "room-123", "account123", undefined, "openai/gpt-5-mini");
 //
 // // Access the text content
 // const textContent = result.text
@@ -223,7 +223,7 @@ async function generateChat(
 //     role: "user",
 //     parts: [{ type: "text", text: "Hello" }]
 //   }
-// ], "room-123", "account123", undefined, "gpt-4");
+// ], "room-123", "account123", undefined, "openai/gpt-5-mini");
 //
 // // Access the text content
 // const textContent = response.text
@@ -350,7 +350,7 @@ async function generateChat(
 //     role: "user",
 //     parts: [{ type: "text", text: "Hello" }]
 //   }
-// ], "room-123", "account123", undefined, "gpt-4");
+// ], "room-123", "account123", undefined, "openai/gpt-5-mini");
 //
 // // Access the text content
 // const textContent = response.text
