@@ -107,6 +107,15 @@ export default defineConfig({
           ],
         },
         {
+          text: "Chat",
+          items: [
+            {
+              text: "Generate",
+              link: "/chat/generate",
+            },
+          ],
+        },
+        {
           text: "Apify",
           items: [
             {
