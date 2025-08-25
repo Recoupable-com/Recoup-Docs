@@ -166,9 +166,11 @@ interface ChatResponse {
   sources?: any[];
   finishReason: string;
   usage: {
-    promptTokens: number;
-    completionTokens: number;
+    inputTokens: number;
+    outputTokens: number;
     totalTokens: number;
+    reasoningTokens: number;
+    cachedInputTokens: number;
   };
   response: {
     messages: any[];
