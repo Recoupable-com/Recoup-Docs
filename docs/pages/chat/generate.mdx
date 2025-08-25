@@ -10,7 +10,7 @@ Generate AI-powered text responses using the Recoup chat system. This endpoint p
 ## Endpoint
 
 ```http
-POST https://chat.recoupable.com/chat/generate
+POST https://chat.recoupable.com/api/chat/generate
 ```
 
 ## Parameters
@@ -28,7 +28,7 @@ POST https://chat.recoupable.com/chat/generate
 :::code-group
 
 ```bash [cURL]
-curl -X POST "https://chat.recoupable.com/chat/generate" \
+curl -X POST "https://chat.recoupable.com/api/chat/generate" \
   -H "Content-Type: application/json" \
   -d '{
     "messages": [
@@ -53,7 +53,7 @@ curl -X POST "https://chat.recoupable.com/chat/generate" \
 import requests
 
 def generate_chat(messages, room_id, account_id, artist_id=None, model=None):
-    url = "https://chat.recoupable.com/chat/generate"
+    url = "https://chat.recoupable.com/api/chat/generate"
     payload = {
         "messages": messages,
         "roomId": room_id,
@@ -108,13 +108,16 @@ async function generateChat(messages, roomId, accountId, artistId, model) {
     payload.model = model;
   }
 
-  const response = await fetch("https://chat.recoupable.com/chat/generate", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    "https://chat.recoupable.com/api/chat/generate",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+  );
 
   if (!response.ok) throw new Error("Chat generation failed");
   const result = await response.json();
@@ -194,13 +197,16 @@ async function generateChat(
     payload.model = model;
   }
 
-  const response = await fetch("https://chat.recoupable.com/chat/generate", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    "https://chat.recoupable.com/api/chat/generate",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+  );
 
   if (!response.ok) throw new Error("Chat generation failed");
   const result = await response.json();
@@ -321,13 +327,16 @@ async function generateChat(
     payload.model = model;
   }
 
-  const response = await fetch("https://chat.recoupable.com/chat/generate", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    "https://chat.recoupable.com/api/chat/generate",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+  );
 
   if (!response.ok) throw new Error("Chat generation failed");
   const result = await response.json();
