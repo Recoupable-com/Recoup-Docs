@@ -15,13 +15,14 @@ POST https://chat.recoupable.com/api/chat/generate
 
 ## Parameters
 
-| Name      | Type   | Required | Description                                                                                                  |
-| --------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------ |
-| messages  | array  | Yes      | Array of [UIMessage](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message#uimessage) objects for context |
-| roomId    | string | Yes      | The unique identifier of the chat room                                                                       |
-| artistId  | string | No       | The unique identifier of the artist (optional)                                                               |
-| accountId | string | Yes      | The unique identifier of the account making the request                                                      |
-| model     | string | No       | The AI model to use for text generation (optional)                                                           |
+| Name         | Type   | Required | Description                                                                                                  |
+| ------------ | ------ | -------- | ------------------------------------------------------------------------------------------------------------ |
+| messages     | array  | Yes      | Array of [UIMessage](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message#uimessage) objects for context |
+| roomId       | string | Yes      | The unique identifier of the chat room                                                                       |
+| artistId     | string | No       | The unique identifier of the artist (optional)                                                               |
+| accountId    | string | Yes      | The unique identifier of the account making the request                                                      |
+| model        | string | No       | The AI model to use for text generation (optional)                                                           |
+| excludeTools | array  | No       | Array of tool names to exclude from execution (e.g., `["create_scheduled_actions"]`)                         |
 
 ## Request Examples
 
@@ -45,14 +46,15 @@ curl -X POST "https://chat.recoupable.com/api/chat/generate" \
     ],
     "roomId": "room-123",
     "accountId": "your-account-id",
-    "model": "openai/gpt-5-mini"
+    "model": "openai/gpt-5-mini",
+    "excludeTools": ["create_scheduled_actions"]
   }'
 ```
 
 ```python [Python]
 import requests
 
-def generate_chat(messages, room_id, account_id, artist_id=None, model=None):
+def generate_chat(messages, room_id, account_id, artist_id=None, model=None, exclude_tools=None):
     url = "https://chat.recoupable.com/api/chat/generate"
     payload = {
         "messages": messages,
@@ -63,6 +65,8 @@ def generate_chat(messages, room_id, account_id, artist_id=None, model=None):
         payload["artistId"] = artist_id
     if model:
         payload["model"] = model
+    if exclude_tools:
+        payload["excludeTools"] = exclude_tools
 
     response = requests.post(url, json=payload)
     response.raise_for_status()
@@ -84,7 +88,7 @@ def generate_chat(messages, room_id, account_id, artist_id=None, model=None):
 #         "role": "user",
 #         "parts": [{"type": "text", "text": "Hello"}]
 #     }
-# ], "room-123", "account123", model="openai/gpt-5-mini")
+# ], "room-123", "account123", model="openai/gpt-5-mini", exclude_tools=["create_scheduled_actions"])
 #
 # # Access the text content
 # text_content = ""
@@ -94,7 +98,14 @@ def generate_chat(messages, room_id, account_id, artist_id=None, model=None):
 ```
 
 ```javascript [JavaScript]
-async function generateChat(messages, roomId, accountId, artistId, model) {
+async function generateChat(
+  messages,
+  roomId,
+  accountId,
+  artistId,
+  model,
+  excludeTools
+) {
   const payload = {
     messages,
     roomId,
@@ -106,6 +117,9 @@ async function generateChat(messages, roomId, accountId, artistId, model) {
   }
   if (model) {
     payload.model = model;
+  }
+  if (excludeTools) {
+    payload.excludeTools = excludeTools;
   }
 
   const response = await fetch(
@@ -140,7 +154,7 @@ async function generateChat(messages, roomId, accountId, artistId, model) {
 //     role: "user",
 //     parts: [{ type: "text", text: "Hello" }]
 //   }
-// ], "room-123", "account123", undefined, "openai/gpt-5-mini");
+// ], "room-123", "account123", undefined, "openai/gpt-5-mini", ["create_scheduled_actions"]);
 //
 // // Access the text content
 // const textContent = result.text
@@ -158,6 +172,7 @@ interface ChatRequest {
   artistId?: string;
   accountId: string;
   model?: string;
+  excludeTools?: string[];
 }
 
 interface ChatResponse {
@@ -184,7 +199,8 @@ async function generateChat(
   roomId: string,
   accountId: string,
   artistId?: string,
-  model?: string
+  model?: string,
+  excludeTools?: string[]
 ): Promise<ChatResponse> {
   const payload: ChatRequest = {
     messages,
@@ -197,6 +213,9 @@ async function generateChat(
   }
   if (model) {
     payload.model = model;
+  }
+  if (excludeTools) {
+    payload.excludeTools = excludeTools;
   }
 
   const response = await fetch(
@@ -231,7 +250,7 @@ async function generateChat(
 //     role: "user",
 //     parts: [{ type: "text", text: "Hello" }]
 //   }
-// ], "room-123", "account123", undefined, "openai/gpt-5-mini");
+// ], "room-123", "account123", undefined, "openai/gpt-5-mini", ["create_scheduled_actions"]);
 //
 // // Access the text content
 // const textContent = response.text
