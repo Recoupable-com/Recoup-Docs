@@ -11,6 +11,15 @@ export default defineConfig({
       text: "API Reference",
       items: [
         {
+          text: "Chat",
+          items: [
+            {
+              text: "Generate",
+              link: "/chat/generate",
+            },
+          ],
+        },
+        {
           text: "Artist",
           items: [
             {
@@ -104,14 +113,9 @@ export default defineConfig({
               text: "Image Generation",
               link: "/image-generation",
             },
-          ],
-        },
-        {
-          text: "Chat",
-          items: [
             {
-              text: "Generate",
-              link: "/chat/generate",
+              text: "Subscriptions",
+              link: "/subscriptions",
             },
           ],
         },
