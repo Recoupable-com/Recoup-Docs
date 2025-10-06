@@ -29,12 +29,13 @@ POST https://api.recoupable.com/api/catalogs
 | catalogs[].name       | string           | No       | Catalog name to create if catalog_id is omitted         |
 | catalogs[].catalog_id | string           | No       | Existing catalog ID to link to the account              |
 
-// Behavior rules:
-// - If catalog_id is provided, links the existing catalog to the account (no new catalog created).
-// - If name is provided and catalog_id is omitted, creates a new catalog then links it to the account.
-// - If both name and catalog_id are provided, catalog_id takes priority.
-// - If catalog_id is provided but invalid, returns an error (even if name is provided).
-// - Only if name is provided and catalog_id is omitted is a new catalog record created.
+### Behavior
+
+- If `catalogs[].catalog_id` is provided, links the existing catalog to the account (no new catalog created).
+- If `catalogs[].name` is provided and `catalogs[].catalog_id` is omitted, creates a new catalog then links it to the account.
+- If both `catalogs[].name` and `catalogs[].catalog_id` are provided, `catalogs[].catalog_id` takes priority.
+- If a provided `catalogs[].catalog_id` is invalid, an error is returned (even if `catalogs[].name` is provided).
+- Only if `catalogs[].name` is provided and `catalogs[].catalog_id` is omitted is a new catalog record created.
 
 ## Request Examples
 
