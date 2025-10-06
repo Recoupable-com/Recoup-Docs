@@ -203,6 +203,7 @@ async function removeSongsFromCatalog(songInputs) {
 
 ```typescript [TypeScript]
 interface Song {
+  catalog_id: string;
   isrc: string;
   name: string;
   album: string;
@@ -297,6 +298,7 @@ The API returns JSON responses with song data including associated artist inform
   "status": "success",
   "songs": [
     {
+      "catalog_id": "YOUR_CATALOG_ID",
       "isrc": "USRC17607839",
       "name": "Bohemian Rhapsody",
       "album": "A Night at the Opera",
@@ -311,6 +313,7 @@ The API returns JSON responses with song data including associated artist inform
       ]
     },
     {
+      "catalog_id": "YOUR_CATALOG_ID",
       "isrc": "USRC17607840",
       "name": "We Will Rock You",
       "album": "News of the World",
@@ -358,6 +361,7 @@ The API returns JSON responses with song data including associated artist inform
 | artists[].id        | string | Unique identifier for the artist account                   |
 | artists[].name      | string | Name of the artist (can be null)                           |
 | artists[].timestamp | number | Timestamp associated with the artist account (can be null) |
+| catalog_id          | string | Catalog ID this song entry is associated with              |
 
 ### Pagination Object
 
