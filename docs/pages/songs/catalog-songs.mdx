@@ -31,6 +31,21 @@ DELETE https://api.recoupable.com/api/catalogs/songs
 | songs[].catalog_id | string           | Yes      | Catalog ID to which the song will be added |
 | songs[].isrc       | string           | Yes      | Song ISRC to associate to the catalog      |
 
+## DELETE Parameters
+
+| Name               | Type             | Required | Description                                    |
+| ------------------ | ---------------- | -------- | ---------------------------------------------- |
+| songs              | array of objects | Yes      | Array of songs for batch deletes               |
+| songs[].catalog_id | string           | Yes      | Catalog ID from which the song will be removed |
+| songs[].isrc       | string           | Yes      | Song ISRC to remove from the catalog           |
+
+### Behavior (DELETE)
+
+- Deletes the relationship in `catalog_songs` for each `{catalog_id, isrc}` pair.
+- If either `catalog_id` or `isrc` is missing in any item, an error is returned.
+- Request accepts a bulk array under `songs`.
+- Response structure is identical to GET and POST (songs array with pagination when applicable).
+
 ## Request Examples
 
 ::::code-group
