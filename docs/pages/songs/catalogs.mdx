@@ -5,7 +5,7 @@ description: API endpoint to list, create/link, and delete catalogs associated w
 
 # Catalogs API
 
-Retrieve and manage catalogs associated with a specific account. Use GET to list catalogs linked to an account. Use POST to create a new catalog or link an existing catalog to an account; the endpoint joins `account_catalogs` with `catalogs` to return catalog metadata for the specified account.
+Retrieve and manage catalogs associated with a specific account. Use GET to list catalogs linked to an account. Use POST to create a new catalog or link an existing catalog to an account. Use DELETE to unlink catalogs from an account and automatically remove orphaned catalogs (including cascading deletes of related catalog_songs) when no accounts remain linked; otherwise only the relationship is removed. The endpoint joins `account_catalogs` with `catalogs` to return catalog metadata for the specified account.
 
 ## Endpoint
 
