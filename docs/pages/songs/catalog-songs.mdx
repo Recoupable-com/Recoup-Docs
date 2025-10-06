@@ -1,11 +1,11 @@
 ---
-title: Get Catalog Songs
-description: API endpoint to retrieve songs within a specific catalog with pagination support.
+title: Catalog Songs API
+description: API endpoint to list songs in a catalog (GET) and batch add catalog-song links (POST), with pagination support for GET.
 ---
 
-# Get Catalog Songs
+# Catalog Songs API
 
-Retrieve songs within a specific catalog. This endpoint joins the catalog_songs table with catalogs, songs, song_artists, and accounts tables to provide comprehensive song information for a given catalog.
+Retrieve songs within a specific catalog. Use GET to list catalog songs with pagination. Use POST to batch add songs to a catalog by ISRC. This endpoint joins the `catalog_songs` table with `catalogs`, `songs`, `song_artists`, and `accounts` to provide comprehensive song information for a given catalog.
 
 ## Endpoint
 
