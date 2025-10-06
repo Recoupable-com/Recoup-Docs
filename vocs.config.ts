@@ -117,6 +117,10 @@ export default defineConfig({
               text: "Catalogs",
               link: "/songs/catalogs",
             },
+            {
+              text: "Catalog Songs",
+              link: "/songs/catalog-songs",
+            },
           ],
         },
         {
