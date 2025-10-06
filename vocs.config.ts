@@ -107,6 +107,15 @@ export default defineConfig({
           ],
         },
         {
+          text: "Songs",
+          items: [
+            {
+              text: "Songs",
+              link: "/songs/songs",
+            },
+          ],
+        },
+        {
           text: "Additional Features",
           items: [
             {
