@@ -1,17 +1,18 @@
 ---
 title: Catalog Songs API
-description: API endpoint to list songs in a catalog (GET) and batch add catalog-song links (POST), with pagination support for GET.
+description: API endpoint to list songs in a catalog (GET), batch add catalog-song links (POST), and batch delete catalog-song links (DELETE); GET supports pagination.
 ---
 
 # Catalog Songs API
 
-Retrieve songs within a specific catalog. Use GET to list catalog songs with pagination. Use POST to batch add songs to a catalog by ISRC. This endpoint joins the `catalog_songs` table with `catalogs`, `songs`, `song_artists`, and `accounts` to provide comprehensive song information for a given catalog.
+Retrieve songs within a specific catalog. Use GET to list catalog songs with pagination. Use POST to batch add songs to a catalog by ISRC. Use DELETE to batch remove songs from a catalog by ISRC. This endpoint joins the `catalog_songs` table with `catalogs`, `songs`, `song_artists`, and `accounts` to provide comprehensive song information for a given catalog.
 
 ## Endpoint
 
 ```http
 GET https://api.recoupable.com/api/catalogs/songs
 POST https://api.recoupable.com/api/catalogs/songs
+DELETE https://api.recoupable.com/api/catalogs/songs
 ```
 
 ## GET Parameters
@@ -334,55 +335,4 @@ This endpoint queries the following database tables:
 
 - **Primary Key**: `id` (uuid)
 - **Foreign Keys**:
-  - `song` references `songs.isrc`
-  - `artist` references `accounts.id`
-- **Unique Constraint**: Combination of `song` and `artist`
-- **Indexes**: On `song`, `artist`, and `created_at` fields for performance
-
-### Accounts Table
-
-- **Primary Key**: `id` (uuid)
-- **Fields**: `name`, `timestamp`
-
-## Usage Examples
-
-### Get songs from a specific catalog with pagination
-
-```bash
-curl -X GET "https://api.recoupable.com/api/catalogs/songs?catalog_id=550e8400-e29b-41d4-a716-446655440001&page=1&limit=10"
-```
-
-### Get all songs from a catalog (first page, default limit)
-
-```bash
-curl -X GET "https://api.recoupable.com/api/catalogs/songs?catalog_id=550e8400-e29b-41d4-a716-446655440001"
-```
-
-## Error Handling
-
-The API uses conventional HTTP response codes:
-
-- `200`: Success
-- `400`: Bad Request (missing or invalid catalog_id)
-- `401`: Unauthorized
-- `404`: Catalog not found or no songs found
-- `500`: Internal Server Error
-
-Example error response:
-
-```json filename="Error Response"
-{
-  "status": "error",
-  "error": "Catalog not found"
-}
-```
-
-## Notes
-
-- The `catalog_id` parameter is required and must be a valid UUID
-- Songs are returned in descending order of addition to the catalog (latest first)
-- Each song includes full artist information from the song_artists relationship
-- All timestamps are returned in ISO 8601 format
-- The relationship between catalogs and songs is many-to-many
-- Pagination parameters allow efficient handling of large catalogs
-- Maximum limit is 100 songs per page to ensure performance
+  - `song`
