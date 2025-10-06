@@ -1,0 +1,287 @@
+---
+title: Get Songs
+description: API endpoint to retrieve songs from the database with optional filtering by ISRC or artist account.
+---
+
+# Get Songs
+
+Retrieve songs from the database with optional filtering by ISRC (International Standard Recording Code) or artist account. This endpoint joins the songs table with song_artists and accounts tables to provide comprehensive song information.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/songs
+```
+
+## Parameters
+
+| Name              | Type   | Required | Description                                                      |
+| ----------------- | ------ | -------- | ---------------------------------------------------------------- |
+| isrc              | string | No       | International Standard Recording Code to filter by specific song |
+| artist_account_id | string | No       | Artist account ID to filter songs by artist                      |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/songs?artist_account_id=YOUR_ARTIST_ID" \
+  -H "Content-Type: application/json"
+```
+
+```python [Python]
+import requests
+
+def get_songs(isrc: str = None, artist_account_id: str = None):
+    try:
+        url = "https://api.recoupable.com/api/songs"
+        params = {}
+
+        if isrc:
+            params["isrc"] = isrc
+        if artist_account_id:
+            params["artist_account_id"] = artist_account_id
+
+        headers = {
+            "Content-Type": "application/json",
+        }
+
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()
+
+        return response.json()
+    except requests.exceptions.RequestException as error:
+        print(f"Error fetching songs: {error}")
+        raise
+
+# Example usage:
+# songs = get_songs(artist_account_id="your-artist-id")
+# specific_song = get_songs(isrc="USRC17607839")
+```
+
+```javascript [JavaScript]
+async function getSongs(isrc, artistAccountId) {
+  try {
+    const params = new URLSearchParams();
+
+    if (isrc) params.append("isrc", isrc);
+    if (artistAccountId) params.append("artist_account_id", artistAccountId);
+
+    const response = await fetch(
+      `https://api.recoupable.com/api/songs?${params.toString()}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching songs:", error);
+    throw error;
+  }
+}
+
+// Example usage:
+// const songs = await getSongs(undefined, "your-artist-id");
+// const specificSong = await getSongs("USRC17607839");
+```
+
+```typescript [TypeScript]
+interface Song {
+  isrc: string;
+  name: string;
+  album: string;
+  lyrics: string;
+  updated_at: string;
+  artists: Array<{
+    id: string;
+    name: string | null;
+    timestamp: number | null;
+  }>;
+}
+
+interface SongsResponse {
+  status: "success" | "error";
+  songs: Song[];
+  error?: string;
+}
+
+async function getSongs(
+  isrc?: string,
+  artistAccountId?: string
+): Promise<SongsResponse> {
+  try {
+    const params = new URLSearchParams();
+
+    if (isrc) params.append("isrc", isrc);
+    if (artistAccountId) params.append("artist_account_id", artistAccountId);
+
+    const response = await fetch(
+      `https://api.recoupable.com/api/songs?${params.toString()}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: SongsResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching songs:", error);
+    throw error;
+  }
+}
+
+// Example usage:
+// const songs = await getSongs(undefined, "your-artist-id");
+// const specificSong = await getSongs("USRC17607839");
+```
+
+:::
+
+## Response Format
+
+The API returns JSON responses with song data including associated artist information:
+
+```json filename="Response"
+{
+  "status": "success",
+  "songs": [
+    {
+      "isrc": "USRC17607839",
+      "name": "Bohemian Rhapsody",
+      "album": "A Night at the Opera",
+      "lyrics": "Is this the real life? Is this just fantasy? Caught in a landslide, no escape from reality...",
+      "updated_at": "2024-03-06T15:33:27Z",
+      "artists": [
+        {
+          "id": "550e8400-e29b-41d4-a716-446655440000",
+          "name": "Queen",
+          "timestamp": 1640995200000
+        }
+      ]
+    },
+    {
+      "isrc": "USRC17607840",
+      "name": "We Will Rock You",
+      "album": "News of the World",
+      "lyrics": "Buddy, you're a boy, make a big noise, playing in the street, gonna be a big man someday...",
+      "updated_at": "2024-03-05T18:22:15Z",
+      "artists": [
+        {
+          "id": "550e8400-e29b-41d4-a716-446655440000",
+          "name": "Queen",
+          "timestamp": 1640995200000
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Response Properties
+
+### Response Object
+
+| Property | Type   | Description                                       |
+| -------- | ------ | ------------------------------------------------- |
+| status   | string | Status of the request ("success" or "error")      |
+| songs    | array  | Array of song objects with artist information     |
+| error    | string | Error message (only present if status is "error") |
+
+### Song Object
+
+| Property            | Type   | Description                                                |
+| ------------------- | ------ | ---------------------------------------------------------- |
+| isrc                | string | International Standard Recording Code (primary key)        |
+| name                | string | Name of the song                                           |
+| album               | string | Name of the album the song belongs to                      |
+| lyrics              | string | Full lyrics of the song                                    |
+| updated_at          | string | ISO timestamp of when the song data was last updated       |
+| artists             | array  | Array of artist objects associated with this song          |
+| artists[].id        | string | Unique identifier for the artist account                   |
+| artists[].name      | string | Name of the artist (can be null)                           |
+| artists[].timestamp | number | Timestamp associated with the artist account (can be null) |
+
+## Database Schema
+
+This endpoint queries the following database tables:
+
+### Songs Table
+
+- **Primary Key**: `isrc` (text)
+- **Fields**: `name`, `album`, `lyrics`, `updated_at`
+- **Indexes**: On `name` and `album` fields for performance
+
+### Song Artists Table
+
+- **Primary Key**: `id` (uuid)
+- **Foreign Keys**:
+  - `song` references `songs.isrc`
+  - `artist` references `accounts.id`
+- **Unique Constraint**: Combination of `song` and `artist`
+
+### Accounts Table
+
+- **Primary Key**: `id` (uuid)
+- **Fields**: `name`, `timestamp`
+
+## Usage Examples
+
+### Get all songs for a specific artist
+
+```bash
+curl -X GET "https://api.recoupable.com/api/songs?artist_account_id=550e8400-e29b-41d4-a716-446655440000"
+```
+
+### Get a specific song by ISRC
+
+```bash
+curl -X GET "https://api.recoupable.com/api/songs?isrc=USRC17607839"
+```
+
+### Get all songs (no filters)
+
+```bash
+curl -X GET "https://api.recoupable.com/api/songs"
+```
+
+## Error Handling
+
+The API uses conventional HTTP response codes:
+
+- `200`: Success
+- `400`: Bad Request (invalid parameters)
+- `401`: Unauthorized
+- `404`: No songs found
+- `500`: Internal Server Error
+
+Example error response:
+
+```json filename="Error Response"
+{
+  "status": "error",
+  "error": "No songs found for the specified criteria"
+}
+```
+
+## Notes
+
+- The `isrc` parameter filters for exact matches
+- The `artist_account_id` parameter uses the UUID from the accounts table
+- Songs can have multiple artists (many-to-many relationship)
+- All timestamps are returned in ISO 8601 format
+- The lyrics field contains the full text of the song
+- Results are ordered by `updated_at` in descending order (most recent first)
