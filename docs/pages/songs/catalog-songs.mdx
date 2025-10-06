@@ -11,9 +11,10 @@ Retrieve songs within a specific catalog. This endpoint joins the catalog_songs 
 
 ```http
 GET https://api.recoupable.com/api/catalogs/songs
+POST https://api.recoupable.com/api/catalogs/songs
 ```
 
-## Parameters
+## GET Parameters
 
 | Name       | Type   | Required | Description                                             |
 | ---------- | ------ | -------- | ------------------------------------------------------- |
@@ -21,13 +22,32 @@ GET https://api.recoupable.com/api/catalogs/songs
 | page       | number | No       | Page number for pagination (default: 1)                 |
 | limit      | number | No       | Number of songs per page (default: 20, max: 100)        |
 
+## POST Parameters
+
+| Name               | Type             | Required | Description                                |
+| ------------------ | ---------------- | -------- | ------------------------------------------ |
+| songs              | array of objects | Yes      | Array of songs for batch updates           |
+| songs[].catalog_id | string           | Yes      | Catalog ID to which the song will be added |
+| songs[].isrc       | string           | Yes      | Song ISRC to associate to the catalog      |
+
 ## Request Examples
 
-:::code-group
+::::code-group
 
 ```bash [cURL]
 curl -X GET "https://api.recoupable.com/api/catalogs/songs?catalog_id=YOUR_CATALOG_ID&page=1&limit=20" \
   -H "Content-Type: application/json"
+```
+
+```bash [cURL - POST]
+curl -X POST "https://api.recoupable.com/api/catalogs/songs" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "songs": [
+      { "catalog_id": "YOUR_CATALOG_ID", "isrc": "USRC17607839" },
+      { "catalog_id": "YOUR_CATALOG_ID", "isrc": "USRC17607840" }
+    ]
+  }'
 ```
 
 ```python [Python]
@@ -36,19 +56,10 @@ import requests
 def get_catalog_songs(catalog_id: str, page: int = 1, limit: int = 20):
     try:
         url = "https://api.recoupable.com/api/catalogs/songs"
-        params = {
-            "catalog_id": catalog_id,
-            "page": page,
-            "limit": limit
-        }
-
-        headers = {
-            "Content-Type": "application/json",
-        }
-
+        params = {"catalog_id": catalog_id, "page": page, "limit": limit}
+        headers = {"Content-Type": "application/json"}
         response = requests.get(url, params=params, headers=headers)
         response.raise_for_status()
-
         return response.json()
     except requests.exceptions.RequestException as error:
         print(f"Error fetching catalog songs: {error}")
@@ -56,6 +67,25 @@ def get_catalog_songs(catalog_id: str, page: int = 1, limit: int = 20):
 
 # Example usage:
 # songs = get_catalog_songs("your-catalog-id", page=1, limit=20)
+
+
+def add_songs_to_catalog(items: list[dict]):
+    try:
+        url = "https://api.recoupable.com/api/catalogs/songs"
+        payload = {"songs": items}
+        headers = {"Content-Type": "application/json"}
+        response = requests.post(url, json=payload, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as error:
+        print(f"Error adding songs to catalog: {error}")
+        raise
+
+# Example usage:
+# result = add_songs_to_catalog([
+#   {"catalog_id": "your-catalog-id", "isrc": "USRC17607839"},
+#   {"catalog_id": "your-catalog-id", "isrc": "USRC17607840"}
+# ])
 ```
 
 ```javascript [JavaScript]
@@ -88,8 +118,29 @@ async function getCatalogSongs(catalogId, page = 1, limit = 20) {
   }
 }
 
+async function addSongsToCatalog(songInputs) {
+  try {
+    const response = await fetch(
+      "https://api.recoupable.com/api/catalogs/songs",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ songs: songInputs }),
+      }
+    );
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error adding songs to catalog:", error);
+    throw error;
+  }
+}
+
 // Example usage:
-// const songs = await getCatalogSongs("your-catalog-id", 1, 20);
+// const result = await addSongsToCatalog([
+//   { catalog_id: "your-catalog-id", isrc: "USRC17607839" },
+//   { catalog_id: "your-catalog-id", isrc: "USRC17607840" }
+// ]);
 ```
 
 ```typescript [TypeScript]
@@ -151,11 +202,28 @@ async function getCatalogSongs(
   }
 }
 
-// Example usage:
-// const songs = await getCatalogSongs("your-catalog-id", 1, 20);
+interface AddSongInput {
+  catalog_id: string;
+  isrc: string;
+}
+
+async function addSongsToCatalog(
+  inputs: AddSongInput[]
+): Promise<CatalogSongsResponse> {
+  const response = await fetch(
+    "https://api.recoupable.com/api/catalogs/songs",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ songs: inputs }),
+    }
+  );
+  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  return (await response.json()) as CatalogSongsResponse;
+}
 ```
 
-:::
+::::
 
 ## Response Format
 
