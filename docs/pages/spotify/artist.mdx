@@ -1,0 +1,151 @@
+---
+title: Spotify Get Artist API
+description: Retrieve Spotify catalog information for a single artist identified by their unique Spotify ID.
+---
+
+# Spotify Get Artist API
+
+Get Spotify catalog information for a single artist identified by their unique Spotify ID. This endpoint is a proxy to the official [Spotify Get Artist API](https://developer.spotify.com/documentation/web-api/reference/get-an-artist).
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/spotify/artist/
+```
+
+## Parameters
+
+| Name | Type   | Required | Description                   |
+| ---- | ------ | -------- | ----------------------------- |
+| id   | string | Yes      | The Spotify ID of the artist. |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/spotify/artist/?id=0TnOYISbd1XYRBk9myaseg" \
+  -H "Content-Type: application/json"
+```
+
+```python [Python]
+import requests
+
+def get_artist(id):
+    url = "https://api.recoupable.com/api/spotify/artist/"
+    params = {"id": id}
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+# get_artist("0TnOYISbd1XYRBk9myaseg")
+```
+
+```javascript [JavaScript]
+async function getArtist(id) {
+  const params = new URLSearchParams({ id });
+  const response = await fetch(
+    `https://api.recoupable.com/api/spotify/artist/?${params}`,
+    { headers: { "Content-Type": "application/json" } }
+  );
+  if (!response.ok) throw new Error("Spotify artist fetch failed");
+  return await response.json();
+}
+```
+
+```typescript [TypeScript]
+interface SpotifyArtist {
+  external_urls: {
+    spotify: string;
+  };
+  followers: {
+    href: string;
+    total: number;
+  };
+  genres: string[];
+  href: string;
+  id: string;
+  images: Array<{
+    url: string;
+    height: number;
+    width: number;
+  }>;
+  name: string;
+  popularity: number;
+  type: "artist";
+  uri: string;
+}
+
+interface ArtistResponse {
+  artist: SpotifyArtist | null;
+  error: Error | null;
+}
+
+// Example usage:
+// const data = await getArtist("0TnOYISbd1XYRBk9myaseg");
+```
+
+:::
+
+## Example Response
+
+```json filename="Response"
+{
+  "artist": {
+    "external_urls": {
+      "spotify": "https://open.spotify.com/artist/0TnOYISbd1XYRBk9myaseg"
+    },
+    "followers": {
+      "href": null,
+      "total": 1000000
+    },
+    "genres": ["Prog rock", "Grunge"],
+    "href": "https://api.spotify.com/v1/artists/0TnOYISbd1XYRBk9myaseg",
+    "id": "0TnOYISbd1XYRBk9myaseg",
+    "images": [
+      {
+        "url": "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
+        "height": 300,
+        "width": 300
+      }
+    ],
+    "name": "Pitbull",
+    "popularity": 85,
+    "type": "artist",
+    "uri": "spotify:artist:0TnOYISbd1XYRBk9myaseg"
+  },
+  "error": null
+}
+```
+
+## Response Properties
+
+| Property                     | Type    | Description                                           |
+| ---------------------------- | ------- | ----------------------------------------------------- |
+| artist                       | object  | The Spotify artist object (null if error)             |
+| artist.external_urls         | object  | Known external URLs for this artist                   |
+| artist.external_urls.spotify | string  | The Spotify URL for the artist                        |
+| artist.followers             | object  | Information about the followers of the artist         |
+| artist.followers.href        | string  | This will always be set to null                       |
+| artist.followers.total       | integer | The total number of followers                         |
+| artist.genres                | array   | A list of the genres the artist is associated with    |
+| artist.href                  | string  | A link to the Web API endpoint providing full details |
+| artist.id                    | string  | The Spotify ID for the artist                         |
+| artist.images                | array   | Images of the artist in various sizes                 |
+| artist.images[].url          | string  | The source URL of the image                           |
+| artist.images[].height       | integer | The image height in pixels                            |
+| artist.images[].width        | integer | The image width in pixels                             |
+| artist.name                  | string  | The name of the artist                                |
+| artist.popularity            | integer | The popularity of the artist (0-100)                  |
+| artist.type                  | string  | The object type, always `"artist"`                    |
+| artist.uri                   | string  | The Spotify URI for the artist                        |
+| error                        | object  | Error object if request failed (null if successful)   |
+
+_See the [Spotify Get Artist API Reference](https://developer.spotify.com/documentation/web-api/reference/get-an-artist) for full details._
+
+## Notes
+
+- This endpoint requires a valid Spotify access token (handled by the Recoup API backend).
+- The response includes both the artist data and any potential error information.
+- For more details, see the [official Spotify documentation](https://developer.spotify.com/documentation/web-api/reference/get-an-artist).
