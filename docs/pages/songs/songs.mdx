@@ -23,13 +23,13 @@ POST https://api.recoupable.com/api/songs
 
 ## POST Parameters
 
-| Name           | Type             | Required | Description                                                                            |
-| -------------- | ---------------- | -------- | -------------------------------------------------------------------------------------- |
-| songs          | array of objects | Yes      | Array of song inputs for bulk create/fetch. Each item supports fields below.           |
-| songs[].isrc   | string           | Yes      | International Standard Recording Code of the song to create or fetch                   |
-| songs[].name   | string           | No       | Optional. Applied only if internal search cannot find valid info for the provided ISRC |
-| songs[].album  | string           | No       | Optional. Applied only if internal search cannot find valid info for the provided ISRC |
-| songs[].lyrics | string           | No       | Optional. Applied only if internal search cannot find valid info for the provided ISRC |
+| Name          | Type             | Required | Description                                                                            |
+| ------------- | ---------------- | -------- | -------------------------------------------------------------------------------------- |
+| songs         | array of objects | Yes      | Array of song inputs for bulk create/fetch. Each item supports fields below.           |
+| songs[].isrc  | string           | Yes      | International Standard Recording Code of the song to create or fetch                   |
+| songs[].name  | string           | No       | Optional. Applied only if internal search cannot find valid info for the provided ISRC |
+| songs[].album | string           | No       | Optional. Applied only if internal search cannot find valid info for the provided ISRC |
+| songs[].notes | string           | No       | Optional. Applied only if internal search cannot find valid info for the provided ISRC |
 
 ## Request Examples
 
@@ -101,7 +101,7 @@ interface Song {
   isrc: string;
   name: string;
   album: string;
-  lyrics: string;
+  notes: string;
   updated_at: string;
   artists: Array<{
     id: string;
@@ -120,7 +120,7 @@ interface CreateSongInput {
   isrc: string;
   name?: string;
   album?: string;
-  lyrics?: string;
+  notes?: string;
 }
 
 async function createOrFetchSongs(
@@ -156,7 +156,7 @@ The API returns JSON responses with song data including associated artist inform
       "isrc": "USRC17607839",
       "name": "Bohemian Rhapsody",
       "album": "A Night at the Opera",
-      "lyrics": "Is this the real life? Is this just fantasy? Caught in a landslide, no escape from reality...",
+      "notes": "Is this the real life? Is this just fantasy? Caught in a landslide, no escape from reality...",
       "updated_at": "2024-03-06T15:33:27Z",
       "artists": [
         {
@@ -170,7 +170,7 @@ The API returns JSON responses with song data including associated artist inform
       "isrc": "USRC17607840",
       "name": "We Will Rock You",
       "album": "News of the World",
-      "lyrics": "Buddy, you're a boy, make a big noise, playing in the street, gonna be a big man someday...",
+      "notes": "Buddy, you're a boy, make a big noise, playing in the street, gonna be a big man someday...",
       "updated_at": "2024-03-05T18:22:15Z",
       "artists": [
         {
@@ -201,7 +201,7 @@ The API returns JSON responses with song data including associated artist inform
 | isrc                | string | International Standard Recording Code (primary key)        |
 | name                | string | Name of the song                                           |
 | album               | string | Name of the album the song belongs to                      |
-| lyrics              | string | Full lyrics of the song                                    |
+| notes               | string | Notes for the song                                         |
 | updated_at          | string | ISO timestamp of when the song data was last updated       |
 | artists             | array  | Array of artist objects associated with this song          |
 | artists[].id        | string | Unique identifier for the artist account                   |
@@ -215,7 +215,7 @@ This endpoint queries the following database tables:
 ### Songs Table
 
 - **Primary Key**: `isrc` (text)
-- **Fields**: `name`, `album`, `lyrics`, `updated_at`
+- **Fields**: `name`, `album`, `notes`, `updated_at`
 - **Indexes**: On `name` and `album` fields for performance
 
 ### Song Artists Table
@@ -276,5 +276,5 @@ Example error response:
 - The `artist_account_id` parameter uses the UUID from the accounts table
 - Songs can have multiple artists (many-to-many relationship)
 - All timestamps are returned in ISO 8601 format
-- The lyrics field contains the full text of the song
+- The notes field contains notes for the song
 - Results are ordered by `updated_at` in descending order (most recent first)
