@@ -25,11 +25,15 @@ DELETE https://api.recoupable.com/api/catalogs/songs
 
 ## POST Parameters
 
-| Name               | Type             | Required | Description                                |
-| ------------------ | ---------------- | -------- | ------------------------------------------ |
-| songs              | array of objects | Yes      | Array of songs for batch updates           |
-| songs[].catalog_id | string           | Yes      | Catalog ID to which the song will be added |
-| songs[].isrc       | string           | Yes      | Song ISRC to associate to the catalog      |
+| Name               | Type             | Required | Description                                                                |
+| ------------------ | ---------------- | -------- | -------------------------------------------------------------------------- |
+| songs              | array of objects | Yes      | Array of songs for batch updates                                           |
+| songs[].catalog_id | string           | Yes      | Catalog ID to which the song will be added                                 |
+| songs[].isrc       | string           | Yes      | Song ISRC to associate to the catalog                                      |
+| songs[].name       | string           | No       | Optional. Applied only if internal search cannot find valid info for ISRC  |
+| songs[].album      | string           | No       | Optional. Applied only if internal search cannot find valid info for ISRC  |
+| songs[].notes      | string           | No       | Optional. Applied only if internal search cannot find valid info for ISRC  |
+| songs[].artists    | string[]         | No       | Optional array of artist names. Applied only if internal search lacks info |
 
 ## DELETE Parameters
 
@@ -57,10 +61,10 @@ curl -X GET "https://api.recoupable.com/api/catalogs/songs?catalog_id=YOUR_CATAL
 
 ```bash [cURL - POST]
 curl -X POST "https://api.recoupable.com/api/catalogs/songs" \
-  -H "Content-Type: application/json" \
+  -H "Content-Type": "application/json" \
   -d '{
     "songs": [
-      { "catalog_id": "YOUR_CATALOG_ID", "isrc": "USRC17607839" },
+      { "catalog_id": "YOUR_CATALOG_ID", "isrc": "USRC17607839", "name": "Bohemian Rhapsody", "album": "A Night at the Opera", "notes": "Classic", "artists": ["Queen"] },
       { "catalog_id": "YOUR_CATALOG_ID", "isrc": "USRC17607840" }
     ]
   }'
@@ -176,6 +180,12 @@ async function addSongsToCatalog(songInputs) {
   }
 }
 
+// Example usage:
+// const result = await addSongsToCatalog([
+//   { catalog_id: "your-catalog-id", isrc: "USRC17607839", name: "Bohemian Rhapsody", album: "A Night at the Opera", notes: "Classic", artists: ["Queen"] },
+//   { catalog_id: "your-catalog-id", isrc: "USRC17607840" }
+// ]);
+
 async function removeSongsFromCatalog(songInputs) {
   try {
     const response = await fetch(
@@ -249,6 +259,10 @@ async function getCatalogSongs(
 interface AddSongInput {
   catalog_id: string;
   isrc: string;
+  name?: string;
+  album?: string;
+  notes?: string;
+  artists?: string[];
 }
 
 async function addSongsToCatalog(
