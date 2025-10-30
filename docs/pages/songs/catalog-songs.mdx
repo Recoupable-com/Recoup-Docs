@@ -61,7 +61,7 @@ curl -X GET "https://api.recoupable.com/api/catalogs/songs?catalog_id=YOUR_CATAL
 
 ```bash [cURL - POST]
 curl -X POST "https://api.recoupable.com/api/catalogs/songs" \
-  -H "Content-Type": "application/json" \
+  -H "Content-Type: application/json" \
   -d '{
     "songs": [
       { "catalog_id": "YOUR_CATALOG_ID", "isrc": "USRC17607839", "name": "Bohemian Rhapsody", "album": "A Night at the Opera", "notes": "Classic", "artists": ["Queen"] },
@@ -72,7 +72,7 @@ curl -X POST "https://api.recoupable.com/api/catalogs/songs" \
 
 ```bash [cURL - DELETE]
 curl -X DELETE "https://api.recoupable.com/api/catalogs/songs" \
-  -H "Content-Type": "application/json" \
+  -H "Content-Type: application/json" \
   -d '{
     "songs": [
       { "catalog_id": "YOUR_CATALOG_ID", "isrc": "USRC17607839" },
