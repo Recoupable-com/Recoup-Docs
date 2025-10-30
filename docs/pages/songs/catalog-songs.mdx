@@ -415,4 +415,5 @@ This endpoint queries the following database tables:
 
 - **Primary Key**: `id` (uuid)
 - **Foreign Keys**:
-  - `song`
+  - `song` references `songs.isrc`
+  - `artist` references `accounts.id`
