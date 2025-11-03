@@ -128,6 +128,15 @@ export default defineConfig({
           ],
         },
         {
+          text: "Jobs",
+          items: [
+            {
+              text: "Get Jobs",
+              link: "/jobs/jobs",
+            },
+          ],
+        },
+        {
           text: "Additional Features",
           items: [
             {
