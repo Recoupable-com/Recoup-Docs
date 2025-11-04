@@ -132,7 +132,11 @@ export default defineConfig({
           items: [
             {
               text: "Get Jobs",
-              link: "/jobs/jobs",
+              link: "/jobs/get",
+            },
+            {
+              text: "Create Job",
+              link: "/jobs/create",
             },
           ],
         },

@@ -1,0 +1,150 @@
+---
+title: Create Job
+description: API endpoint to create a scheduled job (scheduled action). Returns the created job in the same shape as the GET endpoint.
+---
+
+# Create Job
+
+Create a new scheduled job. All fields are required. The response shape matches the [GET Jobs](/jobs/get) endpoint (an array containing the created job).
+
+## Endpoint
+
+```http
+POST https://api.recoupable.com/api/jobs
+```
+
+## POST Parameters
+
+| Name              | Type   | Required | Description                                |
+| ----------------- | ------ | -------- | ------------------------------------------ |
+| title             | string | Yes      | Descriptive title of the job               |
+| prompt            | string | Yes      | Instruction/prompt executed by the job     |
+| schedule          | string | Yes      | Cron expression defining when the job runs |
+| account_id        | string | Yes      | UUID of the associated account             |
+| artist_account_id | string | Yes      | UUID of the associated artist account      |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X POST "https://api.recoupable.com/api/jobs" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Weekly Genre Pulse Check",
+    "prompt": "Execute this weekly genre analysis workflow and email a summary to the team.",
+    "schedule": "0 9 * * 4",
+    "account_id": "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d",
+    "artist_account_id": "1873859c-dd37-4e9a-9bac-80d35a1b2c3d"
+  }'
+```
+
+```python [Python]
+import requests
+
+def create_job(title: str, prompt: str, schedule: str, account_id: str, artist_account_id: str):
+    try:
+        url = "https://api.recoupable.com/api/jobs"
+        payload = {
+            "title": title,
+            "prompt": prompt,
+            "schedule": schedule,
+            "account_id": account_id,
+            "artist_account_id": artist_account_id,
+        }
+        headers = {"Content-Type": "application/json"}
+        response = requests.post(url, json=payload, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as error:
+        print(f"Error creating job: {error}")
+        raise
+```
+
+```javascript [JavaScript]
+async function createJob({
+  title,
+  prompt,
+  schedule,
+  account_id,
+  artist_account_id,
+}) {
+  try {
+    const response = await fetch("https://api.recoupable.com/api/jobs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title,
+        prompt,
+        schedule,
+        account_id,
+        artist_account_id,
+      }),
+    });
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error creating job:", error);
+    throw error;
+  }
+}
+```
+
+```typescript [TypeScript]
+interface Job {
+  id: string;
+  title: string;
+  prompt: string;
+  schedule: string;
+  account_id: string;
+  artist_account_id: string;
+  enabled: boolean | null;
+}
+
+interface JobsResponse {
+  status: "success" | "error";
+  jobs: Job[];
+  error?: string;
+}
+
+interface CreateJobInput {
+  title: string;
+  prompt: string;
+  schedule: string; // cron
+  account_id: string;
+  artist_account_id: string;
+}
+
+async function createJob(input: CreateJobInput): Promise<JobsResponse> {
+  const response = await fetch("https://api.recoupable.com/api/jobs", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  return (await response.json()) as JobsResponse;
+}
+```
+
+:::
+
+## Response Format
+
+The API returns JSON identical to the GET endpoint: an array containing the created job. See [GET Jobs](/jobs/get) for full response details.
+
+```json filename="Response - Created Job"
+{
+  "status": "success",
+  "jobs": [
+    {
+      "id": "aade2bce-55c7-468e-a606-c4e76fb2ea2k",
+      "title": "Weekly Genre Pulse Check",
+      "prompt": "Execute this weekly genre analysis workflow and email a summary to the team.",
+      "schedule": "0 9 * * 4",
+      "account_id": "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d",
+      "artist_account_id": "1873859c-dd37-4e9a-9bac-80d35a1b2c3d",
+      "enabled": true
+    }
+  ]
+}
+```
