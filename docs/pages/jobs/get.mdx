@@ -13,7 +13,7 @@ Retrieve scheduled jobs from the database. If a job `id` is provided, returns a 
 GET https://api.recoupable.com/api/jobs
 ```
 
-## Parameters
+## GET Parameters
 
 | Name | Type   | Required | Description                                                                                                                           |
 | ---- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
@@ -249,3 +249,5 @@ This endpoint queries the `scheduled_actions` table:
   - `account_id` (uuid, not null) - Foreign key to accounts table
   - `artist_account_id` (uuid, not null) - Foreign key to artist accounts table
   - `enabled` (boolean, null, default true) - Job enable/disable flag
+
+
