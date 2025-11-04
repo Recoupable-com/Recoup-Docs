@@ -142,6 +142,10 @@ export default defineConfig({
               text: "Update Job",
               link: "/jobs/update",
             },
+            {
+              text: "Delete Job",
+              link: "/jobs/delete",
+            },
           ],
         },
         {
