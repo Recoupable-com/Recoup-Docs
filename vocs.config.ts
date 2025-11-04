@@ -138,6 +138,10 @@ export default defineConfig({
               text: "Create Job",
               link: "/jobs/create",
             },
+            {
+              text: "Update Job",
+              link: "/jobs/update",
+            },
           ],
         },
         {
