@@ -5,7 +5,15 @@ description: API endpoint to retrieve scheduled tasks with optional filtering.
 
 # Get Tasks
 
-Retrieve scheduled tasks from the database. If a task `id` is provided, returns a single task matching that ID. Otherwise, returns an array of all tasks. Tasks have cron-based execution schedules.
+Retrieve scheduled tasks from the database. Tasks have cron-based execution schedules.
+
+You can filter tasks using the following optional parameters:
+
+- If `id` is provided, returns a single task matching that ID
+- If `account_id` is provided, returns only tasks for that account
+- If `artist_account_id` is provided, returns only tasks for that artist account
+
+If no parameters are provided, returns an array of all tasks.
 
 ## Endpoint
 
@@ -15,33 +23,47 @@ GET https://api.recoupable.com/api/tasks
 
 ## GET Parameters
 
-| Name | Type   | Required | Description                                                                                                                              |
-| ---- | ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| id   | string | No       | Optional. The unique identifier of the task to retrieve. If provided, returns a single task in the array. If omitted, returns all tasks. |
+| Name              | Type   | Required | Description                                                                    |
+| ----------------- | ------ | -------- | ------------------------------------------------------------------------------ |
+| id                | string | No       | Optional. Returns a single task matching the provided ID.                      |
+| account_id        | string | No       | Optional. Filter tasks to only include those for the specified account.        |
+| artist_account_id | string | No       | Optional. Filter tasks to only include those for the specified artist account. |
 
 ## Request Examples
 
 :::code-group
 
 ```bash [cURL]
+# Get all tasks
 curl -X GET "https://api.recoupable.com/api/tasks" \
   -H "Content-Type: application/json"
-```
 
-```bash [cURL - With ID]
+# Get a single task by ID
 curl -X GET "https://api.recoupable.com/api/tasks?id=aade2bce-55c7-468e-a606-c4e76fb2ea2k" \
+  -H "Content-Type: application/json"
+
+# Filter tasks by account_id
+curl -X GET "https://api.recoupable.com/api/tasks?account_id=848cd58d-700f-4b38-ab4c-d9f52a1b2c3d" \
+  -H "Content-Type: application/json"
+
+# Filter tasks by artist_account_id
+curl -X GET "https://api.recoupable.com/api/tasks?artist_account_id=1873859c-dd37-4e9a-9bac-80d35a1b2c3d" \
   -H "Content-Type: application/json"
 ```
 
 ```python [Python]
 import requests
 
-def get_tasks(task_id: str = None):
+def get_tasks(task_id: str = None, account_id: str = None, artist_account_id: str = None):
     try:
         url = "https://api.recoupable.com/api/tasks"
         params = {}
         if task_id:
             params["id"] = task_id
+        if account_id:
+            params["account_id"] = account_id
+        if artist_account_id:
+            params["artist_account_id"] = artist_account_id
         headers = {"Content-Type": "application/json"}
         response = requests.get(url, params=params, headers=headers)
         response.raise_for_status()
@@ -52,25 +74,33 @@ def get_tasks(task_id: str = None):
 
 # Example usage:
 # tasks = get_tasks()  # Get all tasks
-# task = get_tasks("aade2bce-55c7-468e-a606-c4e76fb2ea2k")  # Get single task
+# task = get_tasks(task_id="aade2bce-55c7-468e-a606-c4e76fb2ea2k")  # Get single task
+# account_tasks = get_tasks(account_id="848cd58d-700f-4b38-ab4c-d9f52a1b2c3d")  # Get tasks for account
+# artist_tasks = get_tasks(artist_account_id="1873859c-dd37-4e9a-9bac-80d35a1b2c3d")  # Get tasks for artist
 ```
 
 ```javascript [JavaScript]
-async function getTasks(taskId = null) {
+async function getTasks(
+  taskId = null,
+  accountId = null,
+  artistAccountId = null
+) {
   try {
     const params = new URLSearchParams();
     if (taskId) params.append("id", taskId);
+    if (accountId) params.append("account_id", accountId);
+    if (artistAccountId) params.append("artist_account_id", artistAccountId);
 
-    const response = await fetch(
-      `https://api.recoupable.com/api/tasks${
-        taskId ? `?${params.toString()}` : ""
-      }`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const queryString = params.toString();
+    const url = `https://api.recoupable.com/api/tasks${
+      queryString ? `?${queryString}` : ""
+    }`;
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -87,6 +117,8 @@ async function getTasks(taskId = null) {
 // Example usage:
 // const tasks = await getTasks();  // Get all tasks
 // const task = await getTasks("aade2bce-55c7-468e-a606-c4e76fb2ea2k");  // Get single task
+// const accountTasks = await getTasks(null, "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d");  // Get tasks for account
+// const artistTasks = await getTasks(null, null, "1873859c-dd37-4e9a-9bac-80d35a1b2c3d");  // Get tasks for artist
 ```
 
 ```typescript [TypeScript]
@@ -107,20 +139,26 @@ interface TasksResponse {
   error?: string;
 }
 
-async function getTasks(taskId?: string): Promise<TasksResponse> {
+async function getTasks(
+  taskId?: string,
+  accountId?: string,
+  artistAccountId?: string
+): Promise<TasksResponse> {
   const params = new URLSearchParams();
   if (taskId) params.append("id", taskId);
+  if (accountId) params.append("account_id", accountId);
+  if (artistAccountId) params.append("artist_account_id", artistAccountId);
 
-  const response = await fetch(
-    `https://api.recoupable.com/api/tasks${
-      taskId ? `?${params.toString()}` : ""
-    }`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const queryString = params.toString();
+  const url = `https://api.recoupable.com/api/tasks${
+    queryString ? `?${queryString}` : ""
+  }`;
+
+  const response = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -132,6 +170,8 @@ async function getTasks(taskId?: string): Promise<TasksResponse> {
 // Example usage:
 // const tasks = await getTasks();  // Get all tasks
 // const task = await getTasks("aade2bce-55c7-468e-a606-c4e76fb2ea2k");  // Get single task
+// const accountTasks = await getTasks(undefined, "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d");  // Get tasks for account
+// const artistTasks = await getTasks(undefined, undefined, "1873859c-dd37-4e9a-9bac-80d35a1b2c3d");  // Get tasks for artist
 ```
 
 :::
