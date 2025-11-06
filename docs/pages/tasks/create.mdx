@@ -99,6 +99,7 @@ interface Task {
   account_id: string;
   artist_account_id: string;
   enabled: boolean | null;
+  trigger_schedule_id: string | null;
 }
 
 interface TasksResponse {
@@ -143,7 +144,8 @@ The API returns JSON identical to the GET endpoint: an array containing the crea
       "schedule": "0 9 * * 4",
       "account_id": "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d",
       "artist_account_id": "1873859c-dd37-4e9a-9bac-80d35a1b2c3d",
-      "enabled": true
+      "enabled": true,
+      "trigger_schedule_id": null
     }
   ]
 }
