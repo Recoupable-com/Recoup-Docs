@@ -98,6 +98,7 @@ interface Task {
   account_id: string;
   artist_account_id: string;
   enabled: boolean | null;
+  trigger_schedule_id: string | null;
 }
 
 interface TasksResponse {
@@ -150,7 +151,8 @@ The API returns JSON responses with task data. When an `id` parameter is provide
       "schedule": "0 10 * * *",
       "account_id": "df1652b7-9a8e-4f3c-8b2d-1e4f5a6b7c8d",
       "artist_account_id": "1873859c-dd37-4e9a-9bac-80d35a1b2c3d",
-      "enabled": true
+      "enabled": true,
+      "trigger_schedule_id": null
     },
     {
       "id": "6388ca52-b1b7-41e7-a48d-404b4d05016f",
@@ -159,7 +161,8 @@ The API returns JSON responses with task data. When an `id` parameter is provide
       "schedule": "0 9 * * *",
       "account_id": "d15d5708-700f-4b38-ab4c-d9f52a1b2c3d",
       "artist_account_id": "1873859c-dd37-4e9a-9bac-80d35a1b2c3d",
-      "enabled": true
+      "enabled": true,
+      "trigger_schedule_id": null
     },
     {
       "id": "e32aa16b-7069-4c29-8935-fadf7bca8471",
@@ -168,7 +171,8 @@ The API returns JSON responses with task data. When an `id` parameter is provide
       "schedule": "0 10 * * 2",
       "account_id": "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d",
       "artist_account_id": "1873859c-dd37-4e9a-9bac-80d35a1b2c3d",
-      "enabled": true
+      "enabled": true,
+      "trigger_schedule_id": null
     }
   ]
 }
@@ -203,15 +207,16 @@ The API returns JSON responses with task data. When an `id` parameter is provide
 
 ### Task Object
 
-| Property          | Type    | Description                                                                      |
-| ----------------- | ------- | -------------------------------------------------------------------------------- |
-| id                | string  | Unique identifier for the task (UUID)                                            |
-| title             | string  | Descriptive title or name of the task                                            |
-| prompt            | string  | Detailed instruction or prompt associated with the task execution                |
-| schedule          | string  | Cron expression defining when the task should execute (e.g., "0 10 \* \* \*")    |
-| account_id        | string  | Unique identifier for the associated account (UUID)                              |
-| artist_account_id | string  | Unique identifier for the associated artist account (UUID)                       |
-| enabled           | boolean | Whether the task is enabled. Defaults to `true` if not specified. Can be `null`. |
+| Property            | Type    | Description                                                                      |
+| ------------------- | ------- | -------------------------------------------------------------------------------- |
+| id                  | string  | Unique identifier for the task (UUID)                                            |
+| title               | string  | Descriptive title or name of the task                                            |
+| prompt              | string  | Detailed instruction or prompt associated with the task execution                |
+| schedule            | string  | Cron expression defining when the task should execute (e.g., "0 10 \* \* \*")    |
+| account_id          | string  | Unique identifier for the associated account (UUID)                              |
+| artist_account_id   | string  | Unique identifier for the associated artist account (UUID)                       |
+| enabled             | boolean | Whether the task is enabled. Defaults to `true` if not specified. Can be `null`. |
+| trigger_schedule_id | string  | Identifier for the trigger schedule associated with this task. Can be `null`.    |
 
 ## Schedule Format (Cron)
 
@@ -249,3 +254,4 @@ This endpoint queries the `scheduled_actions` table:
   - `account_id` (uuid, not null) - Foreign key to accounts table
   - `artist_account_id` (uuid, not null) - Foreign key to artist accounts table
   - `enabled` (boolean, null, default true) - Task enable/disable flag
+  - `trigger_schedule_id` (text, null) - Identifier for the trigger schedule associated with this task
