@@ -34,21 +34,19 @@ GET https://api.recoupable.com/api/tasks
 :::code-group
 
 ```bash [cURL]
+# Get all tasks
 curl -X GET "https://api.recoupable.com/api/tasks" \
   -H "Content-Type: application/json"
-```
 
-```bash [cURL - With ID]
+# Get a single task by ID
 curl -X GET "https://api.recoupable.com/api/tasks?id=aade2bce-55c7-468e-a606-c4e76fb2ea2k" \
   -H "Content-Type: application/json"
-```
 
-```bash [cURL - Filter by Account ID]
+# Filter tasks by account_id
 curl -X GET "https://api.recoupable.com/api/tasks?account_id=848cd58d-700f-4b38-ab4c-d9f52a1b2c3d" \
   -H "Content-Type: application/json"
-```
 
-```bash [cURL - Filter by Artist Account ID]
+# Filter tasks by artist_account_id
 curl -X GET "https://api.recoupable.com/api/tasks?artist_account_id=1873859c-dd37-4e9a-9bac-80d35a1b2c3d" \
   -H "Content-Type: application/json"
 ```
