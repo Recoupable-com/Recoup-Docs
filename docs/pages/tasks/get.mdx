@@ -1,69 +1,69 @@
 ---
-title: Get Jobs
-description: API endpoint to retrieve scheduled jobs (scheduled actions) with optional filtering by job ID.
+title: Get Tasks
+description: API endpoint to retrieve scheduled tasks with optional filtering.
 ---
 
-# Get Jobs
+# Get Tasks
 
-Retrieve scheduled jobs from the database. If a job `id` is provided, returns a single job matching that ID. Otherwise, returns an array of all jobs. Jobs represent scheduled actions with cron-based execution schedules.
+Retrieve scheduled tasks from the database. If a task `id` is provided, returns a single task matching that ID. Otherwise, returns an array of all tasks. Tasks have cron-based execution schedules.
 
 ## Endpoint
 
 ```http
-GET https://api.recoupable.com/api/jobs
+GET https://api.recoupable.com/api/tasks
 ```
 
 ## GET Parameters
 
-| Name | Type   | Required | Description                                                                                                                           |
-| ---- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| id   | string | No       | Optional. The unique identifier of the job to retrieve. If provided, returns a single job in the array. If omitted, returns all jobs. |
+| Name | Type   | Required | Description                                                                                                                              |
+| ---- | ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| id   | string | No       | Optional. The unique identifier of the task to retrieve. If provided, returns a single task in the array. If omitted, returns all tasks. |
 
 ## Request Examples
 
 :::code-group
 
 ```bash [cURL]
-curl -X GET "https://api.recoupable.com/api/jobs" \
+curl -X GET "https://api.recoupable.com/api/tasks" \
   -H "Content-Type: application/json"
 ```
 
 ```bash [cURL - With ID]
-curl -X GET "https://api.recoupable.com/api/jobs?id=aade2bce-55c7-468e-a606-c4e76fb2ea2k" \
+curl -X GET "https://api.recoupable.com/api/tasks?id=aade2bce-55c7-468e-a606-c4e76fb2ea2k" \
   -H "Content-Type: application/json"
 ```
 
 ```python [Python]
 import requests
 
-def get_jobs(job_id: str = None):
+def get_tasks(task_id: str = None):
     try:
-        url = "https://api.recoupable.com/api/jobs"
+        url = "https://api.recoupable.com/api/tasks"
         params = {}
-        if job_id:
-            params["id"] = job_id
+        if task_id:
+            params["id"] = task_id
         headers = {"Content-Type": "application/json"}
         response = requests.get(url, params=params, headers=headers)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as error:
-        print(f"Error fetching jobs: {error}")
+        print(f"Error fetching tasks: {error}")
         raise
 
 # Example usage:
-# jobs = get_jobs()  # Get all jobs
-# job = get_jobs("aade2bce-55c7-468e-a606-c4e76fb2ea2k")  # Get single job
+# tasks = get_tasks()  # Get all tasks
+# task = get_tasks("aade2bce-55c7-468e-a606-c4e76fb2ea2k")  # Get single task
 ```
 
 ```javascript [JavaScript]
-async function getJobs(jobId = null) {
+async function getTasks(taskId = null) {
   try {
     const params = new URLSearchParams();
-    if (jobId) params.append("id", jobId);
+    if (taskId) params.append("id", taskId);
 
     const response = await fetch(
-      `https://api.recoupable.com/api/jobs${
-        jobId ? `?${params.toString()}` : ""
+      `https://api.recoupable.com/api/tasks${
+        taskId ? `?${params.toString()}` : ""
       }`,
       {
         headers: {
@@ -79,18 +79,18 @@ async function getJobs(jobId = null) {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching jobs:", error);
+    console.error("Error fetching tasks:", error);
     throw error;
   }
 }
 
 // Example usage:
-// const jobs = await getJobs();  // Get all jobs
-// const job = await getJobs("aade2bce-55c7-468e-a606-c4e76fb2ea2k");  // Get single job
+// const tasks = await getTasks();  // Get all tasks
+// const task = await getTasks("aade2bce-55c7-468e-a606-c4e76fb2ea2k");  // Get single task
 ```
 
 ```typescript [TypeScript]
-interface Job {
+interface Task {
   id: string;
   title: string;
   prompt: string;
@@ -100,19 +100,19 @@ interface Job {
   enabled: boolean | null;
 }
 
-interface JobsResponse {
+interface TasksResponse {
   status: "success" | "error";
-  jobs: Job[];
+  tasks: Task[];
   error?: string;
 }
 
-async function getJobs(jobId?: string): Promise<JobsResponse> {
+async function getTasks(taskId?: string): Promise<TasksResponse> {
   const params = new URLSearchParams();
-  if (jobId) params.append("id", jobId);
+  if (taskId) params.append("id", taskId);
 
   const response = await fetch(
-    `https://api.recoupable.com/api/jobs${
-      jobId ? `?${params.toString()}` : ""
+    `https://api.recoupable.com/api/tasks${
+      taskId ? `?${params.toString()}` : ""
     }`,
     {
       headers: {
@@ -125,24 +125,24 @@ async function getJobs(jobId?: string): Promise<JobsResponse> {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  return (await response.json()) as JobsResponse;
+  return (await response.json()) as TasksResponse;
 }
 
 // Example usage:
-// const jobs = await getJobs();  // Get all jobs
-// const job = await getJobs("aade2bce-55c7-468e-a606-c4e76fb2ea2k");  // Get single job
+// const tasks = await getTasks();  // Get all tasks
+// const task = await getTasks("aade2bce-55c7-468e-a606-c4e76fb2ea2k");  // Get single task
 ```
 
 :::
 
 ## Response Format
 
-The API returns JSON responses with job data. When an `id` parameter is provided, the response contains a single job in the array. When omitted, all jobs are returned.
+The API returns JSON responses with task data. When an `id` parameter is provided, the response contains a single task in the array. When omitted, all tasks are returned.
 
-```json filename="Response - All Jobs"
+```json filename="Response - All Tasks"
 {
   "status": "success",
-  "jobs": [
+  "tasks": [
     {
       "id": "aade2bce-55c7-468e-a606-c4e76fb2ea2k",
       "title": "Daily Hip-Hop History Caption and Email",
@@ -174,10 +174,10 @@ The API returns JSON responses with job data. When an `id` parameter is provided
 }
 ```
 
-```json filename="Response - Single Job (with id parameter)"
+```json filename="Response - Single Task (with id parameter)"
 {
   "status": "success",
-  "jobs": [
+  "tasks": [
     {
       "id": "aade2bce-55c7-468e-a606-c4e76fb2ea2k",
       "title": "Daily Hip-Hop History Caption and Email",
@@ -195,23 +195,23 @@ The API returns JSON responses with job data. When an `id` parameter is provided
 
 ### Response Object
 
-| Property | Type   | Description                                         |
-| -------- | ------ | --------------------------------------------------- |
-| status   | string | Status of the request ("success" or "error")        |
-| jobs     | array  | Array of job objects (single item if `id` provided) |
-| error    | string | Error message (only present if status is "error")   |
+| Property | Type   | Description                                          |
+| -------- | ------ | ---------------------------------------------------- |
+| status   | string | Status of the request ("success" or "error")         |
+| tasks    | array  | Array of task objects (single item if `id` provided) |
+| error    | string | Error message (only present if status is "error")    |
 
-### Job Object
+### Task Object
 
-| Property          | Type    | Description                                                                     |
-| ----------------- | ------- | ------------------------------------------------------------------------------- |
-| id                | string  | Unique identifier for the job (UUID)                                            |
-| title             | string  | Descriptive title or name of the job                                            |
-| prompt            | string  | Detailed instruction or prompt associated with the job execution                |
-| schedule          | string  | Cron expression defining when the job should execute (e.g., "0 10 \* \* \*")    |
-| account_id        | string  | Unique identifier for the associated account (UUID)                             |
-| artist_account_id | string  | Unique identifier for the associated artist account (UUID)                      |
-| enabled           | boolean | Whether the job is enabled. Defaults to `true` if not specified. Can be `null`. |
+| Property          | Type    | Description                                                                      |
+| ----------------- | ------- | -------------------------------------------------------------------------------- |
+| id                | string  | Unique identifier for the task (UUID)                                            |
+| title             | string  | Descriptive title or name of the task                                            |
+| prompt            | string  | Detailed instruction or prompt associated with the task execution                |
+| schedule          | string  | Cron expression defining when the task should execute (e.g., "0 10 \* \* \*")    |
+| account_id        | string  | Unique identifier for the associated account (UUID)                              |
+| artist_account_id | string  | Unique identifier for the associated artist account (UUID)                       |
+| enabled           | boolean | Whether the task is enabled. Defaults to `true` if not specified. Can be `null`. |
 
 ## Schedule Format (Cron)
 
@@ -243,11 +243,9 @@ This endpoint queries the `scheduled_actions` table:
 
 - **Primary Key**: `id` (uuid, not null, default gen_random_uuid())
 - **Fields**:
-  - `title` (text, not null) - Job title
-  - `prompt` (text, not null) - Job execution prompt/instructions
-  - `schedule` (text, not null) - Cron expression for job scheduling
+  - `title` (text, not null) - Task title
+  - `prompt` (text, not null) - Task execution prompt/instructions
+  - `schedule` (text, not null) - Cron expression for task scheduling
   - `account_id` (uuid, not null) - Foreign key to accounts table
   - `artist_account_id` (uuid, not null) - Foreign key to artist accounts table
-  - `enabled` (boolean, null, default true) - Job enable/disable flag
-
-
+  - `enabled` (boolean, null, default true) - Task enable/disable flag
