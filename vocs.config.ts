@@ -128,23 +128,23 @@ export default defineConfig({
           ],
         },
         {
-          text: "Jobs",
+          text: "Tasks",
           items: [
             {
-              text: "Get Jobs",
-              link: "/jobs/get",
+              text: "Get Tasks",
+              link: "/tasks/get",
             },
             {
-              text: "Create Job",
-              link: "/jobs/create",
+              text: "Create Task",
+              link: "/tasks/create",
             },
             {
-              text: "Update Job",
-              link: "/jobs/update",
+              text: "Update Task",
+              link: "/tasks/update",
             },
             {
-              text: "Delete Job",
-              link: "/jobs/delete",
+              text: "Delete Task",
+              link: "/tasks/delete",
             },
           ],
         },
