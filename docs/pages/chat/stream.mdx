@@ -1,0 +1,199 @@
+---
+title: Chat Stream API
+description: Stream AI-powered chat responses using the Recoup chat system and the Vercel AI SDK UI message stream helpers.
+---
+
+# Chat Stream API
+
+Stream AI-powered chat responses using the Recoup chat system. This endpoint mirrors the request payload of the [Chat Generate API](/chat/generate) but returns a streaming response compatible with the Vercel AI SDK [`createUIMessageStreamResponse`](https://sdk.vercel.ai/docs/reference/ai-sdk-ui/create-ui-message-stream-response).
+
+## Endpoint
+
+```http
+POST https://chat.recoupable.com/api/chat
+```
+
+## Parameters
+
+| Name         | Type   | Required | Description                                                                                                  |
+| ------------ | ------ | -------- | ------------------------------------------------------------------------------------------------------------ |
+| messages     | array  | Yes      | Array of [UIMessage](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message#uimessage) objects for context |
+| roomId       | string | Yes      | The unique identifier of the chat room                                                                       |
+| artistId     | string | No       | The unique identifier of the artist (optional)                                                               |
+| accountId    | string | Yes      | The unique identifier of the account making the request                                                      |
+| model        | string | No       | The AI model to use for text generation (optional)                                                           |
+| excludeTools | array  | No       | Array of tool names to exclude from execution (e.g., `["create_scheduled_actions"]`)                         |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+# Stream all responses to stdout
+curl -N -X POST "https://chat.recoupable.com/api/chat" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [
+      {
+        "id": "msg-1",
+        "role": "user",
+        "parts": [
+          { "type": "text", "text": "Draft a tweet announcing our new single." }
+        ]
+      }
+    ],
+    "roomId": "room-123",
+    "accountId": "your-account-id"
+  }'
+```
+
+```javascript [JavaScript]
+// Browser / Node fetch example
+async function streamChat(messages, roomId, accountId, options = {}) {
+  const response = await fetch("https://chat.recoupable.com/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      messages,
+      roomId,
+      accountId,
+      artistId: options.artistId,
+      model: options.model,
+      excludeTools: options.excludeTools,
+    }),
+  });
+
+  if (!response.ok || !response.body) {
+    throw new Error("Failed to stream chat response");
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    const chunk = decoder.decode(value, { stream: true });
+    // Each chunk contains UI message stream data
+    console.log(chunk);
+  }
+}
+```
+
+```typescript [TypeScript]
+import { createUIMessageStreamParser, UIMessageStreamPart } from "ai";
+
+async function streamChatWithParser(requestBody: {
+  messages: any[];
+  roomId: string;
+  accountId: string;
+  artistId?: string;
+  model?: string;
+  excludeTools?: string[];
+}) {
+  const response = await fetch("https://chat.recoupable.com/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestBody),
+  });
+
+  if (!response.ok || !response.body) {
+    throw new Error("Streaming request failed");
+  }
+
+  const parser = createUIMessageStreamParser((part: UIMessageStreamPart) => {
+    switch (part.type) {
+      case "message-start":
+        console.log("assistant started message", part.message.id);
+        break;
+      case "message-delta":
+        console.log("chunk", part.delta);
+        break;
+      case "message-end":
+        console.log("assistant finished message", part.message.id);
+        break;
+      case "error":
+        console.error("stream error", part.error);
+        break;
+    }
+  });
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    parser.feed(decoder.decode(value, { stream: true }));
+  }
+}
+```
+
+```tsx [React (useChat)]
+import { useChat } from "ai/react";
+
+export function StreamingChat() {
+  const { messages, append, status } = useChat({
+    api: "/api/chat", // proxy to https://chat.recoupable.com/api/chat
+  });
+
+  return (
+    <div>
+      <ul>
+        {messages.map((message) => (
+          <li key={message.id}>
+            <strong>{message.role}:</strong>{" "}
+            {message.parts?.map((part) => part.text).join("") ??
+              message.content}
+          </li>
+        ))}
+      </ul>
+      <button
+        disabled={status === "in_progress"}
+        onClick={() =>
+          append({
+            role: "user",
+            content: "Draft a message to welcome new fans.",
+          })
+        }
+      >
+        Ask Recoup
+      </button>
+    </div>
+  );
+}
+```
+
+:::
+
+## Response Format
+
+The endpoint returns a streaming HTTP response produced by [`createUIMessageStreamResponse`](https://sdk.vercel.ai/docs/reference/ai-sdk-ui/create-ui-message-stream-response). The stream emits UI message parts encoded as data chunks that can be parsed with `createUIMessageStreamParser`.
+
+### Stream Events
+
+| Event Type      | Description                                                                                                    |
+| --------------- | -------------------------------------------------------------------------------------------------------------- |
+| `message-start` | Fired when the assistant begins generating a message. Contains the message metadata.                           |
+| `message-delta` | Fired for incremental updates (token chunks, tool results, etc.) and includes only the delta payload.          |
+| `message-end`   | Fired when the assistant finishes a message. Contains the complete message payload.                            |
+| `error`         | Fired if an error occurs. The payload includes a serialized error string generated by `serializeError`.        |
+| `metadata`      | Optional event that can include usage data, finish reasons, or other metadata emitted by downstream execution. |
+
+### Sample Stream Output
+
+```text
+0:"data: {\"type\":\"message-start\",\"message\":{\"id\":\"msg-assistant-1\",\"role\":\"assistant\"}}\n\n"
+1:"data: {\"type\":\"message-delta\",\"delta\":{\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"Hello\"}]}}\n\n"
+2:"data: {\"type\":\"message-delta\",\"delta\":{\"content\":[{\"type\":\"text\",\"text\":\"! Here's your draft.\"}]}}\n\n"
+3:"data: {\"type\":\"message-end\",\"message\":{\"id\":\"msg-assistant-1\",\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"Hello! Here's your draft.\"}]}}\n\n"
+```
+
+## Notes
+
+- The response is streamed and should be consumed with a readable stream reader, an SSE parser, or the helpers provided by the Vercel AI SDK.
+- Errors emitted during streaming are serialized and returned as `error` events before the stream closes.
+- The same post-processing hooks as the generate endpoint run after the stream completes, ensuring completions are persisted.
+- CORS headers are automatically applied; `OPTIONS` requests respond with `200` for preflight checks.
+
+---

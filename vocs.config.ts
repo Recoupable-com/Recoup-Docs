@@ -17,6 +17,10 @@ export default defineConfig({
               text: "Generate",
               link: "/chat/generate",
             },
+            {
+              text: "Stream",
+              link: "/chat/stream",
+            },
           ],
         },
         {
