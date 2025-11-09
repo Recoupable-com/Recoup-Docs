@@ -21,6 +21,10 @@ export default defineConfig({
               text: "Stream",
               link: "/chat/stream",
             },
+            {
+              text: "Get Chats",
+              link: "/chat/chats",
+            },
           ],
         },
         {
