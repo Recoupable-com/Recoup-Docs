@@ -25,11 +25,11 @@ GET https://api.recoupable.com/api/chats
 :::code-group
 
 ```bash [cURL]
+# Get all chats for an account
 curl -X GET "https://api.recoupable.com/api/chats?account_id=848cd58d-700f-4b38-ab4c-d9f52a1b2c3d" \
   -H "Content-Type: application/json"
-```
 
-```bash [cURL - Filter by Artist]
+# Filter chats by artist_account_id
 curl -X GET "https://api.recoupable.com/api/chats?account_id=848cd58d-700f-4b38-ab4c-d9f52a1b2c3d&artist_account_id=1873859c-dd37-4e9a-9bac-80d35a1b2c3d" \
   -H "Content-Type: application/json"
 ```
@@ -139,34 +139,13 @@ async function getChats(
 
 ## Response Properties
 
-| Property           | Type   | Description                                                       |
-| ------------------ | ------ | ----------------------------------------------------------------- |
-| status             | string | `"success"` or `"error"`                                          |
-| chats              | array  | Array of chat room objects                                        |
-| error              | string | Error message when `status` is `"error"`                          |
-| chats[].id         | string | UUID of the chat room                                             |
-| chats[].account_id | string | UUID of the associated account (can be null if not set)           |
-| chats[].topic      | string | Optional topic or description of the room (null if not provided)  |
-| chats[].updated_at | string | ISO timestamp of the last update to the room                      |
-| chats[].artist_id  | string | UUID of the associated artist account (null when not applicable)  |
-
-## Database Schema
-
-This endpoint reads from the `rooms` table.
-
-### Rooms Table
-
-- **Primary Key**: `id` (uuid)
-- **Fields**:
-  - `account_id` (uuid, nullable, default `gen_random_uuid()`) – account owning the room
-  - `topic` (text, nullable) – optional room topic or label
-  - `updated_at` (timestamptz, default `now()`) – last update timestamp
-  - `artist_id` (uuid, nullable) – associated artist account when applicable
-- **Triggers**:
-  - `set_updated_at` updates the `updated_at` column on every change
-- **Indexes**:
-  - `idx_rooms_account_id` on `account_id`
-  - `idx_rooms_artist_id` on `artist_id`
-
----
-
+| Property           | Type   | Description                                                      |
+| ------------------ | ------ | ---------------------------------------------------------------- |
+| status             | string | `"success"` or `"error"`                                         |
+| chats              | array  | Array of chat room objects                                       |
+| error              | string | Error message when `status` is `"error"`                         |
+| chats[].id         | string | UUID of the chat room                                            |
+| chats[].account_id | string | UUID of the associated account (can be null if not set)          |
+| chats[].topic      | string | Optional topic or description of the room (null if not provided) |
+| chats[].updated_at | string | ISO timestamp of the last update to the room                     |
+| chats[].artist_id  | string | UUID of the associated artist account (null when not applicable) |
