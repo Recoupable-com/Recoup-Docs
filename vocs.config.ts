@@ -11,7 +11,7 @@ export default defineConfig({
       text: "API Reference",
       items: [
         {
-          text: "Chat",
+          text: "Chats",
           items: [
             {
               text: "Generate",
@@ -20,6 +20,10 @@ export default defineConfig({
             {
               text: "Stream",
               link: "/chat/stream",
+            },
+            {
+              text: "Get Chats",
+              link: "/chat/chats",
             },
           ],
         },

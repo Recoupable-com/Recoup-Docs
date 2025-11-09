@@ -1,0 +1,151 @@
+---
+title: Get Chats API
+description: Retrieve chat rooms for an account with optional filtering by artist account.
+---
+
+# Get Chats API
+
+Retrieve chat rooms (conversations) for a specific account. Provide an `account_id` to scope the results, and optionally filter by an `artist_account_id`. The endpoint returns metadata about each room, including the topic, associated artist, and last updated timestamp.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/chats
+```
+
+## Parameters
+
+| Name              | Type   | Required | Description                                                            |
+| ----------------- | ------ | -------- | ---------------------------------------------------------------------- |
+| account_id        | string | Yes      | UUID of the account whose chats to retrieve                            |
+| artist_account_id | string | No       | Optional. Filter chats to only include those for the specified artist. |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+# Get all chats for an account
+curl -X GET "https://api.recoupable.com/api/chats?account_id=848cd58d-700f-4b38-ab4c-d9f52a1b2c3d" \
+  -H "Content-Type: application/json"
+
+# Filter chats by artist_account_id
+curl -X GET "https://api.recoupable.com/api/chats?account_id=848cd58d-700f-4b38-ab4c-d9f52a1b2c3d&artist_account_id=1873859c-dd37-4e9a-9bac-80d35a1b2c3d" \
+  -H "Content-Type: application/json"
+```
+
+```python [Python]
+import requests
+
+def get_chats(account_id: str, artist_account_id: str | None = None):
+    url = "https://api.recoupable.com/api/chats"
+    params = {"account_id": account_id}
+    if artist_account_id:
+        params["artist_account_id"] = artist_account_id
+
+    response = requests.get(url, params=params, headers={"Content-Type": "application/json"})
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+# chats = get_chats("848cd58d-700f-4b38-ab4c-d9f52a1b2c3d")
+# artist_chats = get_chats("848cd58d-700f-4b38-ab4c-d9f52a1b2c3d", "1873859c-dd37-4e9a-9bac-80d35a1b2c3d")
+```
+
+```javascript [JavaScript]
+async function getChats(accountId, artistAccountId = null) {
+  const params = new URLSearchParams({ account_id: accountId });
+  if (artistAccountId) params.append("artist_account_id", artistAccountId);
+
+  const response = await fetch(
+    `https://api.recoupable.com/api/chats?${params.toString()}`,
+    {
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch chats: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+// Example usage:
+// const chats = await getChats("848cd58d-700f-4b38-ab4c-d9f52a1b2c3d");
+// const artistChats = await getChats("848cd58d-700f-4b38-ab4c-d9f52a1b2c3d", "1873859c-dd37-4e9a-9bac-80d35a1b2c3d");
+```
+
+```typescript [TypeScript]
+interface ChatRoom {
+  id: string;
+  account_id: string | null;
+  topic: string | null;
+  updated_at: string;
+  artist_id: string | null;
+}
+
+interface GetChatsResponse {
+  status: "success" | "error";
+  chats: ChatRoom[];
+  error?: string;
+}
+
+async function getChats(
+  accountId: string,
+  artistAccountId?: string
+): Promise<GetChatsResponse> {
+  const params = new URLSearchParams({ account_id: accountId });
+  if (artistAccountId) params.append("artist_account_id", artistAccountId);
+
+  const response = await fetch(
+    `https://api.recoupable.com/api/chats?${params.toString()}`,
+    { headers: { "Content-Type": "application/json" } }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch chats: ${response.status}`);
+  }
+
+  return (await response.json()) as GetChatsResponse;
+}
+```
+
+:::
+
+## Response Format
+
+```json filename="Response"
+{
+  "status": "success",
+  "chats": [
+    {
+      "id": "f1b2c3d4-5678-4abc-9def-1234567890ab",
+      "account_id": "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d",
+      "topic": "Release planning",
+      "updated_at": "2025-01-15T18:27:42.123Z",
+      "artist_id": "1873859c-dd37-4e9a-9bac-80d35a1b2c3d"
+    },
+    {
+      "id": "09e87d65-4321-4abc-9def-0987654321aa",
+      "account_id": "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d",
+      "topic": null,
+      "updated_at": "2025-01-12T09:05:11.987Z",
+      "artist_id": null
+    }
+  ]
+}
+```
+
+## Response Properties
+
+| Property           | Type   | Description                                                      |
+| ------------------ | ------ | ---------------------------------------------------------------- |
+| status             | string | `"success"` or `"error"`                                         |
+| chats              | array  | Array of chat room objects                                       |
+| error              | string | Error message when `status` is `"error"`                         |
+| chats[].id         | string | UUID of the chat room                                            |
+| chats[].account_id | string | UUID of the associated account (can be null if not set)          |
+| chats[].topic      | string | Optional topic or description of the room (null if not provided) |
+| chats[].updated_at | string | ISO timestamp of the last update to the room                     |
+| chats[].artist_id  | string | UUID of the associated artist account (null when not applicable) |
