@@ -11,7 +11,7 @@ export default defineConfig({
       text: "API Reference",
       items: [
         {
-          text: "Chat",
+          text: "Chats",
           items: [
             {
               text: "Generate",
