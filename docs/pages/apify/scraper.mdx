@@ -60,15 +60,15 @@ async function getApifyResults(runId) {
 ```
 
 ```typescript [TypeScript]
-interface ActorRunStatus {
+interface ApifyResponse<T = unknown> {
   status: string;
   datasetId: string;
+  data?: T[];
 }
 
-// The response type will be either ActorRunStatus or the raw dataset items
-type ApifyResponse = ActorRunStatus | any[];
-
-async function getApifyResults(runId: string): Promise<ApifyResponse> {
+async function getApifyResults<T = unknown>(
+  runId: string
+): Promise<ApifyResponse<T>> {
   const params = new URLSearchParams({
     runId,
   });
@@ -78,11 +78,14 @@ async function getApifyResults(runId: string): Promise<ApifyResponse> {
     { headers: { "Content-Type": "application/json" } }
   );
   if (!response.ok) throw new Error("Apify results fetch failed");
-  return await response.json();
+  return (await response.json()) as ApifyResponse<T>;
 }
 
 // Example usage:
-// const data = await getApifyResults("abc123xyz");
+// const result = await getApifyResults("abc123xyz");
+// if (result.status === "SUCCEEDED" && result.data) {
+//   console.log(`Fetched ${result.data.length} items for dataset ${result.datasetId}`);
+// }
 ```
 
 :::
