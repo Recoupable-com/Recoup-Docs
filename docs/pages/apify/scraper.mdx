@@ -60,15 +60,15 @@ async function getApifyResults(runId) {
 ```
 
 ```typescript [TypeScript]
-interface ActorRunStatus {
+interface ApifyResponse<T = unknown> {
   status: string;
   datasetId: string;
+  data?: T[];
 }
 
-// The response type will be either ActorRunStatus or the raw dataset items
-type ApifyResponse = ActorRunStatus | any[];
-
-async function getApifyResults(runId: string): Promise<ApifyResponse> {
+async function getApifyResults<T = unknown>(
+  runId: string
+): Promise<ApifyResponse<T>> {
   const params = new URLSearchParams({
     runId,
   });
@@ -78,11 +78,14 @@ async function getApifyResults(runId: string): Promise<ApifyResponse> {
     { headers: { "Content-Type": "application/json" } }
   );
   if (!response.ok) throw new Error("Apify results fetch failed");
-  return await response.json();
+  return (await response.json()) as ApifyResponse<T>;
 }
 
 // Example usage:
-// const data = await getApifyResults("abc123xyz");
+// const result = await getApifyResults("abc123xyz");
+// if (result.status === "SUCCEEDED" && result.data) {
+//   console.log(`Fetched ${result.data.length} items for dataset ${result.datasetId}`);
+// }
 ```
 
 :::
@@ -101,17 +104,21 @@ async function getApifyResults(runId: string): Promise<ApifyResponse> {
 ### Completed Response
 
 ```json filename="Completed Response"
-[
-  {
-    "id": "123456789",
-    "username": "example_user",
-    "fullName": "Example User",
-    "biography": "This is a sample biography",
-    "followersCount": 1000,
-    "followsCount": 500,
-    "profilePicUrl": "https://example.com/profile.jpg"
-  }
-]
+{
+  "status": "SUCCEEDED",
+  "datasetId": "def456uvw",
+  "data": [
+    {
+      "id": "123456789",
+      "username": "example_user",
+      "fullName": "Example User",
+      "biography": "This is a sample biography",
+      "followersCount": 1000,
+      "followsCount": 500,
+      "profilePicUrl": "https://example.com/profile.jpg"
+    }
+  ]
+}
 ```
 
 ## Response Properties
@@ -125,7 +132,13 @@ async function getApifyResults(runId: string): Promise<ApifyResponse> {
 
 ### Completed Response
 
-When the scraper run is completed successfully, the response will be the raw dataset items from Apify. The exact structure of these items depends on the type of scraper that was run (Instagram Profile, Instagram Comments, etc.).
+| Property  | Type   | Description                                                                                        |
+| --------- | ------ | -------------------------------------------------------------------------------------------------- |
+| status    | string | Final status of the Apify run (typically `"SUCCEEDED"` when complete)                              |
+| datasetId | string | ID of the dataset containing the results                                                           |
+| data      | array  | Array of dataset items returned by the scraper. The structure of each item varies by scraper type. |
+
+When the scraper run completes successfully, the `data` array contains the dataset items from Apify. Its shape depends on the specific scraper (Instagram Profile, Instagram Comments, etc.).
 
 ## Notes
 
@@ -133,6 +146,7 @@ When the scraper run is completed successfully, the response will be the raw dat
 - To start a new scraper run, use one of these endpoints:
   - [Instagram Profiles API](/instagram/profiles) - Scrape profile information
   - [Instagram Comments API](/instagram/comments) - Scrape post comments
+  - [Social Scrape API](/social/scrape) - Kick off a scrape for a specific social profile
 - The response format changes based on the run status:
   - For in-progress runs: Returns status information
   - For completed runs: Returns the raw dataset items
