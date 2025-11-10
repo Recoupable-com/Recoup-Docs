@@ -47,6 +47,10 @@ export default defineConfig({
               text: "Social Posts",
               link: "/social/posts",
             },
+            {
+              text: "Social Scrape",
+              link: "/social/scrape",
+            },
           ],
         },
         {

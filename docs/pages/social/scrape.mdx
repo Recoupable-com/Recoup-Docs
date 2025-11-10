@@ -1,0 +1,116 @@
+---
+title: Social Scrape API
+description: Kick off a social profile scraping job for a specific social ID.
+---
+
+# Social Scrape API
+
+Trigger a social profile scraping job for a given `social_id`. Use the [Get Artist Socials](/artist/socials) endpoint first to retrieve the `social_id` values you can pass here. The response returns Apify run metadata that you can use to poll for status and retrieve results via the [Apify Scraper Results API](/apify/scraper).
+
+## Endpoint
+
+```http
+POST https://api.recoupable.com/api/social/scrape
+```
+
+## Parameters
+
+| Name      | Type   | Required | Description                                                                                           |
+| --------- | ------ | -------- | ----------------------------------------------------------------------------------------------------- |
+| social_id | string | Yes      | UUID of the social profile to scrape. Obtain this from the [Get Artist Socials](/artist/socials) API. |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X POST "https://api.recoupable.com/api/social/scrape" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "social_id": "123e4567-e89b-12d3-a456-426614174005"
+  }'
+```
+
+```python [Python]
+import requests
+
+def scrape_social_profile(social_id: str):
+    url = "https://api.recoupable.com/api/social/scrape"
+    payload = {"social_id": social_id}
+    headers = {"Content-Type": "application/json"}
+
+    response = requests.post(url, json=payload, headers=headers)
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+# result = scrape_social_profile("123e4567-e89b-12d3-a456-426614174005")
+```
+
+```javascript [JavaScript]
+async function scrapeSocialProfile(socialId) {
+  const response = await fetch("https://api.recoupable.com/api/social/scrape", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ social_id: socialId }),
+  });
+
+  if (!response.ok) throw new Error("Social scrape request failed");
+  return await response.json();
+}
+
+// Example usage:
+// const result = await scrapeSocialProfile("123e4567-e89b-12d3-a456-426614174005");
+```
+
+```typescript [TypeScript]
+interface ApifyRunResponse {
+  runId: string;
+  datasetId: string;
+  error?: string | null;
+}
+
+async function scrapeSocialProfile(
+  socialId: string
+): Promise<ApifyRunResponse> {
+  const response = await fetch("https://api.recoupable.com/api/social/scrape", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ social_id: socialId }),
+  });
+
+  if (!response.ok) throw new Error("Social scrape request failed");
+  return (await response.json()) as ApifyRunResponse;
+}
+
+// Example usage:
+// const data = await scrapeSocialProfile("123e4567-e89b-12d3-a456-426614174005");
+```
+
+:::
+
+## Example Response
+
+```json filename="Response"
+{
+  "runId": "abc123xyz",
+  "datasetId": "def456uvw",
+  "error": null
+}
+```
+
+## Response Properties
+
+| Property  | Type   | Description                                               |
+| --------- | ------ | --------------------------------------------------------- |
+| runId     | string | Unique identifier for the Apify run                       |
+| datasetId | string | Unique identifier for the dataset containing scraped data |
+| error     | string | Error message if the run failed (null if successful)      |
+
+## Notes
+
+- This endpoint triggers a background scrape job powered by Apify.
+- The actual social profile data is written to the Apify dataset referenced by `datasetId`.
+- Use the [Apify Scraper Results API](/apify/scraper) to monitor job status and retrieve data.
+- Scrape duration depends on platform rate limits; results may not be immediate.
+- Ensure you have the correct `social_id` by first calling [Get Artist Socials](/artist/socials).
