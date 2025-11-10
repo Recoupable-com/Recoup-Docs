@@ -101,17 +101,21 @@ async function getApifyResults(runId: string): Promise<ApifyResponse> {
 ### Completed Response
 
 ```json filename="Completed Response"
-[
-  {
-    "id": "123456789",
-    "username": "example_user",
-    "fullName": "Example User",
-    "biography": "This is a sample biography",
-    "followersCount": 1000,
-    "followsCount": 500,
-    "profilePicUrl": "https://example.com/profile.jpg"
-  }
-]
+{
+  "status": "SUCCEEDED",
+  "datasetId": "def456uvw",
+  "data": [
+    {
+      "id": "123456789",
+      "username": "example_user",
+      "fullName": "Example User",
+      "biography": "This is a sample biography",
+      "followersCount": 1000,
+      "followsCount": 500,
+      "profilePicUrl": "https://example.com/profile.jpg"
+    }
+  ]
+}
 ```
 
 ## Response Properties
@@ -125,7 +129,13 @@ async function getApifyResults(runId: string): Promise<ApifyResponse> {
 
 ### Completed Response
 
-When the scraper run is completed successfully, the response will be the raw dataset items from Apify. The exact structure of these items depends on the type of scraper that was run (Instagram Profile, Instagram Comments, etc.).
+| Property  | Type   | Description                                                                                        |
+| --------- | ------ | -------------------------------------------------------------------------------------------------- |
+| status    | string | Final status of the Apify run (typically `"SUCCEEDED"` when complete)                              |
+| datasetId | string | ID of the dataset containing the results                                                           |
+| data      | array  | Array of dataset items returned by the scraper. The structure of each item varies by scraper type. |
+
+When the scraper run completes successfully, the `data` array contains the dataset items from Apify. Its shape depends on the specific scraper (Instagram Profile, Instagram Comments, etc.).
 
 ## Notes
 
