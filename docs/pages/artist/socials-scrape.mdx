@@ -1,0 +1,129 @@
+---
+title: Artist Social Scrape API
+description: Trigger scrape jobs for every social profile connected to an artist.
+---
+
+# Artist Social Scrape API
+
+Kick off scraping jobs for all social profiles linked to an artist. Provide an `artist_account_id`, and the API will look up the artist’s socials (see [Get Artist Socials](/artist/socials)) and invoke the [Social Scrape API](/social/scrape) for each `social_id`. Each scrape returns Apify run metadata so you can poll for status and retrieve results.
+
+## Endpoint
+
+```http
+POST https://api.recoupable.com/api/artist/socials/scrape
+```
+
+## Parameters
+
+| Name              | Type   | Required | Description                                  |
+| ----------------- | ------ | -------- | -------------------------------------------- |
+| artist_account_id | string | Yes      | UUID of the artist account to scrape socials |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X POST "https://api.recoupable.com/api/artist/socials/scrape" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "artist_account_id": "1873859c-dd37-4e9a-9bac-80d35a1b2c3d"
+  }'
+```
+
+```python [Python]
+import requests
+
+def scrape_artist_socials(artist_account_id: str):
+    url = "https://api.recoupable.com/api/artist/socials/scrape"
+    payload = {"artist_account_id": artist_account_id}
+    headers = {"Content-Type": "application/json"}
+
+    response = requests.post(url, json=payload, headers=headers)
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+# results = scrape_artist_socials("1873859c-dd37-4e9a-9bac-80d35a1b2c3d")
+```
+
+```javascript [JavaScript]
+async function scrapeArtistSocials(artistAccountId) {
+  const response = await fetch(
+    "https://api.recoupable.com/api/artist/socials/scrape",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ artist_account_id: artistAccountId }),
+    }
+  );
+
+  if (!response.ok) throw new Error("Artist social scrape request failed");
+  return await response.json();
+}
+
+// Example usage:
+// const results = await scrapeArtistSocials("1873859c-dd37-4e9a-9bac-80d35a1b2c3d");
+```
+
+```typescript [TypeScript]
+interface ApifyRunResponse {
+  runId: string;
+  datasetId: string;
+  error?: string | null;
+}
+
+async function scrapeArtistSocials(
+  artistAccountId: string
+): Promise<ApifyRunResponse[]> {
+  const response = await fetch(
+    "https://api.recoupable.com/api/artist/socials/scrape",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ artist_account_id: artistAccountId }),
+    }
+  );
+
+  if (!response.ok) throw new Error("Artist social scrape request failed");
+  return (await response.json()) as ApifyRunResponse[];
+}
+
+// Example usage:
+// const runs = await scrapeArtistSocials("1873859c-dd37-4e9a-9bac-80d35a1b2c3d");
+```
+
+:::
+
+## Response Format
+
+```json filename="Response"
+[
+  {
+    "runId": "abc123xyz",
+    "datasetId": "def456uvw",
+    "error": null
+  },
+  {
+    "runId": "ghi789rst",
+    "datasetId": "uvw123lmn",
+    "error": null
+  }
+]
+```
+
+## Response Properties
+
+| Property  | Type   | Description                                               |
+| --------- | ------ | --------------------------------------------------------- |
+| runId     | string | Unique identifier for the Apify run                       |
+| datasetId | string | Unique identifier for the dataset containing scraped data |
+| error     | string | Error message if the run failed (null if successful)      |
+
+## Notes
+
+- This endpoint orchestrates multiple calls to the [Social Scrape API](/social/scrape), one for each social tied to the artist.
+- The number of items returned equals the number of social profiles attached to the artist.
+- Use the [Apify Scraper Results API](/apify/scraper) to monitor progress and download scraped results.
+- Scrape completion times depend on platform rate limits; results may not appear immediately.
+

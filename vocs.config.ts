@@ -38,6 +38,10 @@ export default defineConfig({
               text: "Artist Segments",
               link: "/artist/segments",
             },
+            {
+              text: "Artist Social Scrape",
+              link: "/artist/socials-scrape",
+            },
           ],
         },
         {
