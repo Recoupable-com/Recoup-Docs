@@ -1,11 +1,11 @@
 ---
 title: Generate Image
-description: Generate high-quality images using AI models and store them on Arweave blockchain with blockchain moment metadata.
+description: Generate high-quality images using AI models and store them on Arweave with In Process moment metadata.
 ---
 
 # Generate Image
 
-Generate high-quality images using AI models. Images are automatically stored on the Arweave blockchain and include blockchain moment metadata for provenance and ownership tracking.
+Generate high-quality images using AI models. Images are automatically stored on Arweave and include In Process moment metadata for provenance and ownership tracking.
 
 ## Endpoint
 
@@ -144,7 +144,7 @@ async function generateImage(
 
 ## Response Format
 
-The API returns JSON responses based on `Experimental_GenerateImageResult` from the AI SDK, with additional fields for Arweave storage and blockchain moment metadata. Here's an example success response:
+The API returns JSON responses based on `Experimental_GenerateImageResult` from the AI SDK, with additional fields for Arweave storage and In Process moment metadata. Here's an example success response:
 
 ```json filename="Response"
 {
@@ -213,18 +213,18 @@ The response extends `Experimental_GenerateImageResult` from the AI SDK and incl
 | usage.totalTokens      | number | Total tokens used                                                          |
 | imageUrl               | string | Permanent Arweave URL where the image is stored                            |
 | arweaveResult          | object | Arweave transaction object (Transaction type from @arweave/web)            |
-| moment                 | object | Blockchain moment metadata for provenance and ownership tracking           |
+| moment                 | object | In Process moment metadata for provenance and ownership tracking           |
 | moment.contractAddress | string | Smart contract address for the moment                                      |
 | moment.tokenId         | string | Token ID of the minted moment                                              |
 | moment.hash            | string | Transaction hash of the moment mint                                        |
-| moment.chainId         | number | Blockchain chain ID (e.g., 8453 for Base)                                  |
+| moment.chainId         | number | Chain ID (e.g., 8453 for Base)                                             |
 
 ## Notes
 
-- Images are generated using AI models (typically DALL-E 3 or similar)
-- All generated images are automatically stored on the Arweave blockchain for permanent storage
-- Each generation creates a blockchain moment with provenance metadata
-- The `moment` object provides ownership and provenance tracking on-chain
+- Images are generated using gpt-image-1
+- All generated images are automatically stored on Arweave for permanent storage
+- Each generation creates an onchain moment with In Process
+- The `moment` object provides ownership and provenance tracking onchain
 - The `arweaveResult` contains the full Arweave transaction details
 - The response structure follows the AI SDK's `Experimental_GenerateImageResult` format
 - Content filtering is applied to all prompts to ensure appropriate content
