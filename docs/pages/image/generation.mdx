@@ -200,10 +200,6 @@ The response extends `Experimental_GenerateImageResult` from the AI SDK and incl
 
 | Property               | Type   | Description                                                                |
 | ---------------------- | ------ | -------------------------------------------------------------------------- |
-| image                  | object | The first generated image (GeneratedFile from AI SDK)                      |
-| image.base64           | string | File as a base64 encoded string                                            |
-| image.uint8Array       | array  | File as a Uint8Array (represented as array of numbers in JSON)             |
-| image.mediaType        | string | The IANA media type of the file (e.g., "image/png", "image/jpeg")          |
 | images                 | array  | Array of generated image objects (GeneratedFile from AI SDK)               |
 | images[].base64        | string | File as a base64 encoded string                                            |
 | images[].uint8Array    | array  | File as a Uint8Array (represented as array of numbers in JSON)             |
