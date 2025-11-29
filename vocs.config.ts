@@ -165,6 +165,15 @@ export default defineConfig({
           ],
         },
         {
+          text: "Images",
+          items: [
+            {
+              text: "Generate",
+              link: "/image/generation",
+            },
+          ],
+        },
+        {
           text: "Additional Features",
           items: [
             {

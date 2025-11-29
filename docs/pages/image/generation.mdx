@@ -1,0 +1,240 @@
+---
+title: Generate Image
+description: Generate high-quality images using AI models and store them on Arweave blockchain with blockchain moment metadata.
+---
+
+# Generate Image
+
+Generate high-quality images using AI models. Images are automatically stored on the Arweave blockchain and include blockchain moment metadata for provenance and ownership tracking.
+
+## Endpoint
+
+```http
+GET https://recoup-api.vercel.app/api/image/generate
+```
+
+## Parameters
+
+| Name       | Type   | Required | Description                                               |
+| ---------- | ------ | -------- | --------------------------------------------------------- |
+| prompt     | string | Yes      | Text description of the image you want to generate        |
+| account_id | string | Yes      | The unique identifier of the account generating the image |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://recoup-api.vercel.app/api/image/generate?prompt=tuxedo%20cat%20playing%20the%20trumpet%20in%20cali,%20colombia&account_id=fb678396-a68f-4294-ae50-b8cacf9ce77b" \
+  -H "Content-Type: application/json"
+```
+
+```python [Python]
+import requests
+
+def generate_image(prompt: str, account_id: str):
+    try:
+        url = "https://recoup-api.vercel.app/api/image/generate"
+        params = {
+            "prompt": prompt,
+            "account_id": account_id
+        }
+        headers = {
+            "Content-Type": "application/json",
+        }
+
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()
+
+        return response.json()
+    except requests.exceptions.RequestException as error:
+        print(f"Error generating image: {error}")
+        raise
+
+# Example usage:
+# result = generate_image("tuxedo cat playing the trumpet in cali, colombia", "fb678396-a68f-4294-ae50-b8cacf9ce77b")
+```
+
+```javascript [JavaScript]
+async function generateImage(prompt, accountId) {
+  try {
+    const params = new URLSearchParams({
+      prompt: prompt,
+      account_id: accountId,
+    });
+
+    const response = await fetch(
+      `https://recoup-api.vercel.app/api/image/generate?${params}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error generating image:", error);
+    throw error;
+  }
+}
+
+// Example usage:
+// const result = await generateImage("tuxedo cat playing the trumpet in cali, colombia", "fb678396-a68f-4294-ae50-b8cacf9ce77b");
+```
+
+```typescript [TypeScript]
+import { Experimental_GenerateImageResult } from "ai";
+import { Transaction } from "@arweave/web";
+
+interface Moment {
+  contractAddress: string;
+  tokenId: string;
+  hash: string;
+  chainId: number;
+}
+
+interface ImageGenerationResponse extends Experimental_GenerateImageResult {
+  imageUrl: string;
+  arweaveResult: Transaction;
+  moment: Moment;
+}
+
+async function generateImage(
+  prompt: string,
+  accountId: string
+): Promise<ImageGenerationResponse> {
+  try {
+    const params = new URLSearchParams({
+      prompt: prompt,
+      account_id: accountId,
+    });
+
+    const response = await fetch(
+      `https://recoup-api.vercel.app/api/image/generate?${params}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: ImageGenerationResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error generating image:", error);
+    throw error;
+  }
+}
+
+// Example usage:
+// const result = await generateImage("tuxedo cat playing the trumpet in cali, colombia", "fb678396-a68f-4294-ae50-b8cacf9ce77b");
+```
+
+:::
+
+## Response Format
+
+The API returns JSON responses based on `Experimental_GenerateImageResult` from the AI SDK, with additional fields for Arweave storage and blockchain moment metadata. Here's an example success response:
+
+```json filename="Response"
+{
+  "image": {
+    "base64": "iVBORw0KGgoAAAANSUhEUgAA...",
+    "uint8Array": [137, 80, 78, 71, 13, 10, 26, 10, ...],
+    "mediaType": "image/png"
+  },
+  "images": [
+    {
+      "base64": "iVBORw0KGgoAAAANSUhEUgAA...",
+      "uint8Array": [137, 80, 78, 71, 13, 10, 26, 10, ...],
+      "mediaType": "image/png"
+    }
+  ],
+  "warnings": [],
+  "responses": [
+    {
+      "finishReason": "stop"
+    }
+  ],
+  "providerMetadata": {
+    "model": "dall-e-3",
+    "size": "1024x1024"
+  },
+  "usage": {
+    "promptTokens": 25,
+    "completionTokens": 0,
+    "totalTokens": 25
+  },
+  "imageUrl": "https://arweave.net/XhmPPKsPa8DQo7AQoJCkLH2vrkan6ubIbc5yS9Jwt1I",
+  "arweaveResult": {
+    "id": "XhmPPKsPa8DQo7AQoJCkLH2vrkan6ubIbc5yS9Jwt1I",
+    "last_tx": "XhmPPKsPa8DQo7AQoJCkLH2vrkan6ubIbc5yS9Jwt1I",
+    "owner": "owner_address",
+    "tags": [],
+    "target": "",
+    "quantity": "0",
+    "data": "",
+    "reward": "0",
+    "signature": "signature_string",
+    "format": 2
+  },
+  "moment": {
+    "contractAddress": "0xbEd70CFac86669f4C56E899efC3F50B551037511",
+    "tokenId": "1",
+    "hash": "0x6c9bee2cf445068af08982fc06c6654ebb755b52370cb9d8a869093a3f3cab5b",
+    "chainId": 8453
+  }
+}
+```
+
+## Response Properties
+
+### Response Object
+
+The response extends `Experimental_GenerateImageResult` from the AI SDK and includes the following properties:
+
+| Property               | Type   | Description                                                                |
+| ---------------------- | ------ | -------------------------------------------------------------------------- |
+| image                  | object | The first generated image (GeneratedFile from AI SDK)                      |
+| image.base64           | string | File as a base64 encoded string                                            |
+| image.uint8Array       | array  | File as a Uint8Array (represented as array of numbers in JSON)             |
+| image.mediaType        | string | The IANA media type of the file (e.g., "image/png", "image/jpeg")          |
+| images                 | array  | Array of generated image objects (GeneratedFile from AI SDK)               |
+| images[].base64        | string | File as a base64 encoded string                                            |
+| images[].uint8Array    | array  | File as a Uint8Array (represented as array of numbers in JSON)             |
+| images[].mediaType     | string | The IANA media type of the file (e.g., "image/png", "image/jpeg")          |
+| warnings               | array  | Array of warning messages, if any                                          |
+| responses              | array  | Array of response metadata from the AI provider                            |
+| providerMetadata       | object | Metadata from the AI provider (model, size, etc.)                          |
+| usage                  | object | Token usage information                                                    |
+| usage.promptTokens     | number | Number of tokens used in the prompt                                        |
+| usage.completionTokens | number | Number of tokens used in the completion (typically 0 for image generation) |
+| usage.totalTokens      | number | Total tokens used                                                          |
+| imageUrl               | string | Permanent Arweave URL where the image is stored                            |
+| arweaveResult          | object | Arweave transaction object (Transaction type from @arweave/web)            |
+| moment                 | object | Blockchain moment metadata for provenance and ownership tracking           |
+| moment.contractAddress | string | Smart contract address for the moment                                      |
+| moment.tokenId         | string | Token ID of the minted moment                                              |
+| moment.hash            | string | Transaction hash of the moment mint                                        |
+| moment.chainId         | number | Blockchain chain ID (e.g., 8453 for Base)                                  |
+
+## Notes
+
+- Images are generated using AI models (typically DALL-E 3 or similar)
+- All generated images are automatically stored on the Arweave blockchain for permanent storage
+- Each generation creates a blockchain moment with provenance metadata
+- The `moment` object provides ownership and provenance tracking on-chain
+- The `arweaveResult` contains the full Arweave transaction details
+- The response structure follows the AI SDK's `Experimental_GenerateImageResult` format
+- Content filtering is applied to all prompts to ensure appropriate content
+- The API has rate limits for image generation (contact support for details)
