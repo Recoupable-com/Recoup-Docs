@@ -165,12 +165,17 @@ export default defineConfig({
           ],
         },
         {
-          text: "Additional Features",
+          text: "Images",
           items: [
             {
-              text: "Image Generation",
-              link: "/image-generation",
+              text: "Generate",
+              link: "/image/generation",
             },
+          ],
+        },
+        {
+          text: "Additional Features",
+          items: [
             {
               text: "Subscriptions",
               link: "/subscriptions",
@@ -204,6 +209,10 @@ export default defineConfig({
             {
               text: "Posts (Deprecated)",
               link: "/posts",
+            },
+            {
+              text: "Image Generation (Deprecated)",
+              link: "/image-generation",
             },
           ],
         },
