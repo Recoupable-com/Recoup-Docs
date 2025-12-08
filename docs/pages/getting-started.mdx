@@ -33,15 +33,56 @@ To access the Recoup API programmatically, you'll need to create an API key. Thi
 
 ### Step 3: Use Your API Key
 
-Once you have your API key, you can use it to authenticate your requests to the Recoup API:
+Once you have your API key, you can use it to authenticate your requests to the Recoup API. Include the API key in the `x-api-key` header for all authenticated requests:
 
-```bash
+:::code-group
+
+```bash [cURL]
 curl -X GET "https://api.recoupable.com/api/fans?artist_account_id=YOUR_ARTIST_ACCOUNT_ID" \
   -H "Content-Type: application/json" \
   -H "x-api-key: YOUR_API_KEY"
 ```
 
-Include the API key in the `x-api-key` header for all authenticated requests.
+```python [Python]
+import requests
+
+headers = {
+    "Content-Type": "application/json",
+    "x-api-key": "YOUR_API_KEY"
+}
+
+response = requests.get(
+    "https://api.recoupable.com/api/fans",
+    params={"artist_account_id": "YOUR_ARTIST_ACCOUNT_ID"},
+    headers=headers
+)
+```
+
+```javascript [JavaScript]
+const response = await fetch(
+  "https://api.recoupable.com/api/fans?artist_account_id=YOUR_ARTIST_ACCOUNT_ID",
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": "YOUR_API_KEY",
+    },
+  }
+);
+```
+
+```typescript [TypeScript]
+const response = await fetch(
+  "https://api.recoupable.com/api/fans?artist_account_id=YOUR_ARTIST_ACCOUNT_ID",
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": "YOUR_API_KEY",
+    },
+  }
+);
+```
+
+:::
 
 ### Next Steps
 
@@ -50,48 +91,6 @@ With your API key ready, you can now:
 - Access artist data - Use your API key to fetch artist socials, segments, and more
 - Generate images - Use your API key to create AI-generated images
 - Manage tasks - Use your API key to create and manage scheduled tasks
-
-## Available Endpoints
-
-The Recoup API provides the following main endpoints:
-
-### Fans API
-
-Access detailed information about an artist's fans across all social platforms. This includes:
-
-- Fan profiles
-- Geographic data
-- Social media statistics
-- Engagement metrics
-
-[Learn more about the Fans API →](/fans)
-
-### Posts API
-
-Retrieve and analyze an artist's social media posts across platforms. This includes:
-
-- Post content
-- Engagement metrics
-- Post URLs
-- Timestamps
-
-[Learn more about the Posts API →](/posts)
-
-## Rate Limiting
-
-Coming soon - Rate limiting details will be provided here.
-
-## Error Handling
-
-The API uses conventional HTTP response codes to indicate the success or failure of requests:
-
-- `200`: Success
-- `400`: Bad Request
-- `401`: Unauthorized
-- `403`: Forbidden
-- `404`: Not Found
-- `429`: Too Many Requests
-- `500`: Internal Server Error
 
 ## Example Implementation
 
