@@ -40,7 +40,7 @@ export default defineConfig({
           text: "Organizations",
           items: [
             {
-              text: "List Organizations",
+              text: "Get Organizations",
               link: "/organizations/list",
             },
             {
@@ -57,7 +57,7 @@ export default defineConfig({
           text: "Artists",
           items: [
             {
-              text: "List Artists",
+              text: "Get Artists",
               link: "/artists/list",
             },
           ],

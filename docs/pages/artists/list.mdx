@@ -1,11 +1,11 @@
 ---
-title: List Artists
+title: Get Artists
 description: Retrieve artists with optional organization filtering.
 ---
 
-# List Artists
+# Get Artists
 
-Retrieve artists accessible to a user. Supports filtering by organization or showing only personal (non-organization) artists.
+Retrieve artists accessible to an account. Supports filtering by organization or showing only personal (non-organization) artists.
 
 ## Endpoint
 
@@ -17,7 +17,7 @@ GET https://api.recoupable.com/api/artists
 
 | Name      | Type   | Required | Description                                           |
 | --------- | ------ | -------- | ----------------------------------------------------- |
-| accountId | string | Yes      | The user's account ID                                 |
+| accountId | string | Yes      | The account ID                                        |
 | orgId     | string | No       | Filter to artists in a specific organization          |
 | personal  | string | No       | Set to `"true"` to show only personal (non-org) artists |
 
@@ -35,15 +35,15 @@ GET https://api.recoupable.com/api/artists
 
 ```bash [cURL]
 # Get all artists
-curl -X GET "https://api.recoupable.com/api/artists?accountId=user-uuid" \
+curl -X GET "https://api.recoupable.com/api/artists?accountId=account-uuid" \
   -H "Content-Type: application/json"
 
 # Get artists in a specific organization
-curl -X GET "https://api.recoupable.com/api/artists?accountId=user-uuid&orgId=org-uuid" \
+curl -X GET "https://api.recoupable.com/api/artists?accountId=account-uuid&orgId=org-uuid" \
   -H "Content-Type: application/json"
 
 # Get only personal artists (not in any org)
-curl -X GET "https://api.recoupable.com/api/artists?accountId=user-uuid&personal=true" \
+curl -X GET "https://api.recoupable.com/api/artists?accountId=account-uuid&personal=true" \
   -H "Content-Type: application/json"
 ```
 
@@ -75,9 +75,9 @@ async function getArtists(accountId, options = {}) {
 }
 
 // Usage examples
-const allArtists = await getArtists("user-uuid");
-const orgArtists = await getArtists("user-uuid", { orgId: "org-uuid" });
-const personalArtists = await getArtists("user-uuid", { personal: true });
+const allArtists = await getArtists("account-uuid");
+const orgArtists = await getArtists("account-uuid", { orgId: "org-uuid" });
+const personalArtists = await getArtists("account-uuid", { personal: true });
 ```
 
 ```typescript [TypeScript]
@@ -177,7 +177,7 @@ async function getArtists(
 | artists[].account_id  | string  | UUID of the artist account                        |
 | artists[].name        | string  | Artist display name                               |
 | artists[].image       | string \| null | Artist profile image URL                   |
-| artists[].pinned      | boolean | Whether the user has pinned this artist           |
+| artists[].pinned      | boolean | Whether the account has pinned this artist        |
 | artists[].socials     | array   | Social media profiles linked to the artist        |
 | message               | string  | Error message (only present if status is "error") |
 

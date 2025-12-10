@@ -1,11 +1,11 @@
 ---
-title: List Organizations
-description: Retrieve all organizations a user belongs to.
+title: Get Organizations
+description: Retrieve all organizations an account belongs to.
 ---
 
-# List Organizations
+# Get Organizations
 
-Retrieve all organizations that a user account belongs to. Used for organization selector dropdowns and access control.
+Retrieve all organizations that an account belongs to. Used for organization selector dropdowns and access control.
 
 ## Endpoint
 
@@ -17,7 +17,7 @@ GET https://api.recoupable.com/api/organizations
 
 | Name      | Type   | Required | Description                                      |
 | --------- | ------ | -------- | ------------------------------------------------ |
-| accountId | string | Yes      | The unique identifier of the user's account      |
+| accountId | string | Yes      | The unique identifier of the account             |
 
 ## Request Examples
 
@@ -29,7 +29,7 @@ curl -X GET "https://api.recoupable.com/api/organizations?accountId=123e4567-e89
 ```
 
 ```javascript [JavaScript]
-async function getUserOrganizations(accountId) {
+async function getAccountOrganizations(accountId) {
   const params = new URLSearchParams({ accountId });
   
   const response = await fetch(
@@ -49,7 +49,7 @@ async function getUserOrganizations(accountId) {
 }
 
 // Usage
-const { organizations } = await getUserOrganizations("123e4567-e89b-12d3-a456-426614174000");
+const { organizations } = await getAccountOrganizations("123e4567-e89b-12d3-a456-426614174000");
 ```
 
 ```typescript [TypeScript]
@@ -66,7 +66,7 @@ interface OrganizationsResponse {
   message?: string;
 }
 
-async function getUserOrganizations(accountId: string): Promise<OrganizationsResponse> {
+async function getAccountOrganizations(accountId: string): Promise<OrganizationsResponse> {
   const params = new URLSearchParams({ accountId });
   
   const response = await fetch(
@@ -122,7 +122,7 @@ async function getUserOrganizations(accountId: string): Promise<OrganizationsRes
 | Property                       | Type           | Description                                         |
 | ------------------------------ | -------------- | --------------------------------------------------- |
 | status                         | string         | Status of the request ("success" or "error")        |
-| organizations                  | array          | List of organizations the user belongs to           |
+| organizations                  | array          | List of organizations the account belongs to        |
 | organizations[].id             | string         | UUID of the membership record                       |
 | organizations[].organization_id| string         | UUID of the organization account                    |
 | organizations[].organization_name | string      | Display name of the organization                    |
@@ -131,7 +131,7 @@ async function getUserOrganizations(accountId: string): Promise<OrganizationsRes
 
 ## Use Cases
 
-- **Organization Selector**: Display dropdown of user's organizations in the UI
-- **Context Switching**: Allow users to switch between personal and organization contexts
-- **Access Control**: Verify user membership before showing organization data
+- **Organization Selector**: Display dropdown of account's organizations in the UI
+- **Context Switching**: Allow accounts to switch between personal and organization contexts
+- **Access Control**: Verify account membership before showing organization data
 
