@@ -1,0 +1,137 @@
+---
+title: List Organizations
+description: Retrieve all organizations a user belongs to.
+---
+
+# List Organizations
+
+Retrieve all organizations that a user account belongs to. Used for organization selector dropdowns and access control.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/organizations
+```
+
+## Parameters
+
+| Name      | Type   | Required | Description                                      |
+| --------- | ------ | -------- | ------------------------------------------------ |
+| accountId | string | Yes      | The unique identifier of the user's account      |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/organizations?accountId=123e4567-e89b-12d3-a456-426614174000" \
+  -H "Content-Type: application/json"
+```
+
+```javascript [JavaScript]
+async function getUserOrganizations(accountId) {
+  const params = new URLSearchParams({ accountId });
+  
+  const response = await fetch(
+    `https://api.recoupable.com/api/organizations?${params}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Usage
+const { organizations } = await getUserOrganizations("123e4567-e89b-12d3-a456-426614174000");
+```
+
+```typescript [TypeScript]
+interface Organization {
+  id: string;
+  organization_id: string;
+  organization_name: string;
+  organization_image: string | null;
+}
+
+interface OrganizationsResponse {
+  status: "success" | "error";
+  organizations: Organization[];
+  message?: string;
+}
+
+async function getUserOrganizations(accountId: string): Promise<OrganizationsResponse> {
+  const params = new URLSearchParams({ accountId });
+  
+  const response = await fetch(
+    `https://api.recoupable.com/api/organizations?${params}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+}
+```
+
+:::
+
+## Response Format
+
+```json filename="Response - Success"
+{
+  "status": "success",
+  "organizations": [
+    {
+      "id": "row-uuid-1",
+      "organization_id": "org-account-uuid-1",
+      "organization_name": "Rostrum Records",
+      "organization_image": "https://example.com/rostrum-logo.jpg"
+    },
+    {
+      "id": "row-uuid-2",
+      "organization_id": "org-account-uuid-2",
+      "organization_name": "Fat Beats",
+      "organization_image": "https://example.com/fatbeats-logo.jpg"
+    }
+  ]
+}
+```
+
+```json filename="Response - No Organizations"
+{
+  "status": "success",
+  "organizations": []
+}
+```
+
+## Response Properties
+
+| Property                       | Type           | Description                                         |
+| ------------------------------ | -------------- | --------------------------------------------------- |
+| status                         | string         | Status of the request ("success" or "error")        |
+| organizations                  | array          | List of organizations the user belongs to           |
+| organizations[].id             | string         | UUID of the membership record                       |
+| organizations[].organization_id| string         | UUID of the organization account                    |
+| organizations[].organization_name | string      | Display name of the organization                    |
+| organizations[].organization_image | string \| null | Organization logo/image URL                     |
+| message                        | string         | Error message (only present if status is "error")   |
+
+## Use Cases
+
+- **Organization Selector**: Display dropdown of user's organizations in the UI
+- **Context Switching**: Allow users to switch between personal and organization contexts
+- **Access Control**: Verify user membership before showing organization data
+

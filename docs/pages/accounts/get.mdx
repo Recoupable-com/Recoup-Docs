@@ -1,0 +1,132 @@
+---
+title: Get Account
+description: Retrieve account details by ID including profile info, emails, and wallets.
+---
+
+# Get Account
+
+Retrieve detailed account information by ID. Returns the account with associated profile info, emails, and wallet addresses.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/accounts/{id}
+```
+
+## Parameters
+
+| Name | Type   | Required | Description                          |
+| ---- | ------ | -------- | ------------------------------------ |
+| id   | string | Yes      | The unique identifier of the account |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/accounts/123e4567-e89b-12d3-a456-426614174000" \
+  -H "Content-Type: application/json"
+```
+
+```javascript [JavaScript]
+async function getAccount(accountId) {
+  const response = await fetch(
+    `https://api.recoupable.com/api/accounts/${accountId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Usage
+const account = await getAccount("123e4567-e89b-12d3-a456-426614174000");
+```
+
+```typescript [TypeScript]
+interface AccountResponse {
+  status: "success" | "error";
+  account: {
+    id: string;
+    name: string;
+    image: string | null;
+    instruction: string | null;
+    knowledges: Array<{ url: string; name: string; type: string }> | null;
+    email: string | null;
+    wallet_address: string | null;
+  };
+  message?: string;
+}
+
+async function getAccount(accountId: string): Promise<AccountResponse> {
+  const response = await fetch(
+    `https://api.recoupable.com/api/accounts/${accountId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+}
+```
+
+:::
+
+## Response Format
+
+```json filename="Response - Success"
+{
+  "status": "success",
+  "account": {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "name": "My Organization",
+    "image": "https://example.com/avatar.jpg",
+    "instruction": "Custom AI instructions for this account",
+    "knowledges": [
+      {
+        "url": "https://storage.example.com/file.txt",
+        "name": "knowledge-base.txt",
+        "type": "text/plain"
+      }
+    ],
+    "email": "user@example.com",
+    "wallet_address": "0x1234567890abcdef..."
+  }
+}
+```
+
+```json filename="Response - Not Found"
+{
+  "status": "error",
+  "message": "Account not found"
+}
+```
+
+## Response Properties
+
+| Property              | Type           | Description                                    |
+| --------------------- | -------------- | ---------------------------------------------- |
+| status                | string         | Status of the request ("success" or "error")   |
+| account               | object         | The account details                            |
+| account.id            | string         | Unique identifier (UUID)                       |
+| account.name          | string         | Account display name                           |
+| account.image         | string \| null | Profile image URL                              |
+| account.instruction   | string \| null | Custom AI instructions                         |
+| account.knowledges    | array \| null  | Knowledge base files attached to this account  |
+| account.email         | string \| null | Primary email address                          |
+| account.wallet_address| string \| null | Connected wallet address                       |
+| message               | string         | Error message (only present if status is "error") |
+

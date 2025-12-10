@@ -28,6 +28,41 @@ export default defineConfig({
           ],
         },
         {
+          text: "Accounts",
+          items: [
+            {
+              text: "Get Account",
+              link: "/accounts/get",
+            },
+          ],
+        },
+        {
+          text: "Organizations",
+          items: [
+            {
+              text: "List Organizations",
+              link: "/organizations/list",
+            },
+            {
+              text: "Create Organization",
+              link: "/organizations/create",
+            },
+            {
+              text: "Add Artist to Org",
+              link: "/organizations/add-artist",
+            },
+          ],
+        },
+        {
+          text: "Artists",
+          items: [
+            {
+              text: "List Artists",
+              link: "/artists/list",
+            },
+          ],
+        },
+        {
           text: "Artist",
           items: [
             {
