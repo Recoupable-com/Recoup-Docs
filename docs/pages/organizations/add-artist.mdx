@@ -1,0 +1,133 @@
+---
+title: Add Artist to Organization
+description: Add an artist to an organization for shared access and management.
+---
+
+# Add Artist to Organization
+
+Add an artist to an organization. This allows organization members to access and manage the artist.
+
+## Endpoint
+
+```http
+POST https://api.recoupable.com/api/organizations/artists
+```
+
+## Request Body
+
+| Name           | Type   | Required | Description                              |
+| -------------- | ------ | -------- | ---------------------------------------- |
+| artistId       | string | Yes      | The account ID of the artist to add      |
+| organizationId | string | Yes      | The account ID of the organization       |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X POST "https://api.recoupable.com/api/organizations/artists" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "artistId": "artist-account-uuid",
+    "organizationId": "org-account-uuid"
+  }'
+```
+
+```javascript [JavaScript]
+async function addArtistToOrganization(artistId, organizationId) {
+  const response = await fetch(
+    "https://api.recoupable.com/api/organizations/artists",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ artistId, organizationId }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Usage
+await addArtistToOrganization(
+  "artist-account-uuid",
+  "org-account-uuid"
+);
+```
+
+```typescript [TypeScript]
+interface AddArtistRequest {
+  artistId: string;
+  organizationId: string;
+}
+
+interface AddArtistResponse {
+  status: "success" | "error";
+  id: string;
+  message?: string;
+}
+
+async function addArtistToOrganization(
+  artistId: string,
+  organizationId: string
+): Promise<AddArtistResponse> {
+  const response = await fetch(
+    "https://api.recoupable.com/api/organizations/artists",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ artistId, organizationId }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+}
+```
+
+:::
+
+## Response Format
+
+```json filename="Response - Success"
+{
+  "status": "success",
+  "id": "created-record-uuid"
+}
+```
+
+```json filename="Response - Error"
+{
+  "status": "error",
+  "message": "artistId and organizationId are required"
+}
+```
+
+## Response Properties
+
+| Property | Type   | Description                                       |
+| -------- | ------ | ------------------------------------------------- |
+| status   | string | Status of the request ("success" or "error")      |
+| id       | string | UUID of the created artist-organization link      |
+| message  | string | Error message (only present if status is "error") |
+
+## Idempotent Operation
+
+This endpoint is **idempotent** - calling it multiple times with the same `artistId` and `organizationId` will not create duplicate records. If the artist is already in the organization, the existing record ID is returned.
+
+## Use Cases
+
+- **Onboarding**: Add existing artists to a newly created organization
+- **Team Access**: Share artist management across organization members
+- **Label Management**: Organize artists under record label accounts
+
