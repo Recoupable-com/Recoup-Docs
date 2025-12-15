@@ -19,10 +19,10 @@ This endpoint uses **headers only** for input. It does **not** accept any query 
 
 You can authenticate in one of two ways:
 
-| Header        | Type   | Required | Description                                                                                     |
-| ------------- | ------ | -------- | ----------------------------------------------------------------------------------------------- |
-| x-api-key     | string | Optional | Your Recoup API key. See [Getting Started](/getting-started) for how to create and manage keys. |
-| Authorization | string | Optional | `Bearer <access_token>` from an authenticated session. **Used internally only.**                |
+| Header        | Type   | Required | Description                                                                                               |
+| ------------- | ------ | -------- | --------------------------------------------------------------------------------------------------------- |
+| x-api-key     | string | Optional | Your Recoup API key. See [Getting Started](/getting-started#-api-keys) for how to create and manage keys. |
+| Authorization | string | Optional | `Bearer <access_token>` from an authenticated session. **Used internally only.**                          |
 
 > Exactly one of `x-api-key` or `Authorization` must be provided for the request to succeed.
 
