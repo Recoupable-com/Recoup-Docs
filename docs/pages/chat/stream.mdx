@@ -13,16 +13,25 @@ Stream AI-powered chat responses using the Recoup chat system. This endpoint mir
 POST https://chat.recoupable.com/api/chat
 ```
 
+### Authentication
+
+All requests to this endpoint must be authenticated using an API key header:
+
+| Header    | Type   | Required | Description                                                                                               |
+| --------- | ------ | -------- | --------------------------------------------------------------------------------------------------------- |
+| x-api-key | string | Yes      | Your Recoup API key. See [Getting Started](/getting-started#-api-keys) for how to create and manage keys. |
+
 ## Parameters
 
-| Name         | Type   | Required | Description                                                                                                  |
-| ------------ | ------ | -------- | ------------------------------------------------------------------------------------------------------------ |
-| messages     | array  | Yes      | Array of [UIMessage](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message#uimessage) objects for context |
-| roomId       | string | Yes      | The unique identifier of the chat room                                                                       |
-| artistId     | string | No       | The unique identifier of the artist (optional)                                                               |
-| accountId    | string | Yes      | The unique identifier of the account making the request                                                      |
-| model        | string | No       | The AI model to use for text generation (optional)                                                           |
-| excludeTools | array  | No       | Array of tool names to exclude from execution (e.g., `["create_scheduled_actions"]`)                         |
+| Name         | Type   | Required | Description                                                                                                                                         |
+| ------------ | ------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| prompt       | string | No       | Single text prompt for the assistant. Required if `messages` is not provided.                                                                       |
+| messages     | array  | No       | Array of [UIMessage](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message#uimessage) objects for context. Required if `prompt` is not provided. |
+| artistId     | string | No       | The unique identifier of the artist (optional)                                                                                                      |
+| model        | string | No       | The AI model to use for text generation (optional)                                                                                                  |
+| excludeTools | array  | No       | Array of tool names to exclude from execution (e.g., `["create_scheduled_actions"]`)                                                                |
+
+> Exactly one of `messages` or `prompt` should be provided in each request.
 
 ## Request Examples
 
@@ -32,34 +41,33 @@ POST https://chat.recoupable.com/api/chat
 # Stream all responses to stdout
 curl -N -X POST "https://chat.recoupable.com/api/chat" \
   -H "Content-Type: application/json" \
+  -H "x-api-key: YOUR_API_KEY" \
   -d '{
-    "messages": [
-      {
-        "id": "msg-1",
-        "role": "user",
-        "parts": [
-          { "type": "text", "text": "Draft a tweet announcing our new single." }
-        ]
-      }
-    ],
-    "roomId": "room-123",
-    "accountId": "your-account-id"
+    "prompt": "Draft a tweet announcing our new single."
   }'
 ```
 
 ```javascript [JavaScript]
 // Browser / Node fetch example
-async function streamChat(messages, roomId, accountId, options = {}) {
+async function streamChat({
+  messages,
+  prompt,
+  artistId,
+  model,
+  excludeTools,
+} = {}) {
   const response = await fetch("https://chat.recoupable.com/api/chat", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": "YOUR_API_KEY",
+    },
     body: JSON.stringify({
       messages,
-      roomId,
-      accountId,
-      artistId: options.artistId,
-      model: options.model,
-      excludeTools: options.excludeTools,
+      prompt,
+      artistId,
+      model,
+      excludeTools,
     }),
   });
 
@@ -84,16 +92,18 @@ async function streamChat(messages, roomId, accountId, options = {}) {
 import { createUIMessageStreamParser, UIMessageStreamPart } from "ai";
 
 async function streamChatWithParser(requestBody: {
-  messages: any[];
-  roomId: string;
-  accountId: string;
+  messages?: any[];
+  prompt?: string;
   artistId?: string;
   model?: string;
   excludeTools?: string[];
 }) {
   const response = await fetch("https://chat.recoupable.com/api/chat", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": "YOUR_API_KEY",
+    },
     body: JSON.stringify(requestBody),
   });
 
