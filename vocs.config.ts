@@ -34,6 +34,10 @@ export default defineConfig({
               text: "Get Account",
               link: "/accounts/get",
             },
+            {
+              text: "Get Account ID",
+              link: "/accounts/id",
+            },
           ],
         },
         {
