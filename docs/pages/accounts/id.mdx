@@ -1,0 +1,110 @@
+---
+title: Get Account ID
+description: Retrieve the authenticated account ID using an API key or bearer token.
+---
+
+# Get Account ID
+
+Retrieve the ID of the authenticated account associated with the provided credentials. This is useful when you have an API key or access token but do not yet know the corresponding `accountId`.
+
+## Endpoint
+
+```http
+GET https://api.recoupable.com/api/accounts/id
+```
+
+## Authentication
+
+This endpoint uses **headers only** for input. It does **not** accept any query parameters or request body.
+
+You can authenticate in one of two ways:
+
+| Header        | Type   | Required | Description                                                                                               |
+| ------------- | ------ | -------- | --------------------------------------------------------------------------------------------------------- |
+| x-api-key     | string | Optional | Your Recoup API key. See [Getting Started](/getting-started#-api-keys) for how to create and manage keys. |
+| Authorization | string | Optional | `Bearer <access_token>` from an authenticated session. **Used internally only.**                          |
+
+> Exactly one of `x-api-key` or `Authorization` must be provided for the request to succeed.
+
+## Request Examples
+
+::::code-group
+
+```bash [cURL]
+curl -X GET "https://api.recoupable.com/api/accounts/id" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+```javascript [JavaScript]
+async function getAccountId() {
+  const response = await fetch("https://api.recoupable.com/api/accounts/id", {
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": "YOUR_API_KEY",
+      // Or, for internal use:
+      // "Authorization": `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Usage
+// const { accountId } = await getAccountId();
+```
+
+```typescript [TypeScript]
+interface GetAccountIdResponse {
+  status: "success" | "error";
+  accountId?: string;
+  message?: string;
+}
+
+async function getAccountId(): Promise<GetAccountIdResponse> {
+  const response = await fetch("https://api.recoupable.com/api/accounts/id", {
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": "YOUR_API_KEY",
+      // Or, for internal use:
+      // "Authorization": `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+}
+```
+
+::::
+
+## Response Format
+
+```json filename="Response - Success"
+{
+  "status": "success",
+  "accountId": "123e4567-e89b-12d3-a456-426614174000"
+}
+```
+
+```json filename="Response - Unauthorized"
+{
+  "status": "error",
+  "message": "Unauthorized"
+}
+```
+
+## Response Properties
+
+| Property  | Type   | Description                                               |
+| --------- | ------ | --------------------------------------------------------- |
+| status    | string | Status of the request ("success" or "error")              |
+| accountId | string | The unique identifier (UUID) of the authenticated account |
+| message   | string | Error message (present only when `status` is "error")     |
