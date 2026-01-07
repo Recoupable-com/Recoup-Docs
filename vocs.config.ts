@@ -213,6 +213,15 @@ export default defineConfig({
           ],
         },
         {
+          text: "Transcribe",
+          items: [
+            {
+              text: "Transcribe Audio",
+              link: "/transcribe/audio",
+            },
+          ],
+        },
+        {
           text: "Additional Features",
           items: [
             {
