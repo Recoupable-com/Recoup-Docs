@@ -1,0 +1,188 @@
+---
+title: Create Chat
+description: Create a new chat room.
+---
+
+# Create Chat
+
+Create a new chat room.
+
+## Endpoint
+
+```http
+POST https://recoup-api.vercel.app/api/conversations
+```
+
+### Authentication
+
+| Header    | Type   | Required | Description                                                                                               |
+| --------- | ------ | -------- | --------------------------------------------------------------------------------------------------------- |
+| x-api-key | string | Yes      | Your Recoup API key. See [Getting Started](/getting-started#-api-keys) for how to create and manage keys. |
+
+## Parameters
+
+| Name     | Type   | Required | Description                                                    |
+| -------- | ------ | -------- | -------------------------------------------------------------- |
+| artistId | string | No       | UUID of the artist account the chat is associated with         |
+| chatId   | string | No       | UUID for the new chat (client-generated). If not provided, one will be generated automatically. |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X POST "https://recoup-api.vercel.app/api/conversations" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -d '{}'
+```
+
+```python [Python]
+import requests
+
+def create_chat(
+    artist_id: str | None = None,
+    chat_id: str | None = None,
+    api_key: str = "YOUR_API_KEY"
+):
+    url = "https://recoup-api.vercel.app/api/conversations"
+
+    payload = {}
+    if artist_id:
+        payload["artistId"] = artist_id
+    if chat_id:
+        payload["chatId"] = chat_id
+
+    response = requests.post(
+        url,
+        json=payload,
+        headers={
+            "Content-Type": "application/json",
+            "x-api-key": api_key,
+        }
+    )
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+# result = create_chat()
+# chat = result["chat"]
+```
+
+```javascript [JavaScript]
+async function createChat({
+  artistId,
+  chatId,
+  apiKey = "YOUR_API_KEY",
+} = {}) {
+  const payload = {};
+  if (artistId) {
+    payload.artistId = artistId;
+  }
+  if (chatId) {
+    payload.chatId = chatId;
+  }
+
+  const response = await fetch("https://recoup-api.vercel.app/api/conversations", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to create chat: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+// Example usage:
+// const { chat } = await createChat();
+```
+
+```typescript [TypeScript]
+interface CreateChatRequest {
+  artistId?: string;
+  chatId?: string;
+}
+
+interface Chat {
+  id: string;
+  account_id: string | null;
+  artist_id: string | null;
+  topic: string | null;
+  updated_at: string;
+}
+
+interface CreateChatResponse {
+  status: "success" | "error";
+  chat?: Chat;
+  message?: string;
+}
+
+async function createChat(
+  params: CreateChatRequest = {},
+  apiKey: string = "YOUR_API_KEY"
+): Promise<CreateChatResponse> {
+  const response = await fetch("https://recoup-api.vercel.app/api/conversations", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+    },
+    body: JSON.stringify(params),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to create chat: ${response.status}`);
+  }
+
+  return response.json();
+}
+```
+
+:::
+
+## Response Format
+
+```json filename="Response - Success"
+{
+  "status": "success",
+  "chat": {
+    "id": "f1b2c3d4-5678-4abc-9def-1234567890ab",
+    "account_id": "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d",
+    "artist_id": null,
+    "topic": null,
+    "updated_at": "2025-01-09T12:00:00.000Z"
+  }
+}
+```
+
+```json filename="Response - Error"
+{
+  "status": "error",
+  "message": "Failed to create chat"
+}
+```
+
+## Response Properties
+
+| Property         | Type   | Description                                          |
+| ---------------- | ------ | ---------------------------------------------------- |
+| status           | string | Status of the request ("success" or "error")         |
+| chat             | object | The created chat object                              |
+| chat.id          | string | UUID of the created chat                             |
+| chat.account_id  | string | UUID of the account that owns the chat               |
+| chat.artist_id   | string | UUID of the associated artist (null if not provided) |
+| chat.topic       | string | Title of the chat (null on creation)                 |
+| chat.updated_at  | string | ISO timestamp of the last update                     |
+| message          | string | Error message (only present if status is "error")    |
+
+## Notes
+
+- If `chatId` is not provided, a UUID will be generated automatically
+- If `artistId` is not provided, the chat will not be associated with any artist
+- After creating a chat, use the [Chat Stream API](/chat/stream) or [Chat Generate API](/chat/generate) to send messages
