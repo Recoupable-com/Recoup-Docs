@@ -122,12 +122,21 @@ const response = await fetch("https://api.recoupable.com/api/endpoint", {
 
 :::
 
-## Response
+## Response Format
 
-\`\`\`json
+\`\`\`json filename="Response - Success"
 {
-  "success": true,
-  "data": {}
+  "status": "success",
+  "entityName": {
+    // entity properties
+  }
+}
+\`\`\`
+
+\`\`\`json filename="Response - Error"
+{
+  "status": "error",
+  "message": "Error description"
 }
 \`\`\`
 ```
@@ -155,6 +164,10 @@ Add the new page to `vocs.config.ts` in the sidebar configuration:
 - **Tables**: Use markdown tables for parameters and headers
 - **Links**: Use relative links for internal docs (e.g., `/getting-started`)
 - **accountId**: Do NOT add `accountId` as a parameter if it can be inferred from the API key. The API key is used to identify the account, so `accountId` should only be documented when explicitly required.
+- **Response structure**: All API responses follow a standard format:
+  - `status`: Either `"success"` or `"error"`
+  - Data is wrapped in a named property (e.g., `conversation`, `organization`, `accountId`)
+  - Error responses include a `message` field with the error description
 - **Base URLs**:
   - Recoup-Chat endpoints: `https://api.recoupable.com/api`
   - Chat streaming endpoints: `https://chat.recoupable.com/api`
