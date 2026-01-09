@@ -28,7 +28,7 @@ export default defineConfig({
           ],
         },
         {
-          text: "Rooms",
+          text: "Conversations",
           items: [
             {
               text: "Create Conversation",
