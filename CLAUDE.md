@@ -62,8 +62,8 @@ recoup-docs/
 Create a new `.mdx` file in `docs/pages/`. Use nested folders for categorization:
 
 ```
-docs/pages/rooms/conversations.mdx  → /rooms/conversations
-docs/pages/chat/stream.mdx          → /chat/stream
+docs/pages/conversations/create.mdx  → /conversations/create
+docs/pages/chat/stream.mdx           → /chat/stream
 ```
 
 ### 2. MDX File Template
