@@ -27,10 +27,10 @@ All requests to this endpoint must be authenticated using an API key header:
 | ------------ | ------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | prompt       | string | No       | Single text prompt for the assistant. Required if `messages` is not provided.                                                                       |
 | messages     | array  | No       | Array of [UIMessage](https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message#uimessage) objects for context. Required if `prompt` is not provided. |
-| roomId       | string | No       | UUID of the chat room. If not provided, one will be generated automatically. Use [Create Chat](/chat/create) to create a room beforehand.           |
 | artistId     | string | No       | The unique identifier of the artist (optional)                                                                                                      |
 | model        | string | No       | The AI model to use for text generation (optional)                                                                                                  |
 | excludeTools | array  | No       | Array of tool names to exclude from execution (e.g., `["create_scheduled_actions"]`)                                                                |
+| roomId       | string | No       | UUID of the chat room. If not provided, one will be generated automatically. Use [Create Chat](/chat/create) to create a room beforehand.           |
 
 > Exactly one of `messages` or `prompt` should be provided in each request.
 
