@@ -32,7 +32,7 @@ export default defineConfig({
           items: [
             {
               text: "Create Conversation",
-              link: "/rooms/conversations",
+              link: "/conversations/create",
             },
           ],
         },
