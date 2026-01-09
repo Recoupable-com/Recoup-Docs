@@ -5,7 +5,7 @@ description: Create a new chat conversation (room).
 
 # Create Conversation
 
-Create a new chat conversation (room). The account is automatically inferred from the API key provided in the request.
+Create a new chat conversation (room).
 
 ## Endpoint
 
@@ -183,7 +183,6 @@ async function createConversation(
 
 ## Notes
 
-- The account is automatically inferred from the API key - no need to pass `accountId`
 - If `conversationId` is not provided, a UUID will be generated automatically
 - If `artistId` is not provided, the conversation will not be associated with any artist
 - After creating a conversation, use the [Chat Stream API](/chat/stream) or [Chat Generate API](/chat/generate) to send messages
