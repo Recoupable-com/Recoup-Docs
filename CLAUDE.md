@@ -155,5 +155,6 @@ Add the new page to `vocs.config.ts` in the sidebar configuration:
 - **Tables**: Use markdown tables for parameters and headers
 - **Links**: Use relative links for internal docs (e.g., `/getting-started`)
 - **Base URLs**:
-  - API endpoints: `https://api.recoupable.com/api`
-  - Chat endpoints: `https://chat.recoupable.com/api`
+  - Recoup-Chat endpoints: `https://api.recoupable.com/api`
+  - Chat streaming endpoints: `https://chat.recoupable.com/api`
+  - recoup-api endpoints: `https://recoup-api.vercel.app/api`
