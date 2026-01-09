@@ -10,7 +10,7 @@ Create a new chat room.
 ## Endpoint
 
 ```http
-POST https://recoup-api.vercel.app/api/conversations
+POST https://recoup-api.vercel.app/api/chats
 ```
 
 ### Authentication
@@ -31,7 +31,7 @@ POST https://recoup-api.vercel.app/api/conversations
 :::code-group
 
 ```bash [cURL]
-curl -X POST "https://recoup-api.vercel.app/api/conversations" \
+curl -X POST "https://recoup-api.vercel.app/api/chats" \
   -H "Content-Type: application/json" \
   -H "x-api-key: YOUR_API_KEY" \
   -d '{}'
@@ -45,7 +45,7 @@ def create_chat(
     chat_id: str | None = None,
     api_key: str = "YOUR_API_KEY"
 ):
-    url = "https://recoup-api.vercel.app/api/conversations"
+    url = "https://recoup-api.vercel.app/api/chats"
 
     payload = {}
     if artist_id:
@@ -83,7 +83,7 @@ async function createChat({
     payload.chatId = chatId;
   }
 
-  const response = await fetch("https://recoup-api.vercel.app/api/conversations", {
+  const response = await fetch("https://recoup-api.vercel.app/api/chats", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -127,7 +127,7 @@ async function createChat(
   params: CreateChatRequest = {},
   apiKey: string = "YOUR_API_KEY"
 ): Promise<CreateChatResponse> {
-  const response = await fetch("https://recoup-api.vercel.app/api/conversations", {
+  const response = await fetch("https://recoup-api.vercel.app/api/chats", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
