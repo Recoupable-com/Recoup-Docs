@@ -154,6 +154,7 @@ Add the new page to `vocs.config.ts` in the sidebar configuration:
 - **Code groups**: Use `:::code-group` for multi-language examples (cURL, JavaScript, TypeScript, Python)
 - **Tables**: Use markdown tables for parameters and headers
 - **Links**: Use relative links for internal docs (e.g., `/getting-started`)
+- **accountId**: Do NOT add `accountId` as a parameter if it can be inferred from the API key. The API key is used to identify the account, so `accountId` should only be documented when explicitly required.
 - **Base URLs**:
   - Recoup-Chat endpoints: `https://api.recoupable.com/api`
   - Chat streaming endpoints: `https://chat.recoupable.com/api`
