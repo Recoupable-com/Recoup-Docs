@@ -1,0 +1,225 @@
+---
+title: Create Conversation
+description: Create a new chat conversation (room) for an account and artist.
+---
+
+# Create Conversation
+
+Create a new chat conversation (room) associated with an account and artist. The conversation title is automatically generated from the first message using AI.
+
+## Endpoint
+
+```http
+POST https://chat.recoupable.com/api/chat/create
+```
+
+### Authentication
+
+| Header    | Type   | Required | Description                                                                                               |
+| --------- | ------ | -------- | --------------------------------------------------------------------------------------------------------- |
+| x-api-key | string | Yes      | Your Recoup API key. See [Getting Started](/getting-started#-api-keys) for how to create and manage keys. |
+
+## Parameters
+
+| Name         | Type   | Required | Description                                                              |
+| ------------ | ------ | -------- | ------------------------------------------------------------------------ |
+| accountId    | string | Yes      | UUID of the account creating the conversation                            |
+| artistId     | string | Yes      | UUID of the artist account the conversation is associated with           |
+| chatId       | string | Yes      | UUID for the new conversation (client-generated)                         |
+| firstMessage | string | Yes      | The first message in the conversation, used to generate the topic title  |
+| email        | string | No       | Email address for notifications                                          |
+
+## Request Examples
+
+:::code-group
+
+```bash [cURL]
+curl -X POST "https://chat.recoupable.com/api/chat/create" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -d '{
+    "accountId": "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d",
+    "artistId": "1873859c-dd37-4e9a-9bac-80d35a1b2c3d",
+    "chatId": "f1b2c3d4-5678-4abc-9def-1234567890ab",
+    "firstMessage": "Help me plan the release for my new single",
+    "email": "artist@example.com"
+  }'
+```
+
+```python [Python]
+import requests
+
+def create_conversation(
+    account_id: str,
+    artist_id: str,
+    chat_id: str,
+    first_message: str,
+    email: str | None = None,
+    api_key: str = "YOUR_API_KEY"
+):
+    url = "https://chat.recoupable.com/api/chat/create"
+
+    payload = {
+        "accountId": account_id,
+        "artistId": artist_id,
+        "chatId": chat_id,
+        "firstMessage": first_message,
+    }
+    if email:
+        payload["email"] = email
+
+    response = requests.post(
+        url,
+        json=payload,
+        headers={
+            "Content-Type": "application/json",
+            "x-api-key": api_key,
+        }
+    )
+    response.raise_for_status()
+    return response.json()
+
+# Example usage:
+# result = create_conversation(
+#     account_id="848cd58d-700f-4b38-ab4c-d9f52a1b2c3d",
+#     artist_id="1873859c-dd37-4e9a-9bac-80d35a1b2c3d",
+#     chat_id="f1b2c3d4-5678-4abc-9def-1234567890ab",
+#     first_message="Help me plan the release for my new single"
+# )
+```
+
+```javascript [JavaScript]
+async function createConversation({
+  accountId,
+  artistId,
+  chatId,
+  firstMessage,
+  email,
+  apiKey = "YOUR_API_KEY",
+}) {
+  const response = await fetch("https://chat.recoupable.com/api/chat/create", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+    },
+    body: JSON.stringify({
+      accountId,
+      artistId,
+      chatId,
+      firstMessage,
+      email,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to create conversation: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+// Example usage:
+// const result = await createConversation({
+//   accountId: "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d",
+//   artistId: "1873859c-dd37-4e9a-9bac-80d35a1b2c3d",
+//   chatId: "f1b2c3d4-5678-4abc-9def-1234567890ab",
+//   firstMessage: "Help me plan the release for my new single",
+// });
+```
+
+```typescript [TypeScript]
+interface CreateConversationRequest {
+  accountId: string;
+  artistId: string;
+  chatId: string;
+  firstMessage: string;
+  email?: string;
+}
+
+interface CreateConversationResponse {
+  room: {
+    id: string;
+    topic: string;
+    memories: unknown[];
+    rooms_reports: string[];
+  };
+  success: boolean;
+  error?: string;
+}
+
+async function createConversation(
+  params: CreateConversationRequest,
+  apiKey: string = "YOUR_API_KEY"
+): Promise<CreateConversationResponse> {
+  const response = await fetch("https://chat.recoupable.com/api/chat/create", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+    },
+    body: JSON.stringify(params),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to create conversation: ${response.status}`);
+  }
+
+  return (await response.json()) as CreateConversationResponse;
+}
+```
+
+:::
+
+## Response
+
+```json
+{
+  "room": {
+    "id": "f1b2c3d4-5678-4abc-9def-1234567890ab",
+    "topic": "New Single Release Planning",
+    "memories": [],
+    "rooms_reports": []
+  },
+  "success": true
+}
+```
+
+## Response Properties
+
+| Property            | Type    | Description                                              |
+| ------------------- | ------- | -------------------------------------------------------- |
+| success             | boolean | `true` if the conversation was created successfully      |
+| room                | object  | The created conversation room object                     |
+| room.id             | string  | UUID of the created conversation                         |
+| room.topic          | string  | AI-generated title based on the first message            |
+| room.memories       | array   | Array of conversation memories (empty on creation)       |
+| room.rooms_reports  | array   | Array of associated report IDs (empty on creation)       |
+| error               | string  | Error message when `success` is `false`                  |
+
+## Error Responses
+
+### Missing Required Parameters (400)
+
+```json
+{
+  "error": "Missing required parameters",
+  "success": false
+}
+```
+
+### Server Error (500)
+
+```json
+{
+  "error": "Failed to create chat room",
+  "success": false
+}
+```
+
+## Notes
+
+- The `chatId` should be a valid UUID generated by the client before making the request
+- The conversation `topic` is automatically generated from the `firstMessage` using AI
+- A Telegram notification is sent when a new conversation is created (if configured)
+- After creating a conversation, use the [Chat Stream API](/chat/stream) or [Chat Generate API](/chat/generate) to send messages

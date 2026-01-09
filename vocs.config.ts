@@ -28,6 +28,15 @@ export default defineConfig({
           ],
         },
         {
+          text: "Rooms",
+          items: [
+            {
+              text: "Create Conversation",
+              link: "/rooms/conversations",
+            },
+          ],
+        },
+        {
           text: "Accounts",
           items: [
             {
