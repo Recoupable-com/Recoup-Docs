@@ -18,6 +18,14 @@ Branch from `main`:
 git checkout main && git pull origin main && git checkout -b <branch-name>
 ```
 
+### Completing a Task
+
+After pushing changes, create a PR against `main`:
+
+```bash
+gh pr create --base main
+```
+
 ## Build Commands
 
 ```bash
