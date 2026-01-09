@@ -66,7 +66,7 @@ def create_conversation(
 
 # Example usage:
 # result = create_conversation()
-# result = create_conversation(artist_id="1873859c-dd37-4e9a-9bac-80d35a1b2c3d")
+# conversation = result["conversation"]
 ```
 
 ```javascript [JavaScript]
@@ -100,8 +100,7 @@ async function createConversation({
 }
 
 // Example usage:
-// const result = await createConversation();
-// const result = await createConversation({ artistId: "1873859c-dd37-4e9a-9bac-80d35a1b2c3d" });
+// const { conversation } = await createConversation();
 ```
 
 ```typescript [TypeScript]
@@ -110,7 +109,7 @@ interface CreateConversationRequest {
   conversationId?: string;
 }
 
-interface Room {
+interface Conversation {
   id: string;
   account_id: string | null;
   artist_id: string | null;
@@ -118,10 +117,16 @@ interface Room {
   updated_at: string;
 }
 
+interface CreateConversationResponse {
+  status: "success" | "error";
+  conversation?: Conversation;
+  message?: string;
+}
+
 async function createConversation(
   params: CreateConversationRequest = {},
   apiKey: string = "YOUR_API_KEY"
-): Promise<Room> {
+): Promise<CreateConversationResponse> {
   const response = await fetch("https://recoup-api.vercel.app/api/conversations", {
     method: "POST",
     headers: {
@@ -135,43 +140,46 @@ async function createConversation(
     throw new Error(`Failed to create conversation: ${response.status}`);
   }
 
-  return (await response.json()) as Room;
+  return response.json();
 }
 ```
 
 :::
 
-## Response
+## Response Format
 
-```json
+```json filename="Response - Success"
 {
-  "id": "f1b2c3d4-5678-4abc-9def-1234567890ab",
-  "account_id": "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d",
-  "artist_id": null,
-  "topic": null,
-  "updated_at": "2025-01-09T12:00:00.000Z"
+  "status": "success",
+  "conversation": {
+    "id": "f1b2c3d4-5678-4abc-9def-1234567890ab",
+    "account_id": "848cd58d-700f-4b38-ab4c-d9f52a1b2c3d",
+    "artist_id": null,
+    "topic": null,
+    "updated_at": "2025-01-09T12:00:00.000Z"
+  }
+}
+```
+
+```json filename="Response - Error"
+{
+  "status": "error",
+  "message": "Failed to create conversation"
 }
 ```
 
 ## Response Properties
 
-| Property   | Type   | Description                                              |
-| ---------- | ------ | -------------------------------------------------------- |
-| id         | string | UUID of the created conversation                         |
-| account_id | string | UUID of the account that owns the conversation           |
-| artist_id  | string | UUID of the associated artist (null if not provided)     |
-| topic      | string | Title of the conversation (null on creation)             |
-| updated_at | string | ISO timestamp of the last update                         |
-
-## Error Responses
-
-### Server Error (500)
-
-```json
-{
-  "error": "Failed to create conversation"
-}
-```
+| Property                 | Type   | Description                                              |
+| ------------------------ | ------ | -------------------------------------------------------- |
+| status                   | string | Status of the request ("success" or "error")             |
+| conversation             | object | The created conversation object                          |
+| conversation.id          | string | UUID of the created conversation                         |
+| conversation.account_id  | string | UUID of the account that owns the conversation           |
+| conversation.artist_id   | string | UUID of the associated artist (null if not provided)     |
+| conversation.topic       | string | Title of the conversation (null on creation)             |
+| conversation.updated_at  | string | ISO timestamp of the last update                         |
+| message                  | string | Error message (only present if status is "error")        |
 
 ## Notes
 
