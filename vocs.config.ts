@@ -14,6 +14,10 @@ export default defineConfig({
           text: "Chats",
           items: [
             {
+              text: "Create Chat",
+              link: "/chat/create",
+            },
+            {
               text: "Generate",
               link: "/chat/generate",
             },

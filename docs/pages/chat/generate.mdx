@@ -30,6 +30,7 @@ All requests to this endpoint must be authenticated using an API key header:
 | artistId     | string | No       | The unique identifier of the artist (optional)                                                                                                      |
 | model        | string | No       | The AI model to use for text generation (optional)                                                                                                  |
 | excludeTools | array  | No       | Array of tool names to exclude from execution (e.g., `["create_scheduled_actions"]`)                                                                |
+| roomId       | string | No       | UUID of the chat room. If not provided, one will be generated automatically. Use [Create Chat](/chat/create) to create a chat beforehand.           |
 
 > Exactly one of `messages` or `prompt` should be provided in each request.
 
